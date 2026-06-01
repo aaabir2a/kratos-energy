@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white font-body text-ink antialiased;
+  }
+
+  /* Brand focus ring on form controls */
+  input:focus,
+  select:focus,
+  textarea:focus {
+    @apply border-green-500;
+    box-shadow: 0 0 0 3px rgba(108, 174, 52, 0.32);
+    outline: none;
+  }
+
+  input[type="range"] {
+    accent-color: #6cae34;
+  }
+}
+
+@layer components {
+  /* Page width container — 1180px max, responsive side padding */
+  .container-ke {
+    @apply mx-auto w-full max-w-container px-5 sm:px-7;
+  }
+
+  /* Reusable button press/hover micro-interaction */
+  .ke-press {
+    @apply transition-all duration-200 ease-soft hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98];
+  }
+
+  /* Card hover lift */
+  .ke-lift {
+    @apply transition-all duration-200 ease-soft hover:-translate-y-1 hover:shadow-lg;
+  }
+}
