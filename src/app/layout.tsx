@@ -1,18 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins, Nunito_Sans } from "next/font/google";
+import { Sora, Inter } from "next/font/google";
 import "./globals.css";
 
-const poppins = Poppins({
+const sora = Sora({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-poppins",
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-display",
   display: "swap",
 });
 
-const nunito = Nunito_Sans({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
-  variable: "--font-nunito",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-body",
   display: "swap",
 });
 
@@ -53,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${poppins.variable} ${nunito.variable}`}>
+    <html lang="en" className={`${sora.variable} ${inter.variable}`}>
       <body>{children}</body>
     </html>
   );

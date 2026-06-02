@@ -57,8 +57,8 @@ const config: Config = {
         cec: "#F39200",
       },
       fontFamily: {
-        display: ["var(--font-poppins)", "system-ui", "sans-serif"],
-        body: ["var(--font-nunito)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "system-ui", "sans-serif"],
+        body: ["var(--font-body)", "system-ui", "sans-serif"],
       },
       borderRadius: {
         sm: "8px",
