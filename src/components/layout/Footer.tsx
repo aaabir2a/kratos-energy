@@ -1,35 +1,36 @@
+import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { PHONE, EMAIL } from "@/lib/nav";
 
-const COLUMNS: { heading: string; items: string[] }[] = [
+const COLUMNS: { heading: string; items: { label: string; href: string }[] }[] = [
   {
     heading: "Solar Solutions",
     items: [
-      "Residential Solar",
-      "Commercial Solar",
-      "Utility Scale",
-      "Battery Storage",
-      "EV Charging",
+      { label: "Residential Solar", href: "/#systems" },
+      { label: "Commercial Solar", href: "/systems/50kw" },
+      { label: "Battery Storage", href: "/battery-storage" },
+      { label: "EV Charging", href: "/ev-charging" },
+      { label: "Build Your System", href: "/build" },
     ],
   },
   {
     heading: "Company",
     items: [
-      "About Kratos",
-      "Our Projects",
-      "PPA & Finance",
-      "Clean Energy Council",
-      "Careers",
+      { label: "Blog & Guides", href: "/blog" },
+      { label: "Our Projects", href: "/#reviews" },
+      { label: "Finance & $0 Upfront", href: "/finance" },
+      { label: "Refer a Friend", href: "/refer" },
+      { label: "Government Rebates", href: "/rebates" },
     ],
   },
   {
     heading: "Support",
     items: [
-      "Get a Quote",
-      "Savings Calculator",
-      "Warranty & O&M",
-      "Contact Us",
-      "FAQs",
+      { label: "Get a Quote", href: "/get-a-quote" },
+      { label: "Savings Calculator", href: "/savings-calculator" },
+      { label: "Warranty & Support", href: "/support" },
+      { label: "Contact Us", href: "/get-a-quote" },
+      { label: "FAQs", href: "/support" },
     ],
   },
 ];
@@ -66,13 +67,13 @@ export function Footer() {
               </div>
               <ul className="flex flex-col gap-2.5">
                 {col.items.map((item) => (
-                  <li key={item}>
-                    <a
-                      href="#"
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
                       className="font-body text-sm text-[#bcd4c6] transition-colors hover:text-white"
                     >
-                      {item}
-                    </a>
+                      {item.label}
+                    </Link>
                   </li>
                 ))}
               </ul>

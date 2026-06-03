@@ -1,10 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { Icon } from "@/components/ui/Icon";
-import { Button } from "@/components/ui/Button";
 import { NAV, PHONE, PHONE_HREF } from "@/lib/nav";
-import { cn, scrollToId } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 /** Full-screen mobile navigation overlay. */
 export function MobileMenu({
@@ -14,11 +14,6 @@ export function MobileMenu({
   open: boolean;
   onClose: () => void;
 }) {
-  const go = (id: string) => {
-    scrollToId(id);
-    onClose();
-  };
-
   return (
     <div
       className={cn(
@@ -39,13 +34,14 @@ export function MobileMenu({
 
       <nav className="mt-6 flex flex-col">
         {NAV.map((item) => (
-          <button
+          <Link
             key={item.label}
-            onClick={() => go(item.id)}
-            className="border-b border-white/10 py-3.5 text-left font-display text-[23px] font-bold text-white"
+            href={item.href}
+            onClick={onClose}
+            className="border-b border-white/10 py-3.5 text-left font-display text-[22px] font-bold text-white"
           >
             {item.label}
-          </button>
+          </Link>
         ))}
       </nav>
 
@@ -56,15 +52,13 @@ export function MobileMenu({
         >
           <Icon name="phone" size={22} className="text-green-400" /> {PHONE}
         </a>
-        <Button
-          variant="primary"
-          size="lg"
-          icon="arrow"
-          fullWidth
-          onClick={() => go("quote")}
+        <Link
+          href="/get-a-quote"
+          onClick={onClose}
+          className="ke-press inline-flex items-center justify-center gap-2.5 rounded-pill bg-green-500 px-[34px] py-[17px] font-display text-[17px] font-bold text-white shadow-green hover:bg-green-600"
         >
-          Get a Free Quote
-        </Button>
+          Get a Free Quote <Icon name="arrow" size={21} stroke={2.4} />
+        </Link>
       </div>
     </div>
   );
