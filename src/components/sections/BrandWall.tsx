@@ -1,4 +1,3 @@
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
 import { BRANDS } from "@/lib/systems";
 
@@ -12,8 +11,7 @@ export function BrandWall() {
     <section className="border-y border-ash-200 bg-paper py-16">
       <div className="container-ke">
         <div className="mb-9 text-center">
-          <Eyebrow center>Premium Hardware Only</Eyebrow>
-          <h2 className="mt-3 font-display text-[clamp(24px,2.8vw,34px)] font-extrabold tracking-[-0.02em] text-navy-700">
+          <h2 className="font-display text-[clamp(24px,2.8vw,34px)] font-extrabold tracking-[-0.02em] text-navy-700">
             We install CEC-approved panels, inverters &amp; batteries.
           </h2>
         </div>

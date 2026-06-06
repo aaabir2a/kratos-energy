@@ -2,40 +2,37 @@
 
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
-import { Eyebrow } from "@/components/ui/Eyebrow";
-import { cn, scrollToId } from "@/lib/utils";
+import { scrollToId } from "@/lib/utils";
 
 type Service = {
   icon: string;
   title: string;
   tag: string | null;
-  accent: boolean;
   body: string;
   points: string[];
 };
 
-const SERVICES: Service[] = [
-  {
-    icon: "sun",
-    title: "Residential Solar",
-    tag: "Most Popular",
-    accent: true,
-    body: "Power your home with clean, reliable solar. Perfect for families looking to slash bills.",
-    points: [
-      "Systems from 3kW to 15kW",
-      "From $5,990 after rebates",
-      "Free design & installation",
-    ],
-  },
+const FEATURED: Service = {
+  icon: "sun",
+  title: "Residential Solar",
+  tag: "Most Popular",
+  body: "Power your home with clean, reliable solar. Perfect for families looking to slash bills.",
+  points: [
+    "Systems from 3kW to 15kW",
+    "From $5,990 after rebates",
+    "Free design & installation",
+  ],
+};
+
+const SECONDARY: Service[] = [
   {
     icon: "building",
     title: "Commercial Solar",
     tag: null,
-    accent: false,
     body: "Smart energy to power your operations and cut overhead with predictable, lower costs.",
     points: [
       "Systems from 20kW to 500kW+",
-      "Flexible PPA & finance options",
+      "Flexible payment plans & finance options",
       "Energy monitoring included",
     ],
   },
@@ -43,66 +40,97 @@ const SERVICES: Service[] = [
     icon: "zap",
     title: "Utility Scale",
     tag: null,
-    accent: false,
-    body: "Scalable solar farms engineered for performance — shovel-ready projects for investors.",
+    body: "Scalable solar farms engineered for performance: shovel-ready projects for investors.",
     points: [
       "Megawatt-scale projects",
-      "Custom engineering & EPC",
-      "Professional O&M",
+      "Custom engineering & procurement",
+      "Professional operations & maintenance",
     ],
   },
 ];
 
-function ServiceCard({ s }: { s: Service }) {
+function PointList({
+  points,
+  className,
+}: {
+  points: string[];
+  className?: string;
+}) {
   return (
-    <div
-      className={cn(
-        "ke-lift relative flex flex-col rounded-lg bg-white p-7",
-        s.accent
-          ? "border-2 border-green-500 shadow-lg"
-          : "border border-ash-200 shadow-md",
-      )}
-    >
+    <ul className={className}>
+      {points.map((p) => (
+        <li
+          key={p}
+          className="flex items-center gap-2.5 font-body text-[14.5px] text-ink"
+        >
+          <Icon
+            name="check"
+            size={16}
+            stroke={3}
+            className="flex-none text-green-500"
+          />
+          {p}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Large primary panel — the residential offer carries the most weight. */
+function FeaturePanel({ s }: { s: Service }) {
+  return (
+    <div className="ke-lift relative flex flex-col rounded-xl border-2 border-green-500 bg-white p-8 shadow-lg sm:p-10">
       {s.tag && (
-        <span className="absolute -top-3 left-[26px] rounded-pill bg-green-500 px-3.5 py-[5px] font-display text-[11px] font-bold uppercase tracking-[0.06em] text-white">
+        <span className="absolute -top-3 left-8 rounded-pill bg-green-500 px-4 py-[5px] font-display text-[11px] font-bold uppercase tracking-[0.06em] text-white">
           {s.tag}
         </span>
       )}
-      <span className="mb-4 flex h-[52px] w-[52px] items-center justify-center rounded-[14px] bg-green-50 text-green-600">
-        <Icon name={s.icon} size={28} />
+      <span className="mb-5 flex h-16 w-16 items-center justify-center rounded-[18px] bg-green-50 text-green-600">
+        <Icon name={s.icon} size={36} />
       </span>
-      <h3 className="mb-2 font-display text-[22px] font-bold text-navy-700">
+      <h3 className="mb-2.5 font-display text-[clamp(26px,2.4vw,32px)] font-extrabold tracking-[-0.01em] text-navy-700">
         {s.title}
       </h3>
-      <p className="mb-[18px] font-body text-[15px] leading-relaxed text-ash-700">
+      <p className="mb-6 max-w-[420px] font-body text-[16.5px] leading-relaxed text-ash-700">
         {s.body}
       </p>
-      <ul className="mb-[22px] flex flex-col gap-2.5">
-        {s.points.map((p) => (
-          <li
-            key={p}
-            className="flex items-center gap-2.5 font-body text-[14.5px] text-ink"
-          >
-            <Icon
-              name="check"
-              size={16}
-              stroke={3}
-              className="flex-none text-green-500"
-            />
-            {p}
-          </li>
-        ))}
-      </ul>
+      <PointList points={s.points} className="mb-8 flex flex-col gap-3" />
       <div className="mt-auto">
         <Button
-          variant={s.accent ? "primary" : "navy"}
-          size="md"
+          variant="primary"
+          size="lg"
           icon="arrow"
           onClick={() => scrollToId("quote")}
         >
-          Get Quote
+          Get a residential quote
         </Button>
       </div>
+    </div>
+  );
+}
+
+/** Compact secondary card — commercial & utility, denser and quieter. */
+function SecondaryCard({ s }: { s: Service }) {
+  return (
+    <div className="ke-lift flex flex-1 flex-col rounded-lg border border-ash-200 bg-white p-6 shadow-md">
+      <div className="mb-3.5 flex items-center gap-3.5">
+        <span className="flex h-11 w-11 flex-none items-center justify-center rounded-[12px] bg-green-50 text-green-600">
+          <Icon name={s.icon} size={24} />
+        </span>
+        <h3 className="font-display text-[19px] font-bold text-navy-700">
+          {s.title}
+        </h3>
+      </div>
+      <p className="mb-4 font-body text-[14.5px] leading-relaxed text-ash-700">
+        {s.body}
+      </p>
+      <PointList points={s.points} className="mb-5 flex flex-col gap-2" />
+      <button
+        onClick={() => scrollToId("quote")}
+        className="mt-auto inline-flex items-center gap-1.5 self-start font-display text-[14px] font-bold text-forest-700 underline-offset-4 hover:underline"
+      >
+        Get a quote <Icon name="arrow" size={15} stroke={2.4} />
+      </button>
     </div>
   );
 }
@@ -112,8 +140,7 @@ export function Services() {
     <section id="services" className="bg-paper py-[84px]">
       <div className="container-ke">
         <div className="mb-12 text-center">
-          <Eyebrow center>Complete Solar Solutions</Eyebrow>
-          <h2 className="mt-3 font-display text-[clamp(30px,3.6vw,46px)] font-extrabold tracking-[-0.02em] text-navy-700">
+          <h2 className="font-display text-[clamp(30px,3.6vw,46px)] font-extrabold tracking-[-0.02em] text-navy-700">
             From consultation to switch-on.
           </h2>
           <p className="mx-auto mt-3 max-w-[540px] font-body text-lg text-ash-700">
@@ -121,10 +148,14 @@ export function Services() {
             kilowatt to megawatt.
           </p>
         </div>
-        <div className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((s) => (
-            <ServiceCard key={s.title} s={s} />
-          ))}
+
+        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-[1.5fr_1fr]">
+          <FeaturePanel s={FEATURED} />
+          <div className="flex flex-col gap-6">
+            {SECONDARY.map((s) => (
+              <SecondaryCard key={s.title} s={s} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

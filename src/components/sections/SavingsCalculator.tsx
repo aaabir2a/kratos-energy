@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { cn, scrollToId } from "@/lib/utils";
 
 const STATE_FACTOR: Record<string, number> = {
@@ -16,7 +15,7 @@ const STATE_FACTOR: Record<string, number> = {
 
 const SIDE_STATS: [string, string][] = [
   ["$8.2M", "Customer savings"],
-  ["2,847", "Systems installed"],
+  ["3,100+", "Systems installed"],
   ["25 yr", "Asset lifespan"],
 ];
 
@@ -35,8 +34,7 @@ export function SavingsCalculator() {
       <div className="container-ke grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_1.1fr]">
         {/* Copy */}
         <div>
-          <Eyebrow light>Instant Savings Calculator</Eyebrow>
-          <h2 className="my-3 mb-4 font-display text-[clamp(30px,3.5vw,46px)] font-extrabold leading-[1.08] tracking-[-0.02em] text-white">
+          <h2 className="mb-4 font-display text-[clamp(30px,3.5vw,46px)] font-extrabold leading-[1.08] tracking-[-0.02em] text-white">
             See your savings in 30 seconds.
           </h2>
           <p className="m-0 max-w-[420px] font-body text-[17px] leading-relaxed text-[#a9c4a3]">
@@ -96,11 +94,12 @@ export function SavingsCalculator() {
             <span className="font-display text-[13px] font-semibold text-ash-700">
               Property type
             </span>
-            <div className="flex gap-2.5">
+            <div className="flex gap-2.5" role="group" aria-label="Property type">
               {(["Residential", "Commercial"] as const).map((t) => (
                 <button
                   key={t}
                   onClick={() => setType(t)}
+                  aria-pressed={type === t}
                   className={cn(
                     "flex-1 rounded-md border-[1.5px] px-2 py-[11px] text-center font-display text-[13.5px] font-bold transition-all",
                     type === t

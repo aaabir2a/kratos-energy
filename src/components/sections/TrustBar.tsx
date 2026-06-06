@@ -1,9 +1,9 @@
 import { Icon } from "@/components/ui/Icon";
 
 const STATS: [string, string][] = [
-  ["2,847", "Systems Installed"],
+  ["3,100+", "Systems Installed"],
   ["$8.2M", "Customer Savings"],
-  ["15+", "Years Experience"],
+  ["10+", "Years Experience"],
   ["100%", "Aussie Owned"],
 ];
 

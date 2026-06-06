@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import {
   systemsByCategory,
   type SolarSystem,
@@ -106,8 +105,7 @@ export function SystemPricing() {
     <section id="systems" className="bg-white py-[84px]">
       <div className="container-ke">
         <div className="mb-10 text-center">
-          <Eyebrow center>Transparent Solar Pricing</Eyebrow>
-          <h2 className="mt-3 font-display text-[clamp(30px,3.6vw,46px)] font-extrabold tracking-[-0.02em] text-navy-700">
+          <h2 className="font-display text-[clamp(30px,3.6vw,46px)] font-extrabold tracking-[-0.02em] text-navy-700">
             Find the right system for your roof.
           </h2>
           <p className="mx-auto mt-3 max-w-[540px] font-body text-lg text-ash-700">
@@ -118,11 +116,12 @@ export function SystemPricing() {
 
         {/* Category toggle */}
         <div className="mb-10 flex justify-center">
-          <div className="inline-flex rounded-pill border border-ash-200 bg-paper p-1.5">
+          <div className="inline-flex rounded-pill border border-ash-200 bg-paper p-1.5" role="group" aria-label="System category">
             {(["residential", "commercial"] as const).map((c) => (
               <button
                 key={c}
                 onClick={() => setCat(c)}
+                aria-pressed={cat === c}
                 className={cn(
                   "rounded-pill px-6 py-2.5 font-display text-[14.5px] font-bold capitalize transition-all",
                   cat === c

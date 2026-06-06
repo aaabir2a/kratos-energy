@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
 
 type Story = {
@@ -50,8 +49,7 @@ export function CaseStudies() {
     <section id="projects" className="bg-white py-[84px]">
       <div className="container-ke">
         <div className="mb-11 text-center">
-          <Eyebrow center>Real Australian Projects</Eyebrow>
-          <h2 className="mt-3 font-display text-[clamp(30px,3.6vw,46px)] font-extrabold tracking-[-0.02em] text-navy-700">
+          <h2 className="font-display text-[clamp(30px,3.6vw,46px)] font-extrabold tracking-[-0.02em] text-navy-700">
             Every system tells a savings story.
           </h2>
           <p className="mx-auto mt-3 max-w-[520px] font-body text-lg text-ash-700">
@@ -69,7 +67,7 @@ export function CaseStudies() {
               <div className="relative h-48">
                 <Image
                   src={s.photo}
-                  alt={`${s.name} — ${s.system}`}
+                  alt={`${s.name}, ${s.system}`}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover"
@@ -77,12 +75,6 @@ export function CaseStudies() {
                 <span className="absolute left-4 top-4 rounded-pill bg-white/95 px-3 py-1.5 font-display text-[12px] font-bold text-forest-700 shadow-sm">
                   {s.system}
                 </span>
-                <button
-                  aria-label="Play story"
-                  className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-500 text-white shadow-green"
-                >
-                  <Icon name="play" size={20} fill="#fff" stroke={0} />
-                </button>
               </div>
 
               <div className="flex flex-1 flex-col p-6">

@@ -58,20 +58,28 @@ export function GuideDownload() {
                 Download the free guide
               </h3>
               <p className="mb-5 font-body text-[14px] text-ash-500">
-                Pop in your email — we&rsquo;ll send the PDF straight away.
+                Pop in your email and we&rsquo;ll send the PDF straight away.
               </p>
               <div className="flex flex-col gap-3">
-                <input
-                  className="w-full rounded-md border-[1.5px] border-ash-300 bg-white px-[15px] py-[13px] font-body text-[15px] text-ink outline-none"
-                  placeholder="First name"
-                  required
-                />
-                <input
-                  className="w-full rounded-md border-[1.5px] border-ash-300 bg-white px-[15px] py-[13px] font-body text-[15px] text-ink outline-none"
-                  type="email"
-                  placeholder="Email address"
-                  required
-                />
+                <label className="flex flex-col gap-1">
+                  <span className="sr-only">First name</span>
+                  <input
+                    className="w-full rounded-md border-[1.5px] border-ash-300 bg-white px-[15px] py-[13px] font-body text-[15px] text-ink outline-none"
+                    placeholder="First name"
+                    required
+                    aria-required="true"
+                  />
+                </label>
+                <label className="flex flex-col gap-1">
+                  <span className="sr-only">Email address</span>
+                  <input
+                    className="w-full rounded-md border-[1.5px] border-ash-300 bg-white px-[15px] py-[13px] font-body text-[15px] text-ink outline-none"
+                    type="email"
+                    placeholder="Email address"
+                    required
+                    aria-required="true"
+                  />
+                </label>
               </div>
               <button
                 type="submit"

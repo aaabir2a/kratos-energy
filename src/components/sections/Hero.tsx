@@ -6,69 +6,83 @@ import { Button } from "@/components/ui/Button";
 import { Stars } from "@/components/ui/Stars";
 import { scrollToId } from "@/lib/utils";
 
-function StatPill({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="flex flex-col">
-      <span className="font-display text-[26px] font-extrabold leading-none text-navy-700">
-        {value}
-      </span>
-      <span className="mt-[5px] font-body text-[12.5px] font-semibold text-ash-500">
-        {label}
-      </span>
-    </div>
-  );
-}
-
-function FloatCard({
-  className,
-  children,
-}: {
-  className?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div
-      className={`absolute rounded-md border border-white/70 bg-white/95 shadow-lg backdrop-blur-md ${className ?? ""}`}
-    >
-      {children}
-    </div>
-  );
-}
+const TRUST: { value: string; label: string }[] = [
+  { value: "2,847+", label: "Homes powered" },
+  { value: "$0", label: "Upfront options" },
+  { value: "≈ $2,310", label: "Saved per year" },
+];
 
 export function Hero() {
   return (
     <section
       id="top"
-      className="relative overflow-x-clip bg-white lg:h-[calc(100vh-116px)] lg:min-h-[560px]"
+      className="relative isolate flex min-h-[640px] items-stretch overflow-hidden bg-forest-900 lg:min-h-[calc(100vh-116px)]"
     >
-      <div className="container-ke grid grid-cols-1 items-center gap-14 py-12 lg:h-full lg:grid-cols-[1.02fr_1.1fr] lg:py-0">
-        {/* LEFT — copy */}
-        <div className="animate-fade-up py-2">
-          <div className="mb-[22px] inline-flex items-center gap-2.5 rounded-pill border border-green-200 bg-green-50 py-1.5 pl-[7px] pr-3.5">
+      {/* Full-bleed photograph — the surface itself */}
+      <Image
+        src="/assets/photo-family-house.jpg"
+        alt="Australian family at home with rooftop solar"
+        fill
+        priority
+        sizes="100vw"
+        className="-z-10 object-cover object-[58%_32%]"
+      />
+
+      {/* Directional scrim: darkens the lower-left where the copy lives,
+          opens the upper-right so the photo still reads */}
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(105deg,#0c3b28_4%,rgba(12,59,40,0.78)_38%,rgba(12,59,40,0.30)_66%,rgba(12,59,40,0.08)_100%)]" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-forest-900 via-forest-900/35 to-transparent" />
+
+      {/* Warm sun-glow — atmospheric, low and soft */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-[-6%] top-[26%] -z-[5] h-[460px] w-[460px] rounded-full bg-green-400/20 blur-[130px]"
+      />
+
+      <div className="container-ke relative z-10 flex w-full flex-col justify-end gap-9 pb-10 pt-28 sm:pt-32 lg:gap-12 lg:pb-14">
+        {/* Copy */}
+        <div className="max-w-[660px]">
+          <div
+            className="animate-fade-up mb-6 inline-flex items-center gap-2.5 rounded-pill bg-white/10 py-1.5 pl-[7px] pr-3.5 ring-1 ring-inset ring-white/15"
+            style={{ animationDelay: "0ms" }}
+          >
             <span className="rounded-pill bg-green-500 px-2.5 py-[3px] font-display text-[11px] font-bold tracking-[0.04em] text-white">
               CEC APPROVED
             </span>
-            <span className="inline-flex items-center gap-[7px] font-body text-[13px] font-bold text-forest-800">
+            <span className="inline-flex items-center gap-[7px] font-body text-[13px] font-bold text-white">
               <Stars size={13} /> 4.9/5 · 2,847 homes
             </span>
           </div>
 
-          <div className="mb-3.5 font-display text-[13.5px] font-bold uppercase tracking-[0.14em] text-green-600">
-            100% Australian-Owned Solar
+          <div
+            className="animate-fade-up mb-4 flex items-center gap-3"
+            style={{ animationDelay: "70ms" }}
+          >
+            <span className="h-px w-9 bg-green-400/70" />
+            <span className="font-display text-[13px] font-bold uppercase tracking-[0.16em] text-green-300">
+              100% Australian-Owned Solar
+            </span>
           </div>
 
-          <h1 className="m-0 font-display text-[clamp(40px,4.6vw,66px)] font-extrabold leading-none tracking-[-0.025em] text-navy-800 [text-wrap:balance]">
-            Power your home
-            <br />
-            with <span className="text-green-600">the sun.</span>
+          <h1
+            className="animate-fade-up m-0 font-display text-[clamp(44px,6.6vw,86px)] font-extrabold leading-[0.96] tracking-[-0.03em] text-white [text-wrap:balance]"
+            style={{ animationDelay: "130ms" }}
+          >
+            Power your home with <span className="text-green-300">the sun.</span>
           </h1>
 
-          <p className="m-0 mb-7 mt-5 max-w-[480px] font-body text-[clamp(16px,1.25vw,18.5px)] leading-relaxed text-ash-700">
-            Premium panels, accredited installation and a 25-year warranty —
+          <p
+            className="animate-fade-up m-0 mt-6 max-w-[500px] font-body text-[clamp(16px,1.25vw,18.5px)] leading-relaxed text-white/85"
+            style={{ animationDelay: "200ms" }}
+          >
+            Premium panels, accredited installation and a 25-year warranty,
             turning Australian power bills into savings since 2016.
           </p>
 
-          <div className="mb-[30px] flex flex-wrap gap-3">
+          <div
+            className="animate-fade-up mt-8 flex flex-wrap gap-3"
+            style={{ animationDelay: "270ms" }}
+          >
             <Button
               variant="primary"
               size="lg"
@@ -79,80 +93,33 @@ export function Hero() {
             </Button>
             <button
               onClick={() => scrollToId("calculator")}
-              className="ke-press inline-flex items-center gap-2.5 rounded-pill border-[1.5px] border-green-300 bg-white px-7 py-[15px] font-display text-[17px] font-bold text-forest-700 hover:bg-green-50"
+              className="ke-press inline-flex items-center gap-2.5 rounded-pill border border-white/25 bg-white/10 px-7 py-[15px] font-display text-[17px] font-bold text-white hover:bg-white/[0.18]"
             >
               <Icon name="calculator" size={19} /> Calculate Savings
             </button>
           </div>
-
-          <div className="flex items-center gap-7 border-t border-ash-200 pt-6">
-            <StatPill value="2,847+" label="Homes powered" />
-            <div className="h-9 w-px bg-ash-200" />
-            <StatPill value="25 yr" label="Panel warranty" />
-            <div className="h-9 w-px bg-ash-200" />
-            <StatPill value="$0" label="Upfront options" />
-          </div>
         </div>
 
-        {/* RIGHT — image + floating proof cards */}
-        <div className="relative h-[360px] self-center lg:h-[min(78%,560px)]">
-          <div className="absolute inset-0 overflow-hidden rounded-xl shadow-lg">
-            <Image
-              src="/assets/photo-family-house.jpg"
-              alt="Australian family at home with rooftop solar"
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 55vw"
-              className="object-cover [object-position:46%_42%]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-forest-900/5 to-forest-900/30" />
-          </div>
-
-          {/* Savings — top left */}
-          <FloatCard className="left-2 top-5 flex items-center gap-3 px-[18px] py-[15px] lg:-left-6">
-            <span className="flex h-11 w-11 flex-none items-center justify-center rounded-[12px] bg-green-50 text-green-600">
-              <Icon name="trend" size={24} />
-            </span>
-            <div>
-              <div className="font-display text-[22px] font-extrabold leading-none text-green-600">
-                ≈ $2,310/yr
-              </div>
-              <div className="mt-1 font-body text-xs font-semibold text-ash-500">
-                Average bill savings
-              </div>
+        {/* Solid trust bar, grounded at the foot of the photo */}
+        <div
+          className="animate-fade-up flex w-full max-w-[560px] overflow-hidden rounded-xl bg-forest-900/85 shadow-[0_24px_60px_rgba(0,0,0,0.45)] ring-1 ring-inset ring-white/12"
+          style={{ animationDelay: "340ms" }}
+        >
+          {TRUST.map((t, i) => (
+            <div
+              key={t.label}
+              className={`flex flex-1 flex-col px-5 py-[18px] sm:px-7 ${
+                i > 0 ? "border-l border-white/12" : ""
+              }`}
+            >
+              <span className="font-display text-[clamp(20px,2.2vw,27px)] font-extrabold leading-none text-green-300">
+                {t.value}
+              </span>
+              <span className="mt-1.5 font-body text-[12px] font-semibold text-white/65">
+                {t.label}
+              </span>
             </div>
-          </FloatCard>
-
-          {/* Warranty — top right */}
-          <FloatCard className="right-2 top-5 flex items-center gap-2.5 px-[15px] py-[11px] lg:-right-4">
-            <Icon name="shield" size={22} className="text-gold-500" />
-            <div className="font-display text-[13.5px] font-extrabold leading-[1.15] text-navy-700">
-              25-Year
-              <br />
-              Warranty
-            </div>
-          </FloatCard>
-
-          {/* Offer — bottom */}
-          <FloatCard className="-bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-[18px] whitespace-nowrap px-5 py-4">
-            <div>
-              <div className="mb-[3px] font-body text-[11.5px] font-bold uppercase tracking-[0.06em] text-green-600">
-                Most popular
-              </div>
-              <div className="font-display text-[17px] font-extrabold text-navy-700">
-                10.12 kW System
-              </div>
-            </div>
-            <div className="h-[38px] w-px bg-ash-200" />
-            <div>
-              <div className="font-display text-[26px] font-extrabold leading-none text-green-600">
-                $5,490
-              </div>
-              <div className="mt-[3px] font-body text-[11px] font-semibold text-ash-500">
-                +GST · after rebate
-              </div>
-            </div>
-          </FloatCard>
+          ))}
         </div>
       </div>
     </section>

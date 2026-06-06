@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { PHONE, PHONE_HREF, EMAIL } from "@/lib/nav";
 
 const PROMISES = [
@@ -25,13 +24,12 @@ export function QuoteCTA() {
       <div className="container-ke grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
         {/* Copy */}
         <div>
-          <Eyebrow light>Ready to Start Saving?</Eyebrow>
-          <h2 className="my-3 mb-4 font-display text-[clamp(30px,3.4vw,44px)] font-extrabold leading-[1.08] tracking-[-0.02em] text-white">
+          <h2 className="mb-4 font-display text-[clamp(30px,3.4vw,44px)] font-extrabold leading-[1.08] tracking-[-0.02em] text-white">
             Get your free solar quote in under 2 minutes.
           </h2>
           <p className="mb-[26px] max-w-[420px] font-body text-[17px] leading-relaxed text-[#a9c4a3]">
-            No obligations, no pushy sales calls. Tell us a little about your
-            place and we&rsquo;ll tailor the numbers.
+            Tell us a little about your place and we&rsquo;ll tailor the
+            numbers. Everything in the list below is included, no exceptions.
           </p>
           <div className="mb-[26px] grid grid-cols-1 gap-3 sm:grid-cols-2">
             {PROMISES.map((p) => (
@@ -79,35 +77,54 @@ export function QuoteCTA() {
               }}
             >
               <h3 className="mb-[18px] font-display text-[21px] font-bold text-navy-700">
-                Get Your FREE Quote
+                Get Your Free Quote
               </h3>
               <div className="mb-3 grid grid-cols-2 gap-3">
-                <input className={inputClass} placeholder="First name" required />
-                <input className={inputClass} placeholder="Last name" required />
+                <label className="flex flex-col gap-1">
+                  <span className="sr-only">First name</span>
+                  <input className={inputClass} placeholder="First name" required aria-required="true" />
+                </label>
+                <label className="flex flex-col gap-1">
+                  <span className="sr-only">Last name</span>
+                  <input className={inputClass} placeholder="Last name" required aria-required="true" />
+                </label>
               </div>
               <div className="mb-[18px] flex flex-col gap-3">
-                <input
-                  className={inputClass}
-                  type="email"
-                  placeholder="Email address"
-                  required
-                />
+                <label className="flex flex-col gap-1">
+                  <span className="sr-only">Email address</span>
+                  <input
+                    className={inputClass}
+                    type="email"
+                    placeholder="Email address"
+                    required
+                    aria-required="true"
+                  />
+                </label>
                 <div className="grid grid-cols-2 gap-3">
-                  <input className={inputClass} placeholder="Phone" required />
-                  <input className={inputClass} placeholder="Suburb" required />
+                  <label className="flex flex-col gap-1">
+                    <span className="sr-only">Phone number</span>
+                    <input className={inputClass} type="tel" placeholder="Phone" required aria-required="true" />
+                  </label>
+                  <label className="flex flex-col gap-1">
+                    <span className="sr-only">Suburb</span>
+                    <input className={inputClass} placeholder="Suburb" required aria-required="true" />
+                  </label>
                 </div>
-                <select className={inputClass} defaultValue="">
-                  <option value="" disabled>
-                    Monthly electricity bill
-                  </option>
-                  <option>$100 – $250</option>
-                  <option>$250 – $400</option>
-                  <option>$400 – $600</option>
-                  <option>$600+</option>
-                </select>
+                <label className="flex flex-col gap-1">
+                  <span className="sr-only">Monthly electricity bill</span>
+                  <select className={inputClass} defaultValue="" aria-required="true">
+                    <option value="" disabled>
+                      Monthly electricity bill
+                    </option>
+                    <option>$100 – $250</option>
+                    <option>$250 – $400</option>
+                    <option>$400 – $600</option>
+                    <option>$600+</option>
+                  </select>
+                </label>
               </div>
               <Button type="submit" variant="primary" size="lg" icon="arrow" fullWidth>
-                Get My FREE Quote
+                Get My Free Quote
               </Button>
               <p className="mt-3.5 text-center font-body text-xs text-ash-500">
                 <Icon
@@ -128,7 +145,7 @@ export function QuoteCTA() {
                 You&rsquo;re all set! 🌱
               </h3>
               <p className="mb-[22px] font-body text-base leading-relaxed text-ash-700">
-                Thanks — a Kratos Energy specialist will call you within one
+                Thanks. A Kratos Energy specialist will call you within one
                 business day with your tailored quote.
               </p>
               <Button variant="ghost" size="md" onClick={() => setSent(false)}>

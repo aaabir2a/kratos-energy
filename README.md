@@ -17,7 +17,7 @@ Tailwind theme, and each marketing section is an isolated, reusable component.
 | Framework    | Next.js 14 (App Router, RSC)            |
 | Language     | TypeScript (strict)                     |
 | Styling      | Tailwind CSS 3 + brand theme tokens     |
-| Fonts        | `next/font` — Poppins (display), Nunito Sans (body) |
+| Fonts        | `next/font` — Bricolage Grotesque (display), Hanken Grotesk (body) |
 | Images       | `next/image`                            |
 | Lint         | ESLint (`next/core-web-vitals`)         |
 
@@ -88,8 +88,8 @@ src/
 | Heading navy     | `text-navy-700`       | `#1e3a8a` |
 | Accent gold      | `bg-gold-400`         | `#f4ce47` |
 | CEC orange       | `text-cec`            | `#F39200` |
-| Display font     | `font-display`        | Poppins   |
-| Body font        | `font-body`           | Nunito Sans |
+| Display font     | `font-display`        | Bricolage Grotesque |
+| Body font        | `font-body`           | Hanken Grotesk |
 
 ---
 

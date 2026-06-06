@@ -5,6 +5,7 @@ import type { Config } from "tailwindcss";
  * Mirrors the tokens defined in the design system (colors_and_type.css)
  * so utilities like `bg-green-500`, `text-navy-700`, `shadow-green`,
  * `rounded-lg` and `font-display` map 1:1 to the brand.
+ * Type: Bricolage Grotesque (display) + Hanken Grotesk (body).
  */
 const config: Config = {
   content: ["./src/**/*.{ts,tsx,mdx}"],

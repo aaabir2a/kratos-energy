@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -17,6 +23,18 @@
   textarea:focus {
     @apply border-green-500;
     box-shadow: 0 0 0 3px rgba(108, 174, 52, 0.32);
+    outline: none;
+  }
+
+  /* Keyboard-only focus ring for all interactive elements */
+  :focus-visible {
+    outline: 2px solid #6cae34;
+    outline-offset: 3px;
+  }
+
+  /* Suppress focus ring on mouse/touch for elements that already have hover states */
+  button:not(:focus-visible),
+  a:not(:focus-visible) {
     outline: none;
   }
 
