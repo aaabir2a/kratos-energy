@@ -17,14 +17,16 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
       <main>{children}</main>
       <Footer />
       <FloatingActions />
-      <script
+      <Script
         src="https://api.ambrosianuk.com/widget.js"
+        strategy="afterInteractive"
         data-api-url="https://api.ambrosianuk.com"
         data-api-key="sk__qDL1B2opmjj3vZEhJSQzor2XRTuo2-yFluwhH76cm4"
         data-chatbot-id="bb7f52662f124ba5b188978d8549c165"
         data-primary-color="#5b5bf5"
         data-title="Support"
-        data-position="bottom-right"></script>
+        data-position="bottom-right"
+      />
 
     </>
   );
