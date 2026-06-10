@@ -16,7 +16,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative isolate flex min-h-[640px] items-stretch overflow-hidden bg-forest-900 lg:min-h-[calc(100vh-116px)]"
+      className="relative isolate flex min-h-[540px] items-stretch overflow-hidden bg-forest-900 lg:min-h-[600px]"
     >
       {/* Full-bleed photograph — the surface itself */}
       <Image
@@ -39,7 +39,7 @@ export function Hero() {
         className="pointer-events-none absolute left-[-6%] top-[26%] -z-[5] h-[460px] w-[460px] rounded-full bg-green-400/20 blur-[130px]"
       />
 
-      <div className="container-ke relative z-10 flex w-full flex-col justify-end gap-9 pb-10 pt-28 sm:pt-32 lg:gap-12 lg:pb-14">
+      <div className="container-ke relative z-10 flex w-full flex-col justify-center gap-8 py-10 sm:py-12 lg:gap-10 lg:py-12">
         {/* Copy */}
         <div className="max-w-[660px]">
           <div
@@ -65,7 +65,7 @@ export function Hero() {
           </div>
 
           <h1
-            className="animate-fade-up m-0 font-display text-[clamp(44px,6.6vw,86px)] font-extrabold leading-[0.96] tracking-[-0.03em] text-white [text-wrap:balance]"
+            className="animate-fade-up m-0 font-display text-[clamp(40px,5.6vw,74px)] font-extrabold leading-[0.96] tracking-[-0.03em] text-white [text-wrap:balance]"
             style={{ animationDelay: "130ms" }}
           >
             Power your home with <span className="text-green-300">the sun.</span>

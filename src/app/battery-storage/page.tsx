@@ -5,11 +5,12 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
+import { BATTERIES } from "@/lib/batteries";
 
 export const metadata: Metadata = {
   title: "Home Battery Storage",
   description:
-    "Store your daytime solar and power your home after dark. Kratos Energy installs Tesla, Enphase and Sungrow batteries with generous state rebates.",
+    "Store your daytime solar and power your home after dark. Kratos Energy installs Fox ESS, GoodWe and Sigenergy batteries with generous state rebates.",
 };
 
 const BENEFITS = [
@@ -17,12 +18,6 @@ const BENEFITS = [
   ["shield", "Blackout protection", "Keep the lights, fridge and Wi-Fi on during grid outages with backup-capable batteries."],
   ["trend", "Bigger bill savings", "Stop exporting cheaply and buying back expensively — self-consume up to 90%."],
   ["zap", "EV & smart ready", "Charge your car from stored solar and automate it all from one app."],
-];
-
-const BATTERIES = [
-  ["Tesla Powerwall 3", "13.5 kWh", "Whole-home backup"],
-  ["Enphase IQ Battery 5P", "5.0 kWh", "Modular & expandable"],
-  ["Sungrow SBR", "9.6–25.6 kWh", "Stackable high-voltage"],
 ];
 
 export default function BatteryPage() {
@@ -106,17 +101,48 @@ export default function BatteryPage() {
             </h2>
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {BATTERIES.map(([name, cap, tag]) => (
-              <div key={name} className="ke-lift rounded-lg border border-ash-200 bg-white p-7 shadow-md">
-                <Icon name="battery" size={30} className="text-green-600" />
-                <h3 className="mt-4 font-display text-[20px] font-bold text-navy-700">
-                  {name}
-                </h3>
-                <div className="mt-1 font-display text-[15px] font-extrabold text-green-600">
-                  {cap}
+            {BATTERIES.map((b) => (
+              <article
+                key={b.brand}
+                className="ke-lift flex flex-col overflow-hidden rounded-lg border border-ash-200 bg-white shadow-md"
+              >
+                <div className="relative aspect-square border-b border-ash-200 bg-white">
+                  <Image
+                    src={b.image}
+                    alt={`${b.brand} ${b.model} home battery`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-contain p-6"
+                  />
+                  <span className="absolute left-4 top-4 rounded-pill bg-forest-900/90 px-3 py-1.5 font-display text-[12px] font-bold text-white">
+                    {b.brand}
+                  </span>
                 </div>
-                <p className="mt-2 font-body text-[14px] text-ash-700">{tag}</p>
-              </div>
+                <div className="flex flex-1 flex-col p-7">
+                  <h3 className="font-display text-[20px] font-bold text-navy-700">
+                    {b.model}
+                  </h3>
+                  <div className="mt-1 font-display text-[15px] font-extrabold text-green-600">
+                    {b.capacity}
+                  </div>
+                  <ul className="mt-4 flex flex-col gap-2.5">
+                    {b.features.map((f) => (
+                      <li
+                        key={f}
+                        className="flex items-center gap-2.5 font-body text-[14px] text-ink"
+                      >
+                        <Icon
+                          name="check"
+                          size={15}
+                          stroke={3}
+                          className="flex-none text-green-500"
+                        />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
             ))}
           </div>
         </div>

@@ -2,6 +2,7 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Hero } from "@/components/sections/Hero";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { SystemPricing } from "@/components/sections/SystemPricing";
+import { BatteryRange } from "@/components/sections/BatteryRange";
 import { BrandWall } from "@/components/sections/BrandWall";
 import { SavingsCalculator } from "@/components/sections/SavingsCalculator";
 import { Services } from "@/components/sections/Services";
@@ -16,6 +17,7 @@ export default function HomePage() {
     <SiteLayout>
       <Hero />
       <TrustBar />
+      <BatteryRange />
       <SystemPricing />
       <BrandWall />
       <SavingsCalculator />
