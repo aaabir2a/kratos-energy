@@ -46,6 +46,7 @@ export const NAV: NavLink[] = [
       { label: "Solar Output Calculator", href: "/calculators/solar-output" },
       { label: "Feed-in Tariff Calculator", href: "/calculators/feed-in-tariff" },
       { label: "EV Charging Cost", href: "/calculators/ev-charging-cost" },
+      { label: "Solar by State", href: "/solar" },
       { label: "Build Your System", href: "/build" },
       { label: "Government Rebates", href: "/rebates" },
       { label: "Finance & $0 Upfront", href: "/finance" },
