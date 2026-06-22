@@ -43,6 +43,27 @@ const CALCULATORS: Calc[] = [
     tag: "Bill savings",
   },
   {
+    href: "/calculators/solar-output",
+    icon: "sun",
+    title: "Solar Output Calculator",
+    desc: "Estimate how many kWh your system generates per day, month and year, plus CO₂ avoided.",
+    tag: "Generation",
+  },
+  {
+    href: "/calculators/feed-in-tariff",
+    icon: "zap",
+    title: "Feed-in Tariff Calculator",
+    desc: "See what your exported solar earns with 2026 feed-in rates by state.",
+    tag: "Export earnings",
+  },
+  {
+    href: "/calculators/ev-charging-cost",
+    icon: "battery",
+    title: "EV Charging Cost Calculator",
+    desc: "Compare the yearly cost of charging your EV on solar versus the grid.",
+    tag: "EV charging",
+  },
+  {
     href: "/build",
     icon: "wrench",
     title: "Build Your System",
