@@ -39,10 +39,12 @@ export const NAV: NavLink[] = [
     label: "Solar Savings",
     href: "/savings-calculator",
     menu: [
+      { label: "All Calculators", href: "/calculators" },
       { label: "Savings Calculator", href: "/savings-calculator" },
+      { label: "Solar Rebate Calculator", href: "/calculators/solar-rebate" },
+      { label: "Battery Rebate Calculator", href: "/calculators/battery-rebate" },
       { label: "Build Your System", href: "/build" },
       { label: "Government Rebates", href: "/rebates" },
-      { label: "Rebate Calculator", href: "/calculators/solar-rebate" },
       { label: "Finance & $0 Upfront", href: "/finance" },
     ],
   },

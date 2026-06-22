@@ -95,6 +95,29 @@ export function calcFederalBatteryRebate(usableKwh: number): number {
   return Math.round(rebate);
 }
 
+export type BatteryTier = {
+  label: string; // capacity band, e.g. "First 14 kWh"
+  kwh: number; // usable kWh falling in this band
+  rate: number; // $ per kWh applied
+  amount: number; // rebate from this band
+};
+
+/** Per-tier breakdown of the federal battery rebate, for display. */
+export function federalBatteryBreakdown(usableKwh: number): BatteryTier[] {
+  const bands: { label: string; from: number; limit: number; factor: number }[] = [
+    { label: "First 14 kWh", from: 0, limit: 14, factor: 1.0 },
+    { label: "14 – 28 kWh", from: 14, limit: 28, factor: 0.6 },
+    { label: "28 – 50 kWh", from: 28, limit: 50, factor: 0.15 },
+  ];
+  return bands
+    .map((b) => {
+      const kwh = Math.max(0, Math.min(usableKwh, b.limit) - b.from);
+      const rate = FED_BATTERY_FULL_RATE * b.factor;
+      return { label: b.label, kwh, rate, amount: Math.round(kwh * rate) };
+    })
+    .filter((t) => t.kwh > 0);
+}
+
 /* ----------------------------------------------------- State lookup */
 
 export type StateCode = "NSW" | "VIC" | "QLD" | "SA" | "WA" | "TAS" | "ACT" | "NT";
