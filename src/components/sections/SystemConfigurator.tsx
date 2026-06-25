@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 import {
@@ -22,7 +22,6 @@ import {
   type Phase,
   type ShadingId,
   type SolarSystem,
-  type BatteryOption,
 } from "@/lib/systemPricing";
 
 /* ---------------------------------------------------------------- helpers */
@@ -123,20 +122,18 @@ export function SystemConfigurator() {
 
   const roof = useMemo(() => estimateRoof(sqFt, orientation, shading), [sqFt, orientation, shading]);
 
-  // System
-  const [solar, setSolar] = useState<SolarSystem>(SOLAR[1]);
+  // System. Selections are stored as overrides and the effective values are
+  // derived, so changing brand/phase/roof can't leave a stale choice selected.
   const [phase, setPhase] = useState<Phase>("1P");
   const [brand, setBrand] = useState<Brand>("Goodwe");
-  const [inverter, setInverter] = useState<Inverter | null>(null);
-  const [battery, setBattery] = useState<BatteryOption | null>(null);
-  const [ev, setEv] = useState<EvCharger>(EV_CHARGERS[0]);
+  const [solarOverride, setSolarOverride] = useState<SolarSystem | null>(null);
+  const [inverterOverride, setInverterOverride] = useState<Inverter | null>(null);
+  const [batteryId, setBatteryId] = useState<string | null>(null);
+  const [evChoice, setEvChoice] = useState<EvCharger>(EV_CHARGERS[0]);
   const [done, setDone] = useState(false);
 
-  // Snap solar to the roof recommendation only until the user overrides it.
-  const [solarTouched, setSolarTouched] = useState(false);
-  useEffect(() => {
-    if (!solarTouched) setSolar(roof.recommended);
-  }, [roof, solarTouched]);
+  // Solar follows the roof recommendation until the user picks a size.
+  const solar = solarOverride ?? roof.recommended;
 
   const inverterOpts = useMemo(
     () => INVERTERS.filter((i) => i.brand === brand && i.phase === phase),
@@ -145,20 +142,17 @@ export function SystemConfigurator() {
   const batteryOpts = useMemo(() => BATTERY_OPTIONS.filter((b) => b.brand === brand), [brand]);
   const recInverter = useMemo(() => bestInverter(inverterOpts, solar.sizeKw), [inverterOpts, solar]);
 
-  // Keep inverter valid for the current brand+phase.
-  useEffect(() => {
-    setInverter((prev) => (prev && inverterOpts.some((o) => o.id === prev.id) ? prev : recInverter));
-  }, [inverterOpts, recInverter]);
+  // Inverter: the user's pick if it's valid for this brand+phase, else best-fit.
+  const inverter =
+    inverterOverride && inverterOpts.some((o) => o.id === inverterOverride.id)
+      ? inverterOverride
+      : recInverter;
 
-  // Keep battery valid for the current brand.
-  useEffect(() => {
-    setBattery((prev) => (prev && batteryOpts.some((o) => o.id === prev.id) ? prev : null));
-  }, [batteryOpts]);
+  // Battery: resolve the chosen id within the current brand (else none).
+  const battery = batteryId ? batteryOpts.find((b) => b.id === batteryId) ?? null : null;
 
-  // 22kW charger needs three-phase supply.
-  useEffect(() => {
-    if (phase === "1P" && ev.phase === "3P") setEv(EV_CHARGERS[0]);
-  }, [phase, ev]);
+  // 22kW charger needs three-phase supply — fall back to none on single-phase.
+  const ev = evChoice.phase === "3P" && phase === "1P" ? EV_CHARGERS[0] : evChoice;
 
   const totalCost =
     solar.finalPrice + (inverter?.price ?? 0) + (battery?.finalPrice ?? 0) + ev.price;
@@ -305,8 +299,7 @@ export function SystemConfigurator() {
                     active={solar.id === s.id}
                     recommended={roof.recommended.id === s.id}
                     onClick={() => {
-                      setSolar(s);
-                      setSolarTouched(true);
+                      setSolarOverride(s);
                     }}
                     title={`${s.sizeKw} kW`}
                     sub={`${s.panels} panels · ${s.recInverter} inverter`}
@@ -387,7 +380,7 @@ export function SystemConfigurator() {
                     key={iv.id}
                     active={inverter?.id === iv.id}
                     recommended={recInverter?.id === iv.id}
-                    onClick={() => setInverter(iv)}
+                    onClick={() => setInverterOverride(iv)}
                     title={iv.model}
                     sub={`${iv.kw} kW · ${iv.phase}`}
                     meta={money(iv.price)}
@@ -409,7 +402,7 @@ export function SystemConfigurator() {
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <Tile
                   active={battery === null}
-                  onClick={() => setBattery(null)}
+                  onClick={() => setBatteryId(null)}
                   title="No battery"
                   sub="Add later anytime"
                   meta="Included"
@@ -420,7 +413,7 @@ export function SystemConfigurator() {
                     <Tile
                       key={b.id}
                       active={battery?.id === b.id}
-                      onClick={() => setBattery(b)}
+                      onClick={() => setBatteryId(b.id)}
                       title={`${b.kwh} kWh`}
                       sub={b.model}
                       meta={money(b.finalPrice)}
@@ -447,7 +440,7 @@ export function SystemConfigurator() {
                       key={c.id}
                       active={ev.id === c.id}
                       disabled={blocked}
-                      onClick={() => !blocked && setEv(c)}
+                      onClick={() => !blocked && setEvChoice(c)}
                       title={c.label}
                       sub={blocked ? "Needs three-phase supply" : c.sub}
                       meta={c.price ? money(c.price) : "Included"}

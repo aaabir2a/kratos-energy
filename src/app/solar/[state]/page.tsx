@@ -23,8 +23,13 @@ export function generateStaticParams() {
   return STATE_META.map((s) => ({ state: s.slug }));
 }
 
-export function generateMetadata({ params }: { params: { state: string } }): Metadata {
-  const s = stateBySlug(params.state);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ state: string }>;
+}): Promise<Metadata> {
+  const { state } = await params;
+  const s = stateBySlug(state);
   if (!s) return {};
   return {
     title: `Solar Rebates & Costs in ${s.name} ${YEAR} — STC, Battery & Savings`,
@@ -38,8 +43,9 @@ export function generateMetadata({ params }: { params: { state: string } }): Met
   };
 }
 
-export default function StatePage({ params }: { params: { state: string } }) {
-  const s = stateBySlug(params.state);
+export default async function StatePage({ params }: { params: Promise<{ state: string }> }) {
+  const { state } = await params;
+  const s = stateBySlug(state);
   if (!s) notFound();
 
   const zone = zoneForPostcode(s.capitalPostcode)!;

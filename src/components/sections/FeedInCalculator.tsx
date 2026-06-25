@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 import {
@@ -15,15 +15,14 @@ export function FeedInCalculator() {
   const [postcode, setPostcode] = useState("");
   const [systemKw, setSystemKw] = useState(6.6);
   const [exportShare, setExportShare] = useState(50); // % of generation exported
-  const [fit, setFit] = useState(5); // c/kWh, editable
+  const [fitOverride, setFitOverride] = useState<number | null>(null);
 
   const pc = /^\d{4}$/.test(postcode) ? parseInt(postcode, 10) : null;
   const state = pc !== null ? stateForPostcode(pc) : null;
 
-  // Seed the feed-in rate from the state default when postcode resolves.
-  useEffect(() => {
-    if (state) setFit(ENERGY_BY_STATE[state].feedInTariff);
-  }, [state]);
+  // Feed-in rate: the state default unless the user has typed their own.
+  const fit = fitOverride ?? (state ? ENERGY_BY_STATE[state].feedInTariff : 5);
+  const setFit = (v: number) => setFitOverride(Math.max(0, v));
 
   const res = useMemo(() => {
     if (!state) return null;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 import {
@@ -14,18 +14,17 @@ import {
 export function EvChargingCalculator() {
   const [postcode, setPostcode] = useState("");
   const [kmPerWeek, setKmPerWeek] = useState(250);
-  const [importTariff, setImportTariff] = useState(32); // c/kWh, editable
-  const [solarRate, setSolarRate] = useState(5); // opportunity cost of solar, c/kWh
+  const [importOverride, setImportOverride] = useState<number | null>(null);
+  const [solarOverride, setSolarOverride] = useState<number | null>(null);
 
   const pc = /^\d{4}$/.test(postcode) ? parseInt(postcode, 10) : null;
   const state = pc !== null ? stateForPostcode(pc) : null;
 
-  useEffect(() => {
-    if (state) {
-      setImportTariff(ENERGY_BY_STATE[state].importTariff);
-      setSolarRate(ENERGY_BY_STATE[state].feedInTariff);
-    }
-  }, [state]);
+  // Rates: state defaults unless the user has typed their own.
+  const importTariff = importOverride ?? (state ? ENERGY_BY_STATE[state].importTariff : 32);
+  const solarRate = solarOverride ?? (state ? ENERGY_BY_STATE[state].feedInTariff : 5);
+  const setImportTariff = (v: number) => setImportOverride(Math.max(0, v));
+  const setSolarRate = (v: number) => setSolarOverride(Math.max(0, v));
 
   const res = useMemo(() => {
     const annualKm = kmPerWeek * 52;

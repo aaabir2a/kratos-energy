@@ -7,14 +7,15 @@ import { GuideDownload } from "@/components/sections/GuideDownload";
 import { Icon } from "@/components/ui/Icon";
 import { POSTS, getPost } from "@/lib/posts";
 
-type Params = { params: { slug: string } };
+type Params = { params: Promise<{ slug: string }> };
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata({ params }: Params): Metadata {
-  const post = getPost(params.slug);
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getPost(slug);
   if (!post) return { title: "Article not found" };
   return { title: post.title, description: post.excerpt };
 }
@@ -27,8 +28,9 @@ function formatDate(d: string) {
   });
 }
 
-export default function PostPage({ params }: Params) {
-  const post = getPost(params.slug);
+export default async function PostPage({ params }: Params) {
+  const { slug } = await params;
+  const post = getPost(slug);
   if (!post) notFound();
 
   const more = POSTS.filter((p) => p.slug !== post.slug).slice(0, 3);

@@ -14,15 +14,16 @@ import {
   type SolarSystem,
 } from "@/lib/systems";
 
-type Params = { params: { slug: string } };
+type Params = { params: Promise<{ slug: string }> };
 
 // Pre-render every system page at build time.
 export function generateStaticParams() {
   return SYSTEMS.map((s) => ({ slug: s.slug }));
 }
 
-export function generateMetadata({ params }: Params): Metadata {
-  const system = getSystem(params.slug);
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { slug } = await params;
+  const system = getSystem(slug);
   if (!system) return { title: "System not found" };
   return {
     title: `${system.size} Solar System`,
@@ -49,8 +50,9 @@ function RelatedCard({ s }: { s: SolarSystem }) {
   );
 }
 
-export default function SystemPage({ params }: Params) {
-  const system = getSystem(params.slug);
+export default async function SystemPage({ params }: Params) {
+  const { slug } = await params;
+  const system = getSystem(slug);
   if (!system) notFound();
 
   const enquire = system.price === null;
