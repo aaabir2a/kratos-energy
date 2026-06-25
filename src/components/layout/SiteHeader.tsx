@@ -34,7 +34,7 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
         shadow && "shadow-md",
       )}
     >
-      <div className="container-ke flex h-[78px] items-center gap-[22px]">
+      <div className="mx-auto flex h-[78px] w-full max-w-[1280px] items-center gap-5 px-5 sm:px-8">
         {/* Brand cluster */}
         <Link href="/" className="flex flex-none items-center" aria-label="Kratos Energy home">
           <Logo className="h-[56px] w-auto" priority />
@@ -44,8 +44,9 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
           <CECBadge />
         </div>
 
-        {/* Desktop nav */}
-        <nav className="ml-auto hidden items-center gap-0.5 nav:flex">
+        {/* Desktop nav + CTA cluster */}
+        <div className="ml-auto hidden items-center gap-4 nav:flex">
+        <nav className="flex items-center gap-0.5">
           {NAV.map((item, i) => {
             const active = isActive(item.href);
             return (
@@ -58,7 +59,7 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
                 <Link
                   href={item.href}
                   className={cn(
-                    "inline-flex items-center gap-[5px] whitespace-nowrap rounded-sm border-b-2 px-[9px] py-2 font-display text-[14px] font-semibold transition-colors",
+                    "inline-flex items-center gap-[4px] whitespace-nowrap rounded-sm border-b-2 px-[9px] py-2 font-display text-[13.5px] font-semibold transition-colors",
                     active
                       ? "border-green-500 text-green-600"
                       : "border-transparent text-ash-700 hover:text-green-600",
@@ -106,19 +107,23 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
           })}
         </nav>
 
-        {/* Desktop CTA */}
-        <Link
-          href="/get-a-quote"
-          className="ke-press group ml-5 hidden items-center gap-2 whitespace-nowrap rounded-pill bg-forest-900 px-[22px] py-[11px] font-display text-[14px] font-bold text-white transition-colors duration-200 hover:bg-forest-800 nav:inline-flex"
-        >
-          Design My Solar Plan
-          <Icon
-            name="arrow"
-            size={15}
-            stroke={2.5}
-            className="text-green-400 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none"
-          />
-        </Link>
+          {/* hairline divider before the CTA */}
+          <span className="h-7 w-px flex-none bg-ash-200" aria-hidden />
+
+          {/* Desktop CTA */}
+          <Link
+            href="/get-a-quote"
+            className="ke-press group flex flex-none items-center gap-2 whitespace-nowrap rounded-pill bg-forest-900 px-[20px] py-[11px] font-display text-[13.5px] font-bold text-white transition-colors duration-200 hover:bg-forest-800"
+          >
+            Design My Solar Plan
+            <Icon
+              name="arrow"
+              size={15}
+              stroke={2.5}
+              className="text-green-400 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none"
+            />
+          </Link>
+        </div>
 
         {/* Mobile trigger */}
         <button

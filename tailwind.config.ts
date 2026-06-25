@@ -79,8 +79,9 @@ const config: Config = {
         container: "1180px",
       },
       screens: {
-        // Dedicated breakpoint: collapse the wide 9-item nav into a hamburger
-        nav: "1180px",
+        // Dedicated breakpoint: collapse the wide nav into a hamburger until
+        // there is room for the logo, trust badge, nav and CTA on one row.
+        nav: "1280px",
       },
       transitionTimingFunction: {
         soft: "cubic-bezier(.22,.61,.36,1)",

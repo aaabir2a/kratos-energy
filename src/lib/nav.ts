@@ -13,7 +13,6 @@ export type NavLink = {
  * anchors ("/#id"), so they work from any page.
  */
 export const NAV: NavLink[] = [
-  { label: "Home", href: "/" },
   {
     label: "Our Services",
     href: "/#services",
@@ -55,7 +54,6 @@ export const NAV: NavLink[] = [
   { label: "Projects", href: "/#reviews" },
   { label: "Blog", href: "/blog" },
   { label: "Refer", href: "/refer" },
-  { label: "About", href: "/#services" },
   { label: "Contact", href: "/get-a-quote" },
 ];
 
