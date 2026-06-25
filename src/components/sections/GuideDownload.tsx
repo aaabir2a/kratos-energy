@@ -26,7 +26,7 @@ export function GuideDownload() {
             </span>
           </div>
           <h2 className="mb-3 font-display text-[clamp(28px,3.2vw,42px)] font-extrabold leading-[1.08] tracking-[-0.02em] text-white">
-            The 2025 Australian Solar Buyer&rsquo;s Guide.
+            The 2026 Australian Solar Buyer&rsquo;s Guide.
           </h2>
           <p className="mb-6 max-w-[440px] font-body text-[17px] leading-relaxed text-[#c4d2ef]">
             Everything you need to know before going solar — costs, rebates,
@@ -100,7 +100,7 @@ export function GuideDownload() {
                 Check your inbox! 📩
               </h3>
               <p className="font-body text-[15.5px] leading-relaxed text-ash-700">
-                Your free 2025 Solar Buyer&rsquo;s Guide is on its way.
+                Your free 2026 Solar Buyer&rsquo;s Guide is on its way.
               </p>
             </div>
           )}

@@ -9,7 +9,7 @@ import { Services } from "@/components/sections/Services";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { RebateBanner } from "@/components/sections/RebateBanner";
-import { GuideDownload } from "@/components/sections/GuideDownload";
+// import { GuideDownload } from "@/components/sections/GuideDownload";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 
 export default function HomePage() {
@@ -25,7 +25,7 @@ export default function HomePage() {
       <CaseStudies />
       <Testimonials />
       <RebateBanner />
-      <GuideDownload />
+      {/* <GuideDownload /> */}
       <QuoteCTA />
     </SiteLayout>
   );

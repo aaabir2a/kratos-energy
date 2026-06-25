@@ -14,7 +14,7 @@ export default function RebatesPage() {
   return (
     <SiteLayout>
       <PageHero
-        eyebrow="Government Rebates 2025"
+        eyebrow="Government Rebates 2026"
         title={
           <>
             How much can <span className="text-green-600">you claim?</span>

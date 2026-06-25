@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteLayout } from "@/components/layout/SiteLayout";
-import { GuideDownload } from "@/components/sections/GuideDownload";
+// import { GuideDownload } from "@/components/sections/GuideDownload";
 import { Icon } from "@/components/ui/Icon";
 import { POSTS, getPost } from "@/lib/posts";
 
@@ -159,7 +159,7 @@ export default async function PostPage({ params }: Params) {
         </div>
       </section>
 
-      <GuideDownload />
+      {/* <GuideDownload /> */}
     </SiteLayout>
   );
 }

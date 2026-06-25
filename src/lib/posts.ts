@@ -13,17 +13,17 @@ export type Post = {
 
 export const POSTS: Post[] = [
   {
-    slug: "how-much-does-solar-cost-2025",
-    title: "How much does solar really cost in Australia in 2025?",
+    slug: "how-much-does-solar-cost-2026",
+    title: "How much does solar really cost in Australia in 2026?",
     excerpt:
       "A clear breakdown of system prices, rebates and payback periods — so you know exactly what to expect before you buy.",
     category: "Guides",
-    date: "2025-05-28",
+    date: "2026-05-28",
     readMins: 6,
     author: "Kratos Energy",
     cover: "/assets/photo-panels.jpg",
     body: [
-      { type: "p", text: "Solar pricing has never been more competitive — but the sticker price is only half the story. Here's how to think about the real cost of going solar in 2025." },
+      { type: "p", text: "Solar pricing has never been more competitive — but the sticker price is only half the story. Here's how to think about the real cost of going solar in 2026." },
       { type: "h2", text: "Typical system prices" },
       { type: "p", text: "After federal STCs, a quality 6.6kW system typically lands around $3,990, a 10kW around $5,490, and a 13.2kW around $7,990. Commercial systems are quoted per site." },
       { type: "h2", text: "What drives the price" },
@@ -34,11 +34,11 @@ export const POSTS: Post[] = [
   },
   {
     slug: "is-a-home-battery-worth-it",
-    title: "Is a home battery worth it in 2025?",
+    title: "Is a home battery worth it in 2026?",
     excerpt:
       "Batteries are cheaper than ever and rebates are generous — but the maths depends on how you use power. Here's the honest answer.",
     category: "Battery",
-    date: "2025-05-15",
+    date: "2026-05-15",
     readMins: 7,
     author: "Kratos Energy",
     cover: "/assets/photo-panel-battery.jpg",
@@ -56,7 +56,7 @@ export const POSTS: Post[] = [
     excerpt:
       "Federal STCs, state rebates and battery schemes can stack to thousands off your system. Here's how each one works.",
     category: "Rebates",
-    date: "2025-04-30",
+    date: "2026-04-30",
     readMins: 5,
     author: "Kratos Energy",
     cover: "/assets/photo-family-house.jpg",
@@ -74,7 +74,7 @@ export const POSTS: Post[] = [
     excerpt:
       "Bigger isn't always better. Match your system to your roof, your bill and your future plans with this quick guide.",
     category: "Guides",
-    date: "2025-04-12",
+    date: "2026-04-12",
     readMins: 4,
     author: "Kratos Energy",
     cover: "/assets/photo-panels.jpg",

@@ -101,4 +101,4 @@ src/
   routes when the corresponding pages are built.
 - Images live in `public/assets/`.
 
-© 2025 Kratos Energy. All rights reserved.
+© 2026 Kratos Energy. All rights reserved.

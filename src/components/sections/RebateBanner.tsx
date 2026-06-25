@@ -4,10 +4,12 @@ import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { cn, scrollToId } from "@/lib/utils";
 
+// STC step-down for a typical 10kW NSW system (Zone 3) as deeming falls to
+// the 2030 scheme end. Figures from the rebate engine — see src/lib/rebates.
 const COLS: [string, string, boolean][] = [
-  ["$2,870", "Current Rebate (2025)", true],
-  ["$2,200", "2026 Rebate (est.)", false],
-  ["$1,400", "2027 Rebate (est.)", false],
+  ["$2,620", "Current Rebate (2026)", true],
+  ["$2,090", "2027 Rebate (est.)", false],
+  ["$1,560", "2028 Rebate (est.)", false],
 ];
 
 export function RebateBanner() {

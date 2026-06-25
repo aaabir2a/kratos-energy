@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { ROICalculator } from "@/components/sections/ROICalculator";
-import { GuideDownload } from "@/components/sections/GuideDownload";
+// import { GuideDownload } from "@/components/sections/GuideDownload";
 
 export const metadata: Metadata = {
   title: "Solar Savings & ROI Calculator",
@@ -34,7 +34,7 @@ export default function SavingsCalculatorPage() {
         </div>
       </section>
 
-      <GuideDownload />
+      {/* <GuideDownload /> */}
     </SiteLayout>
   );
 }

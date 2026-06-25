@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
-import { GuideDownload } from "@/components/sections/GuideDownload";
+// import { GuideDownload } from "@/components/sections/GuideDownload";
 import { POSTS } from "@/lib/posts";
 
 export const metadata: Metadata = {
@@ -112,7 +112,7 @@ export default function BlogPage() {
         </div>
       </section>
 
-      <GuideDownload />
+      {/* <GuideDownload /> */}
     </SiteLayout>
   );
 }

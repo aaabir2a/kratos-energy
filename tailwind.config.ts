@@ -90,9 +90,14 @@ const config: Config = {
           "0%": { opacity: "0", transform: "translateY(16px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
+        flash: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.4" },
+        },
       },
       animation: {
         "fade-up": "fade-up .6s cubic-bezier(.22,.61,.36,1) both",
+        flash: "flash 1.4s ease-in-out infinite",
       },
     },
   },

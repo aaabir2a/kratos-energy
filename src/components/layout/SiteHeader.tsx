@@ -30,14 +30,14 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-[55] border-b border-ash-200 bg-white/95 backdrop-blur-md transition-shadow duration-200",
+        "sticky top-[38px] z-[55] border-b border-ash-200 bg-white/95 backdrop-blur-md transition-shadow duration-200",
         shadow && "shadow-md",
       )}
     >
       <div className="container-ke flex h-[78px] items-center gap-[22px]">
         {/* Brand cluster */}
         <Link href="/" className="flex flex-none items-center" aria-label="Kratos Energy home">
-          <Logo className="h-[46px] w-auto" priority />
+          <Logo className="h-[56px] w-auto" priority />
         </Link>
         <div className="hidden h-11 w-px flex-none bg-ash-300 md:block" />
         <div className="hidden flex-none md:block">
@@ -105,6 +105,15 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
             );
           })}
         </nav>
+
+        {/* Desktop CTA */}
+        <Link
+          href="/get-a-quote"
+          className="ke-press ml-3 hidden items-center gap-2 rounded-pill bg-green-500 px-[22px] py-[11px] font-display text-[14.5px] font-bold text-white shadow-green transition-colors hover:bg-green-600 nav:inline-flex"
+        >
+          Design My Solar Plan
+          <Icon name="arrow" size={16} stroke={2.4} />
+        </Link>
 
         {/* Mobile trigger */}
         <button

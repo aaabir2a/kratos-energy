@@ -4,12 +4,12 @@ import { PHONE, PHONE_HREF } from "@/lib/nav";
 /** Slim utility / promo strip above the header. */
 export function PromoBar() {
   return (
-    <div className="relative z-[60] bg-forest-900 text-[13px] text-[#eaf3e6]">
+    <div className="sticky top-0 z-[60] bg-forest-900 text-[13px] text-[#eaf3e6]">
       <div className="container-ke flex h-[38px] items-center gap-[18px]">
         <span className="inline-flex items-center gap-2 font-semibold">
           <Icon name="zap" size={13} fill="#f4ce47" stroke={0} className="text-gold-400" />
           <span>
-            <b className="text-gold-400">NSW Rebates 2025</b> — up to $2,870 off,
+            <b className="text-gold-400">NSW Rebates 2026</b> — up to $3,450 off,
             ending soon.
           </span>
         </span>
@@ -20,9 +20,9 @@ export function PromoBar() {
           </span>
           <a
             href={PHONE_HREF}
-            className="inline-flex items-center gap-[7px] font-extrabold text-white"
+            className="inline-flex animate-flash items-center gap-[7px] font-extrabold text-gold-400 motion-reduce:animate-none"
           >
-            <Icon name="phone" size={13} stroke={2.4} className="text-green-400" />{" "}
+            <Icon name="phone" size={13} stroke={2.4} className="text-gold-400" />{" "}
             {PHONE}
           </a>
         </div>
