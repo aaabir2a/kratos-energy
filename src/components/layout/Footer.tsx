@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
+import { Icon } from "@/components/ui/Icon";
 import { PHONE, EMAIL } from "@/lib/nav";
 
 const COLUMNS: { heading: string; items: { label: string; href: string }[] }[] = [
@@ -58,6 +59,19 @@ export function Footer() {
                 </span>
               ))}
             </div>
+
+            <address className="mt-6 flex max-w-[280px] items-start gap-2.5 not-italic font-body text-sm leading-relaxed">
+              <Icon name="mapPin" size={17} stroke={2.1} className="mt-0.5 flex-none text-green-400" />
+              <span>
+                SmartSpace, Suite 66, 1st Floor
+                <br />
+                Enterprise 1, Innovation Campus
+                <br />
+                Squires Way, North Wollongong
+                <br />
+                NSW 2500, Australia
+              </span>
+            </address>
           </div>
 
           {COLUMNS.map((col) => (

@@ -18,14 +18,24 @@ export function Hero() {
       id="top"
       className="relative isolate flex min-h-[540px] items-stretch overflow-hidden bg-forest-900 lg:min-h-[600px]"
     >
-      {/* Full-bleed photograph — the surface itself */}
+      {/* Full-bleed photograph — the surface itself. Separate landscape and
+          portrait crops; the off-device image is requested at 1px so it isn't
+          downloaded twice. */}
       <Image
-        src="/assets/photo-family-house.jpg"
-        alt="Australian family at home with rooftop solar"
+        src="/assets/hero-solar-rooftop.png"
+        alt="Rooftop solar panels on an Australian home at golden hour"
         fill
         priority
-        sizes="100vw"
-        className="-z-10 object-cover object-[58%_32%]"
+        sizes="(max-width: 639px) 1px, 100vw"
+        className="-z-10 hidden object-cover object-center sm:block"
+      />
+      <Image
+        src="/assets/hero-solar-rooftop-mobile.png"
+        alt="Rooftop solar panels on an Australian home at golden hour"
+        fill
+        priority
+        sizes="(max-width: 639px) 100vw, 1px"
+        className="-z-10 object-cover object-center sm:hidden"
       />
 
       {/* Directional scrim: darkens the lower-left where the copy lives,
@@ -108,9 +118,8 @@ export function Hero() {
           {TRUST.map((t, i) => (
             <div
               key={t.label}
-              className={`flex flex-1 flex-col px-5 py-[18px] sm:px-7 ${
-                i > 0 ? "border-l border-white/12" : ""
-              }`}
+              className={`flex flex-1 flex-col px-5 py-[18px] sm:px-7 ${i > 0 ? "border-l border-white/12" : ""
+                }`}
             >
               <span className="font-display text-[clamp(20px,2.2vw,27px)] font-extrabold leading-none text-green-300">
                 {t.value}
