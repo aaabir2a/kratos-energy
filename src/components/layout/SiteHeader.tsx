@@ -109,10 +109,15 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
         {/* Desktop CTA */}
         <Link
           href="/get-a-quote"
-          className="ke-press ml-3 hidden items-center gap-2 rounded-pill bg-green-500 px-[22px] py-[11px] font-display text-[14.5px] font-bold text-white shadow-green transition-colors hover:bg-green-600 nav:inline-flex"
+          className="ke-press group ml-5 hidden items-center gap-2 whitespace-nowrap rounded-pill bg-forest-900 px-[22px] py-[11px] font-display text-[14px] font-bold text-white transition-colors duration-200 hover:bg-forest-800 nav:inline-flex"
         >
           Design My Solar Plan
-          <Icon name="arrow" size={16} stroke={2.4} />
+          <Icon
+            name="arrow"
+            size={15}
+            stroke={2.5}
+            className="text-green-400 transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transform-none"
+          />
         </Link>
 
         {/* Mobile trigger */}
