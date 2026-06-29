@@ -136,7 +136,7 @@ export function SystemPricing() {
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-[1000px] grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {systems.map((s) => (
             <PriceCard key={s.slug} s={s} />
           ))}
