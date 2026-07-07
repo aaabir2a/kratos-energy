@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import { Icon } from "@/components/ui/Icon";
-import { Button } from "@/components/ui/Button";
 import { PHONE, PHONE_HREF, EMAIL } from "@/lib/nav";
+import { LeadForm } from "@/components/LeadForm";
 
 const PROMISES = [
   "Free consultation & design",
@@ -13,12 +12,7 @@ const PROMISES = [
   "Professional installation",
 ];
 
-const inputClass =
-  "w-full rounded-md border-[1.5px] border-ash-300 bg-white px-[15px] py-[13px] font-body text-[15px] text-ink outline-none";
-
 export function QuoteCTA() {
-  const [sent, setSent] = useState(false);
-
   return (
     <section id="quote" className="bg-forest-900 py-[84px]">
       <div className="container-ke grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
@@ -67,93 +61,8 @@ export function QuoteCTA() {
           </div>
         </div>
 
-        {/* Form card */}
-        <div className="rounded-xl bg-white p-[30px] shadow-lg">
-          {!sent ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setSent(true);
-              }}
-            >
-              <h3 className="mb-[18px] font-display text-[21px] font-bold text-navy-700">
-                Get Your Free Quote
-              </h3>
-              <div className="mb-3 grid grid-cols-2 gap-3">
-                <label className="flex flex-col gap-1">
-                  <span className="sr-only">First name</span>
-                  <input className={inputClass} placeholder="First name" required aria-required="true" />
-                </label>
-                <label className="flex flex-col gap-1">
-                  <span className="sr-only">Last name</span>
-                  <input className={inputClass} placeholder="Last name" required aria-required="true" />
-                </label>
-              </div>
-              <div className="mb-[18px] flex flex-col gap-3">
-                <label className="flex flex-col gap-1">
-                  <span className="sr-only">Email address</span>
-                  <input
-                    className={inputClass}
-                    type="email"
-                    placeholder="Email address"
-                    required
-                    aria-required="true"
-                  />
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <label className="flex flex-col gap-1">
-                    <span className="sr-only">Phone number</span>
-                    <input className={inputClass} type="tel" placeholder="Phone" required aria-required="true" />
-                  </label>
-                  <label className="flex flex-col gap-1">
-                    <span className="sr-only">Suburb</span>
-                    <input className={inputClass} placeholder="Suburb" required aria-required="true" />
-                  </label>
-                </div>
-                <label className="flex flex-col gap-1">
-                  <span className="sr-only">Monthly electricity bill</span>
-                  <select className={inputClass} defaultValue="" aria-required="true">
-                    <option value="" disabled>
-                      Monthly electricity bill
-                    </option>
-                    <option>$100 – $250</option>
-                    <option>$250 – $400</option>
-                    <option>$400 – $600</option>
-                    <option>$600+</option>
-                  </select>
-                </label>
-              </div>
-              <Button type="submit" variant="primary" size="lg" icon="arrow" fullWidth>
-                Get My Free Quote
-              </Button>
-              <p className="mt-3.5 text-center font-body text-xs text-ash-500">
-                <Icon
-                  name="shield"
-                  size={13}
-                  stroke={2}
-                  className="-mb-0.5 mr-1 inline-block"
-                />
-                Your information is 100% secure and never shared.
-              </p>
-            </form>
-          ) : (
-            <div className="px-2.5 py-[30px] text-center">
-              <span className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-50 text-green-600">
-                <Icon name="check" size={34} stroke={3} />
-              </span>
-              <h3 className="mb-2 font-display text-2xl font-extrabold text-navy-700">
-                You&rsquo;re all set! 🌱
-              </h3>
-              <p className="mb-[22px] font-body text-base leading-relaxed text-ash-700">
-                Thanks. A Kratos Energy specialist will call you within one
-                business day with your tailored quote.
-              </p>
-              <Button variant="ghost" size="md" onClick={() => setSent(false)}>
-                Submit another
-              </Button>
-            </div>
-          )}
-        </div>
+        {/* Form card — shared LeadForm (CRM schema + fallback). */}
+        <LeadForm />
       </div>
     </section>
   );

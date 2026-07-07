@@ -54,7 +54,7 @@ export const NAV: NavLink[] = [
   { label: "Projects", href: "/#reviews" },
   { label: "Blog", href: "/blog" },
   { label: "Refer", href: "/refer" },
-  { label: "Contact", href: "/get-a-quote" },
+  { label: "Contact", href: "/contact" },
 ];
 
 /** Phone number used across the site chrome. */

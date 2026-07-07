@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { Stars } from "@/components/ui/Stars";
 import { scrollToId } from "@/lib/utils";
+import { HeroBackdrop } from "@/components/sections/HeroBackdrop";
 
 const TRUST: { value: string; label: string }[] = [
   { value: "2,847+", label: "Homes powered" },
@@ -18,25 +18,10 @@ export function Hero() {
       id="top"
       className="relative isolate flex min-h-[540px] items-stretch overflow-hidden bg-forest-900 lg:min-h-[600px]"
     >
-      {/* Full-bleed photograph — the surface itself. Separate landscape and
-          portrait crops; the off-device image is requested at 1px so it isn't
-          downloaded twice. */}
-      <Image
-        src="/assets/hero-solar-rooftop.png"
-        alt="Rooftop solar panels on an Australian home at golden hour"
-        fill
-        priority
-        sizes="(max-width: 639px) 1px, 100vw"
-        className="-z-10 hidden object-cover object-center sm:block"
-      />
-      <Image
-        src="/assets/hero-solar-rooftop-mobile.png"
-        alt="Rooftop solar panels on an Australian home at golden hour"
-        fill
-        priority
-        sizes="(max-width: 639px) 100vw, 1px"
-        className="-z-10 object-cover object-center sm:hidden"
-      />
+      {/* Full-bleed photograph — the surface itself. Static crops load
+          instantly (LCP); CRM-managed hero images fade in / rotate on top
+          once fetched. See HeroBackdrop. */}
+      <HeroBackdrop />
 
       {/* Directional scrim: darkens the lower-left where the copy lives,
           opens the upper-right so the photo still reads */}

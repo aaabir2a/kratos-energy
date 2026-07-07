@@ -1,8 +1,18 @@
 "use client";
 
+import { useEffect } from "react";
+import Image from "next/image";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { scrollToId } from "@/lib/utils";
+import { useContentStore } from "@/lib/store";
+import type { Package } from "@/lib/api";
+
+const AUD = new Intl.NumberFormat("en-AU", {
+  style: "currency",
+  currency: "AUD",
+  maximumFractionDigits: 0,
+});
 
 type Service = {
   icon: string;
@@ -135,28 +145,110 @@ function SecondaryCard({ s }: { s: Service }) {
   );
 }
 
+/** CRM-managed system package. Headline price = displayPrice. */
+function PackageCard({ p }: { p: Package }) {
+  const remote = p.imageUrl && /^https?:\/\//.test(p.imageUrl);
+  return (
+    <div className="ke-lift flex flex-col overflow-hidden rounded-xl border border-ash-200 bg-white shadow-md">
+      <div className="relative aspect-[16/10] border-b border-ash-200 bg-green-50">
+        {p.imageUrl ? (
+          remote ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={p.imageUrl}
+              alt={p.name}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+          ) : (
+            <Image
+              src={p.imageUrl}
+              alt={p.name}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover"
+            />
+          )
+        ) : (
+          <span className="flex h-full items-center justify-center text-green-600">
+            <Icon name="sun" size={44} />
+          </span>
+        )}
+        {p.power && (
+          <span className="absolute left-4 top-4 rounded-pill bg-forest-900/90 px-3 py-1.5 font-display text-[12px] font-bold text-white">
+            {p.power}
+          </span>
+        )}
+      </div>
+      <div className="flex flex-1 flex-col p-6">
+        <h3 className="font-display text-[19px] font-bold text-navy-700">
+          {p.name}
+        </h3>
+        {p.description && (
+          <p className="mt-2 font-body text-[14.5px] leading-relaxed text-ash-700">
+            {p.description}
+          </p>
+        )}
+        {p.displayPrice > 0 && (
+          <div className="mt-4 font-body text-[14px] text-ash-700">
+            From{" "}
+            <span className="font-display text-[22px] font-extrabold text-green-600">
+              {AUD.format(p.displayPrice)}
+            </span>
+          </div>
+        )}
+        <button
+          onClick={() => scrollToId("quote")}
+          className="mt-auto inline-flex items-center gap-1.5 self-start pt-5 font-display text-[14px] font-bold text-forest-700 underline-offset-4 hover:underline"
+        >
+          Get a quote <Icon name="arrow" size={15} stroke={2.4} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function Services() {
+  const { status, data } = useContentStore((s) => s.packages);
+  const loadPackages = useContentStore((s) => s.loadPackages);
+
+  useEffect(() => {
+    loadPackages();
+  }, [loadPackages]);
+
+  const showPackages = status === "ready" && data.length > 0;
+
   return (
     <section id="services" className="bg-paper py-[84px]">
       <div className="container-ke">
         <div className="mb-12 text-center">
           <h2 className="font-display text-[clamp(30px,3.6vw,46px)] font-extrabold tracking-[-0.02em] text-navy-700">
-            From consultation to switch-on.
+            {showPackages ? "Solar systems built for your home." : "From consultation to switch-on."}
           </h2>
           <p className="mx-auto mt-3 max-w-[540px] font-body text-lg text-ash-700">
-            One Australian-owned team handles design, install and support —
-            kilowatt to megawatt.
+            {showPackages
+              ? "Fully-installed packages, priced after rebates. Every system designed, installed and supported by one Australian-owned team."
+              : "One Australian-owned team handles design, install and support — kilowatt to megawatt."}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-[1.5fr_1fr]">
-          <FeaturePanel s={FEATURED} />
-          <div className="flex flex-col gap-6">
-            {SECONDARY.map((s) => (
-              <SecondaryCard key={s.title} s={s} />
+        {showPackages ? (
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {data.map((p) => (
+              <PackageCard key={p.id} p={p} />
             ))}
           </div>
-        </div>
+        ) : (
+          <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-[1.5fr_1fr]">
+            <FeaturePanel s={FEATURED} />
+            <div className="flex flex-col gap-6">
+              {SECONDARY.map((s) => (
+                <SecondaryCard key={s.title} s={s} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
