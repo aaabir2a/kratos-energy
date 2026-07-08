@@ -17,12 +17,7 @@ type Rebate = {
 const REBATES: Rebate[] = [
   { state: "NSW", name: "New South Wales", federalStc: 2230, stateRebate: 640, batteryRebate: 1600, note: "Empowering Homes + federal STCs." },
   { state: "VIC", name: "Victoria", federalStc: 2230, stateRebate: 1400, batteryRebate: 2950, note: "Solar Victoria rebate + interest-free loan." },
-  { state: "QLD", name: "Queensland", federalStc: 2230, stateRebate: 0, batteryRebate: 1000, note: "Federal STCs + battery booster." },
-  { state: "SA", name: "South Australia", federalStc: 2230, stateRebate: 0, batteryRebate: 2000, note: "Home Battery Scheme + federal STCs." },
-  { state: "ACT", name: "ACT", federalStc: 2230, stateRebate: 825, batteryRebate: 3500, note: "Sustainable Household Scheme loan." },
   { state: "WA", name: "Western Australia", federalStc: 2230, stateRebate: 0, batteryRebate: 1300, note: "Federal STCs + DEBS buyback." },
-  { state: "TAS", name: "Tasmania", federalStc: 2090, stateRebate: 0, batteryRebate: 0, note: "Federal STCs + interest-free loans." },
-  { state: "NT", name: "Northern Territory", federalStc: 1950, stateRebate: 750, batteryRebate: 5000, note: "Home & Business Battery Scheme." },
 ];
 
 function money(n: number) {

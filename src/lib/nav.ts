@@ -8,6 +8,74 @@ export type NavLink = {
   menu?: NavChild[];
 };
 
+export type ProductSubcategory = {
+  label: string;
+  href: string;
+  description: string;
+};
+
+export type ProductCategory = {
+  id: string;
+  label: string;
+  description: string;
+  icon: string;
+  href?: string;
+  subcategories?: ProductSubcategory[];
+  customContent?: {
+    title: string;
+    text: string;
+    points: string[];
+    ctaText: string;
+    ctaHref: string;
+  };
+};
+
+export const PRODUCT_CATEGORIES: ProductCategory[] = [
+  {
+    id: "residential",
+    label: "Residential Systems",
+    description: "High-performance solar and battery solutions tailored for Australian homes to maximize your energy savings.",
+    icon: "sun",
+    subcategories: [
+      { label: "6.6kW System", href: "/systems/6-6kw", description: "Our most popular size, ideal for standard 2–4 person homes." },
+      { label: "10.12kW System", href: "/systems/10kw", description: "Perfect for medium homes with higher usage or ducted air-con." },
+      { label: "12.2kW System", href: "/systems/12-2kw", description: "Designed for larger families, high energy loads, or battery readiness." },
+      { label: "Customized Solution", href: "/get-a-quote", description: "Custom designed solar and storage layouts matching your exact needs." }
+    ]
+  },
+  {
+    id: "commercial",
+    label: "Commercial Systems",
+    description: "Scalable commercial solar solutions designed to reduce operating costs and meet corporate sustainability goals.",
+    icon: "building",
+    subcategories: [
+      { label: "30kW System", href: "/systems/30kw", description: "Cut overheads for cafés, local medical clinics, and small offices." },
+      { label: "50kW System", href: "/systems/50kw", description: "Standard configuration for small-medium warehouses and industrial units." },
+      { label: "100kW System", href: "/systems/100kw", description: "Our largest standard commercial configuration for high-yield operations." },
+      { label: "Customized System", href: "/get-a-quote", description: "Tailored multi-inverter configurations with utility grid connection support." }
+    ]
+  },
+  {
+    id: "large-scale",
+    label: "Large Scale Systems",
+    description: "Utility-scale installations requiring comprehensive planning, expert engineering, and seamless grid connection.",
+    icon: "zap",
+    href: "/systems/large-scale",
+    customContent: {
+      title: "Utility & Grid-Scale Installations",
+      text: "Large-scale solar installations require meticulous planning, site assessment, grid connection studies, and engineering design. Kratos Energy manages the entire lifecycle from feasibility studies to construction and connection, ensuring maximum yield and investment returns.",
+      points: [
+        "Comprehensive grid connection & feasibility studies",
+        "Utility-scale engineering design and structural certification",
+        "Procurement of premium Tier-1 utility grade equipment",
+        "CEC accredited commercial project managers & installers",
+      ],
+      ctaText: "Consult Our Enterprise Team",
+      ctaHref: "/contact"
+    }
+  }
+];
+
 /**
  * Primary site navigation. All links are real routes or homepage
  * anchors ("/#id"), so they work from any page.
@@ -27,12 +95,7 @@ export const NAV: NavLink[] = [
   {
     label: "Our Products",
     href: "/#systems",
-    menu: [
-      { label: "6.6kW System", href: "/systems/6-6kw" },
-      { label: "10.12kW System", href: "/systems/10kw" },
-      { label: "13.2kW System", href: "/systems/13-2kw" },
-      { label: "Commercial Systems", href: "/systems/50kw" },
-    ],
+    // Handled customly via PRODUCT_CATEGORIES in SiteHeader and MobileMenu
   },
   {
     label: "Solar Savings",

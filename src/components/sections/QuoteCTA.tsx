@@ -56,7 +56,7 @@ export function QuoteCTA() {
             </a>
             <span className="flex items-center gap-[11px] font-body text-[15.5px] font-semibold text-[#a9c4a3]">
               <Icon name="mapPin" size={20} className="text-green-400" /> Serving
-              NSW, VIC, SA, ACT &amp; QLD
+              NSW, Victoria &amp; Western Australia
             </span>
           </div>
         </div>

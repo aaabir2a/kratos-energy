@@ -21,7 +21,7 @@ const DETAILS: Detail[] = [
   {
     icon: "phone",
     label: "Call us",
-    lines: [{ text: PHONE, href: PHONE_HREF }, { text: "Mon–Fri, 8am – 6pm AEST" }],
+    lines: [{ text: PHONE, href: PHONE_HREF }],
   },
   {
     icon: "mail",
@@ -32,10 +32,8 @@ const DETAILS: Detail[] = [
     icon: "mapPin",
     label: "Visit us",
     lines: [
-      { text: "SmartSpace, Suite 66, 1st Floor" },
-      { text: "Enterprise 1, Innovation Campus" },
-      { text: "Squires Way, North Wollongong" },
-      { text: "NSW 2500, Australia" },
+      { text: "SmartSpace | Suite 66, 1st Floor, Enterprise 1, Innovation Campus, Squires Way. " },
+      { text: "North Wollongong NSW 2500 Australia" },
     ],
   },
   {
@@ -45,7 +43,7 @@ const DETAILS: Detail[] = [
   },
 ];
 
-const SERVICE_AREAS = ["NSW", "VIC", "QLD", "SA", "ACT"];
+const SERVICE_AREAS = ["NSW", "Victoria", "Western Australia"];
 
 export default function ContactPage() {
   return (

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { Icon } from "@/components/ui/Icon";
-import { NAV, PHONE, PHONE_HREF } from "@/lib/nav";
+import { NAV, PHONE, PHONE_HREF, PRODUCT_CATEGORIES } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
 /** Full-screen mobile navigation overlay with expandable submenus. */
@@ -37,7 +37,8 @@ export function MobileMenu({
 
       <nav className="mt-6 flex flex-col">
         {NAV.map((item, i) => {
-          if (!item.menu) {
+          const isProducts = item.label === "Our Products";
+          if (!item.menu && !isProducts) {
             return (
               <Link
                 key={item.label}
@@ -73,17 +74,55 @@ export function MobileMenu({
               >
                 <div className="overflow-hidden">
                   <div className="flex flex-col pb-3 pl-1">
-                    {item.menu.map((sub) => (
-                      <Link
-                        key={sub.label}
-                        href={sub.href}
-                        onClick={onClose}
-                        className="flex items-center gap-2.5 py-2.5 font-body text-[16.5px] font-semibold text-[#cfe0c6]"
-                      >
-                        <span className="h-1.5 w-1.5 flex-none rounded-full bg-green-400" />
-                        {sub.label}
-                      </Link>
-                    ))}
+                    {isProducts ? (
+                      PRODUCT_CATEGORIES.map((cat) => (
+                        <div key={cat.id} className="mt-4 first:mt-1 last:mb-2">
+                          {/* Category Heading / Label */}
+                          <div className="flex items-center gap-2 px-1 py-1 font-display text-[14px] font-bold text-green-400 uppercase tracking-wider">
+                            <Icon name={cat.icon} size={15} stroke={2.5} className="text-green-400" />
+                            {cat.label}
+                          </div>
+                          <div className="pl-3.5 flex flex-col mt-1 border-l border-white/10 gap-1">
+                            {cat.subcategories ? (
+                              cat.subcategories.map((sub) => (
+                                <Link
+                                  key={sub.label}
+                                  href={sub.href}
+                                  onClick={onClose}
+                                  className="flex items-center gap-2 py-2 font-body text-[16px] font-semibold text-[#cfe0c6] active:text-white"
+                                >
+                                  <span className="h-1 w-1 flex-none rounded-full bg-green-400/70" />
+                                  {sub.label}
+                                </Link>
+                              ))
+                            ) : (
+                              // For large scale system itself
+                              <Link
+                                key={cat.label}
+                                href={cat.href || "/systems/large-scale"}
+                                onClick={onClose}
+                                className="flex items-center gap-2 py-2 font-body text-[16px] font-semibold text-[#cfe0c6] active:text-white"
+                              >
+                                <span className="h-1 w-1 flex-none rounded-full bg-green-400/70" />
+                                View Solutions
+                              </Link>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      item.menu?.map((sub) => (
+                        <Link
+                          key={sub.label}
+                          href={sub.href}
+                          onClick={onClose}
+                          className="flex items-center gap-2.5 py-2.5 font-body text-[16.5px] font-semibold text-[#cfe0c6]"
+                        >
+                          <span className="h-1.5 w-1.5 flex-none rounded-full bg-green-400" />
+                          {sub.label}
+                        </Link>
+                      ))
+                    )}
                   </div>
                 </div>
               </div>

@@ -11,6 +11,7 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { RebateBanner } from "@/components/sections/RebateBanner";
 // import { GuideDownload } from "@/components/sections/GuideDownload";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
+import { NetSellerCertification } from "@/components/sections/NetSellerCertification";
 
 export default function HomePage() {
   return (
@@ -27,6 +28,7 @@ export default function HomePage() {
       <RebateBanner />
       {/* <GuideDownload /> */}
       <QuoteCTA />
+      <NetSellerCertification />
     </SiteLayout>
   );
 }

@@ -15,8 +15,7 @@ export function PromoBar() {
         </span>
         <div className="ml-auto hidden items-center gap-[22px] font-semibold md:flex">
           <span className="inline-flex items-center gap-[7px] opacity-90">
-            <Icon name="mapPin" size={13} stroke={2.2} /> Sydney · Melbourne ·
-            Brisbane
+            <Icon name="mapPin" size={13} stroke={2.2} /> NSW . Victoria . WA
           </span>
           <a
             href={PHONE_HREF}

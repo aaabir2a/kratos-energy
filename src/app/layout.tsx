@@ -36,6 +36,9 @@ export const metadata: Metadata = {
     "solar rebates NSW",
     "Clean Energy Council accredited installer",
   ],
+  icons: {
+    icon: "/kratos-vart-logo.png",
+  },
   openGraph: {
     title: "Kratos Energy — Solar for Every Australian Home",
     description:
