@@ -1,0 +1,14 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        # Baked into the client bundle at build time. Change + rebuild to point
+        # at a different API.
+        NEXT_PUBLIC_API_BASE: https://api.kratos-energy.com/api/v1
+    image: kratos-energy
+    container_name: kratos-energy
+    restart: unless-stopped
+    # Host 3005 -> container 3000. Nginx proxies kratos-energy.com to 127.0.0.1:3005.
+    ports:
+      - "127.0.0.1:3005:3000"

@@ -2,6 +2,7 @@ import { PromoBar } from "./PromoBar";
 import { ChromeShell } from "./ChromeShell";
 import { Footer } from "./Footer";
 import { FloatingActions } from "./FloatingActions";
+import { BackToTop } from "./BackToTop";
 import { ChatWidget } from "./ChatWidget";
 
 /**
@@ -16,6 +17,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
       <ChromeShell />
       <main>{children}</main>
       <Footer />
+      <BackToTop />
       <FloatingActions />
       <ChatWidget />
 
