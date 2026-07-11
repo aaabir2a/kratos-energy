@@ -301,7 +301,17 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
                                         ))}
                                       </ul>
                                     </div>
-                                    <div>
+                                    <div className="flex flex-wrap items-center gap-3">
+                                      {cat.href && (
+                                        <Link
+                                          href={cat.href}
+                                          onClick={() => setOpen(null)}
+                                          className="inline-flex items-center gap-2 rounded-pill bg-green-500 px-4 py-2 font-display text-[12.5px] font-bold text-white shadow-green transition-colors duration-200 hover:bg-green-600"
+                                        >
+                                          View Large-Scale Systems
+                                          <Icon name="arrow" size={13} stroke={2.5} className="text-white" />
+                                        </Link>
+                                      )}
                                       <Link
                                         href={cat.customContent?.ctaHref || "/contact"}
                                         onClick={() => setOpen(null)}
