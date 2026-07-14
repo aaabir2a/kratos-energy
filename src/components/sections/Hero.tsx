@@ -1,10 +1,20 @@
 "use client";
 
+/**
+ * Homepage hero: full-bleed photographic surface. CRM-managed images arrive
+ * as server props (no client fetch, no post-hydration swap); multiple images
+ * auto-rotate with a slow settle-zoom, a two-layer crossfade and segmented
+ * time-progress bars. Static asset renders only when the API has no images.
+ */
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { Stars } from "@/components/ui/Stars";
 import { scrollToId } from "@/lib/utils";
-import { HeroBackdrop } from "@/components/sections/HeroBackdrop";
+import type { HeroImage, HeroImages } from "@/lib/api";
+
+const ROTATE_MS = 6000; // must match the 6s animations in globals.css
 
 const TRUST: { value: string; label: string }[] = [
   { value: "2,847+", label: "Homes powered" },
@@ -12,26 +22,135 @@ const TRUST: { value: string; label: string }[] = [
   { value: "≈ $2,310", label: "Saved per year" },
 ];
 
-export function Hero() {
+/** Rotating image stack + progress segments. Decorative (headline carries meaning). */
+function Slider({ images, className }: { images: HeroImage[]; className?: string }) {
+  const [{ i, prev }, setSlide] = useState<{ i: number; prev: number | null }>({
+    i: 0,
+    prev: null,
+  });
+  const reduce = useRef(false);
+
+  useEffect(() => {
+    reduce.current =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  }, []);
+
+  useEffect(() => {
+    if (images.length < 2 || reduce.current) return;
+    const t = setInterval(
+      () => setSlide((s) => ({ i: (s.i + 1) % images.length, prev: s.i })),
+      ROTATE_MS,
+    );
+    return () => clearInterval(t);
+  }, [images.length]);
+
+  return (
+    <div className={className} aria-hidden>
+      {/* Previous frame holds the zoom's end scale so the swap has no pop. */}
+      {prev !== null && prev !== i && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          key={`prev-${prev}`}
+          src={images[prev].url}
+          alt=""
+          decoding="async"
+          className="absolute inset-0 z-0 h-full w-full scale-[1.08] object-cover object-center"
+        />
+      )}
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        key={`cur-${i}`}
+        src={images[i].url}
+        alt=""
+        width={images[i].width}
+        height={images[i].height}
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+        className="animate-hero-slide absolute inset-0 z-[1] h-full w-full object-cover object-center"
+      />
+
+      {/* Decode the rest ahead of their turn. */}
+      <div className="hidden">
+        {images.map((img, idx) =>
+          idx === i ? null : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img key={`pl-${img.url}`} src={img.url} alt="" loading="lazy" decoding="async" />
+          ),
+        )}
+      </div>
+
+      {/* Segmented progress — one bar per image, active one fills over the dwell. */}
+      {images.length > 1 && (
+        <div className="pointer-events-auto absolute bottom-5 right-5 z-[2] flex gap-2 sm:bottom-7 sm:right-8">
+          {images.map((img, idx) => (
+            <button
+              key={img.url}
+              type="button"
+              aria-label={`Show photo ${idx + 1} of ${images.length}`}
+              onClick={() => setSlide((s) => (s.i === idx ? s : { i: idx, prev: s.i }))}
+              className="group flex h-5 items-center"
+            >
+              <span className="h-[3px] w-9 overflow-hidden rounded-pill bg-white/30 transition-colors group-hover:bg-white/45">
+                {idx === i && (
+                  <span key={`fill-${i}`} className="animate-hero-progress block h-full bg-white" />
+                )}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function Hero({ images }: { images: HeroImages }) {
+  const hasDesktop = images.desktop.length > 0;
+  const hasMobile = images.mobile.length > 0;
+
   return (
     <section
       id="top"
-      className="relative isolate flex min-h-[540px] items-stretch overflow-hidden bg-forest-900 lg:min-h-[600px]"
+      className="relative isolate flex min-h-[540px] items-stretch overflow-hidden bg-forest-900 lg:min-h-[620px]"
     >
-      {/* Full-bleed photograph — the surface itself. Static crops load
-          instantly (LCP); CRM-managed hero images fade in / rotate on top
-          once fetched. See HeroBackdrop. */}
-      <HeroBackdrop />
+      {/* Full-bleed media — CRM slider when available, static asset otherwise.
+          Separate landscape / portrait stacks. */}
+      {hasDesktop ? (
+        <Slider images={images.desktop} className="absolute inset-0 -z-10 hidden sm:block" />
+      ) : (
+        <Image
+          src="/assets/hero-solar-rooftop.png"
+          alt="Rooftop solar panels on an Australian home at golden hour"
+          fill
+          priority
+          sizes="(max-width: 639px) 1px, 100vw"
+          className="-z-10 hidden object-cover object-center sm:block"
+        />
+      )}
+      {hasMobile ? (
+        <Slider images={images.mobile} className="absolute inset-0 -z-10 sm:hidden" />
+      ) : (
+        <Image
+          src="/assets/hero-solar-rooftop-mobile.png"
+          alt="Rooftop solar panels on an Australian home at golden hour"
+          fill
+          priority
+          sizes="(max-width: 639px) 100vw, 1px"
+          className="-z-10 object-cover object-center sm:hidden"
+        />
+      )}
 
       {/* Directional scrim: darkens the lower-left where the copy lives,
           opens the upper-right so the photo still reads */}
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(105deg,#0c3b28_4%,rgba(12,59,40,0.78)_38%,rgba(12,59,40,0.30)_66%,rgba(12,59,40,0.08)_100%)]" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-forest-900 via-forest-900/35 to-transparent" />
+      <div className="absolute inset-0 -z-[5] bg-[linear-gradient(105deg,#0c3b28_4%,rgba(12,59,40,0.78)_38%,rgba(12,59,40,0.30)_66%,rgba(12,59,40,0.08)_100%)]" />
+      <div className="absolute inset-0 -z-[5] bg-gradient-to-t from-forest-900 via-forest-900/35 to-transparent" />
 
       {/* Warm sun-glow — atmospheric, low and soft */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[-6%] top-[26%] -z-[5] h-[460px] w-[460px] rounded-full bg-green-400/20 blur-[130px]"
+        className="pointer-events-none absolute left-[-6%] top-[26%] -z-[4] h-[460px] w-[460px] rounded-full bg-green-400/20 blur-[130px]"
       />
 
       <div className="container-ke relative z-10 flex w-full flex-col justify-center gap-8 py-10 sm:py-12 lg:gap-10 lg:py-12">

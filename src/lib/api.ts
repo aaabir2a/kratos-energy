@@ -168,6 +168,17 @@ export function getHeroImages(signal?: AbortSignal): Promise<HeroImages> {
   return request<HeroImages>("/public/hero-images", { signal });
 }
 
+/**
+ * Server-side variant (RSC only): ISR-cached so hero image URLs are in the
+ * first HTML payload — the browser starts loading them with the page instead
+ * of after hydration. Revalidates on the backend's own 5-minute cache window.
+ */
+export function getHeroImagesServer(): Promise<HeroImages> {
+  return request<HeroImages>("/public/hero-images", {
+    next: { revalidate: 300 },
+  } as RequestInit);
+}
+
 /** Global CRM-managed lead form schema. `null` when none configured. */
 export function getLeadForm(signal?: AbortSignal): Promise<LeadForm | null> {
   return request<LeadForm | null>("/public/lead-form", { signal });

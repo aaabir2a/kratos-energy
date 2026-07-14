@@ -1,5 +1,6 @@
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Hero } from "@/components/sections/Hero";
+import { getHeroImagesServer, type HeroImages } from "@/lib/api";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { SystemPricing } from "@/components/sections/SystemPricing";
 import { BatteryRange } from "@/components/sections/BatteryRange";
@@ -13,10 +14,21 @@ import { RebateBanner } from "@/components/sections/RebateBanner";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { NetSellerCertification } from "@/components/sections/NetSellerCertification";
 
-export default function HomePage() {
+/** Hero images fetched at render time (ISR) so URLs ship in the first HTML —
+ *  no post-hydration swap. Falls back to empty (static hero asset) on error. */
+async function loadHeroImages(): Promise<HeroImages> {
+  try {
+    return await getHeroImagesServer();
+  } catch {
+    return { desktop: [], mobile: [] };
+  }
+}
+
+export default async function HomePage() {
+  const heroImages = await loadHeroImages();
   return (
     <SiteLayout>
-      <Hero />
+      <Hero images={heroImages} />
       <TrustBar />
       <BatteryRange />
       <SystemPricing />

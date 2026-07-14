@@ -8,11 +8,9 @@
  */
 import { create } from "zustand";
 import {
-  getHeroImages,
   getProducts,
   getPackages,
   getLeadForm,
-  type HeroImages,
   type Product,
   type Package,
   type LeadForm,
@@ -23,11 +21,9 @@ type Status = "idle" | "loading" | "ready" | "error";
 type Slice<T> = { status: Status; data: T };
 
 type ContentState = {
-  hero: Slice<HeroImages>;
   products: Slice<Product[]>;
   packages: Slice<Package[]>;
   leadForm: Slice<LeadForm | null>;
-  loadHero: () => void;
   loadProducts: (category?: string) => void;
   loadPackages: () => void;
   loadLeadForm: () => void;
@@ -61,15 +57,9 @@ export const useContentStore = create<ContentState>((set, get) => {
   }
 
   return {
-    hero: { status: "idle", data: { desktop: [], mobile: [] } },
     products: { status: "idle", data: [] },
     packages: { status: "idle", data: [] },
     leadForm: { status: "idle", data: null },
-
-    loadHero: () =>
-      load("hero", "hero", () => getHeroImages(), (data) => ({
-        hero: { status: "ready", data },
-      })),
 
     loadProducts: (category) =>
       load(

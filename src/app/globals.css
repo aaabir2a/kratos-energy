@@ -8,7 +8,9 @@
   }
 }
 
-/* Hero slider crossfade: the incoming image fades in over the previous one. */
+/* Hero slider. The incoming image fades in over the previous one while slowly
+   settling (1.02 -> 1.08 scale across the 6s dwell — must match ROTATE_MS in
+   Hero.tsx). Progress bars fill across the same dwell. */
 @keyframes heroFade {
   from {
     opacity: 0;
@@ -17,12 +19,37 @@
     opacity: 1;
   }
 }
-.animate-hero-fade {
-  animation: heroFade 900ms ease-out both;
+@keyframes heroZoom {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+@keyframes heroProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+.animate-hero-slide {
+  animation:
+    heroFade 900ms ease-out both,
+    heroZoom 6000ms linear both;
+}
+.animate-hero-progress {
+  animation: heroProgress 6000ms linear both;
 }
 @media (prefers-reduced-motion: reduce) {
-  .animate-hero-fade {
+  .animate-hero-slide {
     animation: none;
+  }
+  .animate-hero-progress {
+    animation: none;
+    width: 100%;
   }
 }
 
