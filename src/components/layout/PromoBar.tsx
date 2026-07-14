@@ -5,7 +5,7 @@ import { PHONE, PHONE_HREF } from "@/lib/nav";
 export function PromoBar() {
   return (
     <div className="sticky top-0 z-[60] bg-forest-900 text-[13px] text-[#eaf3e6]">
-      <div className="mx-auto flex h-[38px] w-full max-w-[1280px] items-center gap-[18px] px-5 sm:px-8">
+      <div className="flex h-[38px] w-full items-center gap-[18px] px-5 sm:px-8">
         <span className="inline-flex items-center gap-2 font-semibold">
           <Icon name="zap" size={13} fill="#f4ce47" stroke={0} className="text-gold-400" />
           <span>

@@ -34,7 +34,7 @@ export default async function HomePage() {
       <SystemPricing />
       <BrandWall />
       <SavingsCalculator />
-      <Services />
+      {/* <Services /> */}
       <CaseStudies />
       <Testimonials />
       <RebateBanner />

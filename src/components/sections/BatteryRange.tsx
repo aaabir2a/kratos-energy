@@ -53,6 +53,40 @@ function CardImage({ src, alt }: { src: string; alt: string }) {
   );
 }
 
+function BatteryCardSkeleton() {
+  return (
+    <div className="flex flex-col overflow-hidden rounded-xl border border-ash-200 bg-white shadow-md animate-pulse">
+      <div className="relative aspect-square border-b border-ash-200 bg-ash-50 flex items-center justify-center">
+        {/* Brand pill placeholder */}
+        <div className="absolute left-4 top-4 h-6 w-20 rounded-pill bg-ash-200" />
+        {/* Image placeholder */}
+        <div className="h-1/2 w-1/2 rounded bg-ash-200/60" />
+      </div>
+
+      <div className="flex flex-1 flex-col p-6 space-y-4">
+        <div>
+          {/* Title placeholder */}
+          <div className="h-6 w-3/4 rounded bg-ash-200" />
+          {/* Capacity placeholder */}
+          <div className="mt-2 h-5 w-1/2 rounded bg-ash-200" />
+        </div>
+        
+        {/* Features placeholders */}
+        <div className="space-y-2 pt-2">
+          <div className="flex items-center gap-2.5">
+            <div className="h-4 w-4 rounded-full bg-ash-200" />
+            <div className="h-4 w-5/6 rounded bg-ash-200" />
+          </div>
+          <div className="flex items-center gap-2.5">
+            <div className="h-4 w-4 rounded-full bg-ash-200" />
+            <div className="h-4 w-2/3 rounded bg-ash-200" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function BatteryRange() {
   const { status, data } = useContentStore((s) => s.products);
   const loadProducts = useContentStore((s) => s.loadProducts);
@@ -60,6 +94,8 @@ export function BatteryRange() {
   useEffect(() => {
     loadProducts("Battery");
   }, [loadProducts]);
+
+  const isLoading = status === "idle" || status === "loading";
 
   const cards = useMemo<Card[]>(() => {
     if (status === "ready" && data.length > 0) {
@@ -120,7 +156,12 @@ export function BatteryRange() {
 
         {/* Brand range */}
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {cards.map((c) => (
+          {isLoading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <BatteryCardSkeleton key={i} />
+            ))
+          ) : (
+            cards.map((c) => (
             <article
               key={c.key}
               className="ke-lift flex flex-col overflow-hidden rounded-xl border border-ash-200 bg-white shadow-md"
@@ -168,7 +209,7 @@ export function BatteryRange() {
                 </ul>
               </div>
             </article>
-          ))}
+          )))}
         </div>
       </div>
     </section>

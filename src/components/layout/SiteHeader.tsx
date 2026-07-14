@@ -86,7 +86,7 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
         shadow && "shadow-md",
       )}
     >
-      <div className="mx-auto flex h-[78px] w-full max-w-[1280px] items-center gap-5 px-5 sm:px-8 relative">
+      <div className="flex h-[78px] w-full items-center gap-5 px-5 sm:px-8 relative">
         {/* Brand cluster */}
         <Link href="/" className="flex flex-none items-center" aria-label="Kratos Energy home">
           <Logo className="h-[56px] w-auto" priority />
@@ -126,8 +126,9 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
                 <Link
                   href={item.href}
                   data-nav-trigger={hasMenu ? "true" : undefined}
-                  onClick={() => {
+                  onClick={(e) => {
                     if (hasMenu) {
+                      e.preventDefault();
                       if (open === i && isLocked) {
                         setOpen(null);
                         setIsLocked(false);

@@ -338,7 +338,7 @@ export default function LargeScalePage() {
       </section>
 
       {/* Featured Projects */}
-      <section id="projects" className="scroll-mt-24 bg-white py-[84px]">
+      {/* <section id="projects" className="scroll-mt-24 bg-white py-[84px]">
         <div className="container-ke">
           <div className="mb-12 max-w-[680px]">
             <Eyebrow>Featured Projects</Eyebrow>
@@ -352,7 +352,7 @@ export default function LargeScalePage() {
             </p>
           </div>
 
-          {/* Solar farms */}
+         
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {FARMS.map((p) => (
               <article
@@ -375,7 +375,7 @@ export default function LargeScalePage() {
             ))}
           </div>
 
-          {/* Commercial projects with metrics */}
+      
           <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
             {COMMERCIAL.map((p) => (
               <article
@@ -409,7 +409,7 @@ export default function LargeScalePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Development Approach */}
       <section className="bg-forest-900 py-[84px] text-white">
