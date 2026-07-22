@@ -674,7 +674,7 @@ export function SystemConfigurator() {
             Estimated investment
           </div>
           <div className="font-display text-[clamp(22px,1.9vw,27px)] font-extrabold leading-tight text-green-600">
-            {moneyRange(costRange)}
+            {step === last ? moneyRange(costRange) : "—"}
           </div>
           <div className="mt-1 font-body text-[13px] text-ash-500">after rebates · incl. GST</div>
 
@@ -682,13 +682,22 @@ export function SystemConfigurator() {
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div className="rounded-md bg-green-50 p-3.5">
               <div className="font-display text-[15px] font-extrabold leading-snug text-forest-700">
-                {moneyRange(saveRange)}
+                {step === last ? moneyRange(saveRange) : "—"}
               </div>
               <div className="mt-1 font-body text-[11.5px] text-ash-500">Est. saved / year</div>
             </div>
             <div className="rounded-md bg-paper p-3.5">
               <div className="font-display text-[15px] font-extrabold leading-snug text-navy-800">
-                {paybackRange} <span className="text-[12px] font-bold text-ash-500">yrs</span>
+                {step === last ? (
+                  <>
+                    {paybackRange}{" "}
+                    {paybackRange !== "—" && (
+                      <span className="text-[12px] font-bold text-ash-500">yrs</span>
+                    )}
+                  </>
+                ) : (
+                  "—"
+                )}
               </div>
               <div className="mt-1 font-body text-[11.5px] text-ash-500">Typical payback</div>
             </div>

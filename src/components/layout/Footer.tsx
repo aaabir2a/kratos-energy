@@ -95,8 +95,7 @@ export function Footer() {
 
         <div className="mt-10 flex flex-wrap justify-between gap-3 border-t border-white/10 pt-[22px] font-body text-[12.5px] text-[#8aa896]">
           <span>
-            © 2026 Kratos Energy. All rights reserved. · ABN 12 345 678 901 ·
-            Clean Energy Council Approved
+            © 2026 Kratos Energy. All rights reserved. Clean Energy Council Approved
           </span>
           <span>
             {PHONE} · {EMAIL}
