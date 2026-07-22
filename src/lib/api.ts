@@ -87,6 +87,8 @@ export type LeadFormField = {
   type: LeadFieldType;
   required: boolean;
   order: number;
+  /** First-class lead column this field feeds (e.g. "firstName", "email"). */
+  maps_to?: string;
   options?: string[];
   placeholder?: string;
   help_text?: string;

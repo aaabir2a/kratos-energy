@@ -263,6 +263,13 @@ export function LeadForm({
         continue;
       }
 
+      // Schema-declared mapping (maps_to) wins over heuristics.
+      if (field.maps_to && KNOWN_LEAD_KEYS.has(field.maps_to) && top[field.maps_to] === undefined) {
+        top[field.maps_to] = value;
+        custom[name] = value;
+        continue;
+      }
+
       // Otherwise keep the raw value in customFields (the CRM validates the
       // schema by field_name) AND mirror common contact fields onto the
       // first-class lead columns by type/label so the lead is actually usable.

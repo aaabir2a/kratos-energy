@@ -1,8 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
+import { submitLead, type LeadFormField } from "@/lib/api";
+import { useContentStore } from "@/lib/store";
 import {
   BATTERY_OPTIONS,
   BRAND_BLURB,
@@ -35,6 +37,73 @@ function bestInverter(opts: Inverter[], targetKw: number): Inverter | null {
     if (da !== db) return da - db;
     return b.kw - a.kw; // tie → larger headroom
   })[0];
+}
+
+/* Estimates are presented as ranges so they read as an initial estimate,
+   not a quote (client requirement). */
+const PRICE_BAND = 0.07; // ±7% around the configured total
+const SAVE_BAND = 0.1; // ±10% around the modelled saving
+
+const roundTo = (n: number, step: number) => Math.round(n / step) * step;
+
+function band(n: number, pct: number, step: number): { lo: number; hi: number } {
+  return { lo: roundTo(n * (1 - pct), step), hi: roundTo(n * (1 + pct), step) };
+}
+
+/** "$9,700 – $10,900" */
+const moneyRange = (r: { lo: number; hi: number }) => `${money(r.lo)} – ${money(r.hi)}`;
+
+/**
+ * Satisfy the CRM's global lead-form schema: fill each field it declares from
+ * the contact details (via `maps_to`, then by type/label), defaulting required
+ * choice fields so validation passes. Unknown build_* keys ride alongside.
+ */
+function schemaAutoFill(
+  fields: LeadFormField[],
+  contact: Record<string, string | undefined>,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const f of fields) {
+    const mapped = f.maps_to ? contact[f.maps_to] : undefined;
+    if (mapped) {
+      out[f.field_name] = mapped;
+      continue;
+    }
+    if (f.type === "email" && contact.email) {
+      out[f.field_name] = contact.email;
+      continue;
+    }
+    if (f.type === "phone" && contact.phone) {
+      out[f.field_name] = contact.phone;
+      continue;
+    }
+    if (f.type === "text" && /name/i.test(`${f.label} ${f.field_name}`) && contact.firstName) {
+      out[f.field_name] = contact.firstName;
+      continue;
+    }
+    if ((f.type === "select" || f.type === "radio") && f.required && f.options?.length) {
+      // Build-your-system is a residential tool — prefer that option.
+      out[f.field_name] = f.options.find((o) => /residential/i.test(o)) ?? f.options[0];
+      continue;
+    }
+    if (f.type === "checkbox" && f.required) out[f.field_name] = true;
+  }
+  return out;
+}
+
+/** Pull UTM / click-id attribution off the current URL for lead source. */
+function attribution() {
+  if (typeof window === "undefined") return {};
+  const q = new URLSearchParams(window.location.search);
+  const pick = (k: string) => q.get(k) || undefined;
+  return {
+    utmSource: pick("utm_source"),
+    utmMedium: pick("utm_medium"),
+    utmCampaign: pick("utm_campaign"),
+    gclid: pick("gclid"),
+    fbclid: pick("fbclid"),
+    referrerUrl: document.referrer || undefined,
+  };
 }
 
 const STEPS = [
@@ -130,7 +199,18 @@ export function SystemConfigurator() {
   const [inverterOverride, setInverterOverride] = useState<Inverter | null>(null);
   const [batteryId, setBatteryId] = useState<string | null>(null);
   const [evChoice, setEvChoice] = useState<EvCharger>(EV_CHARGERS[0]);
-  const [done, setDone] = useState(false);
+
+  // Request flow: closed CTA → contact mini-form → sent confirmation.
+  const [mode, setMode] = useState<"cta" | "form" | "sent">("cta");
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
+
+  // Live CRM form schema — its required fields must be satisfied on submit.
+  const { data: leadSchema } = useContentStore((s) => s.leadForm);
+  const loadLeadForm = useContentStore((s) => s.loadLeadForm);
+  useEffect(() => {
+    loadLeadForm();
+  }, [loadLeadForm]);
 
   // Solar follows the roof recommendation until the user picks a size.
   const solar = solarOverride ?? roof.recommended;
@@ -157,7 +237,14 @@ export function SystemConfigurator() {
   const totalCost =
     solar.finalPrice + (inverter?.price ?? 0) + (battery?.finalPrice ?? 0) + ev.price;
   const annualSaving = estimateAnnualSaving(solar.sizeKw, roof.yieldFactor, !!battery);
-  const paybackYears = annualSaving > 0 ? totalCost / annualSaving : 0;
+
+  // Presented as ranges: exact figures read as a quote, which this is not.
+  const costRange = band(totalCost, PRICE_BAND, 100);
+  const saveRange = band(annualSaving, SAVE_BAND, 50);
+  const paybackLo = saveRange.hi > 0 ? costRange.lo / saveRange.hi : 0;
+  const paybackHi = saveRange.lo > 0 ? costRange.hi / saveRange.lo : 0;
+  const paybackRange =
+    paybackHi > 0 ? `${(Math.round(paybackLo * 2) / 2).toFixed(1)} – ${(Math.round(paybackHi * 2) / 2).toFixed(1)}` : "—";
 
   const lineItems = [
     { label: `${solar.sizeKw} kW solar · ${solar.panels} panels`, value: solar.finalPrice },
@@ -167,6 +254,91 @@ export function SystemConfigurator() {
   ];
 
   const last = STEPS.length - 1;
+
+  /** Submit the configured build + contact details as a CRM lead. The full
+   *  configuration goes in `message` (first-class lead column) and mirrored
+   *  into customFields for when the backend adds structured build fields. */
+  async function handleRequestBuild(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (sending) return;
+    setSendError(null);
+
+    const fd = new FormData(e.currentTarget);
+    const firstName = String(fd.get("firstName") || "").trim();
+    const email = String(fd.get("email") || "").trim();
+    const phoneNo = String(fd.get("phone") || "").trim();
+    if (!firstName) {
+      setSendError("Please tell us your name.");
+      return;
+    }
+    if (!email && !phoneNo) {
+      setSendError("Please add an email or a phone number so we can reach you.");
+      return;
+    }
+
+    const orient = ORIENTATIONS.find((o) => o.id === orientation)?.label ?? orientation;
+    const shade = SHADING.find((s) => s.id === shading)?.label ?? shading;
+
+    const summary = [
+      "Build Your System enquiry:",
+      `- Solar: ${solar.sizeKw} kW (${solar.panels} panels)`,
+      `- Inverter: ${inverter ? `${inverter.brand} ${inverter.model} (${inverter.kw} kW, ${inverter.phase})` : "not selected"}`,
+      `- Battery: ${battery ? `${battery.brand} ${battery.model} (${battery.kwh} kWh)` : "none"}`,
+      `- EV charger: ${ev.price ? ev.label : "none"}`,
+      `- Supply: ${phase === "1P" ? "single-phase" : "three-phase"} · Brand: ${brand}`,
+      `- Roof: ${sqFt.toLocaleString()} sq ft, ${orient}, ${shade}`,
+      `- Estimated investment: ${moneyRange(costRange)} (after rebates, incl. GST)`,
+      `- Estimated saving: ${moneyRange(saveRange)}/yr · payback ${paybackRange} yrs`,
+    ].join("\n");
+
+    setSending(true);
+    try {
+      await submitLead({
+        firstName,
+        email: email || undefined,
+        phone: phoneNo || undefined,
+        suburb: String(fd.get("suburb") || "").trim() || undefined,
+        message: summary,
+        consentMarketing: true,
+        customFields: {
+          // Explicit origin markers so the CRM can distinguish configurator leads.
+          lead_source: "build_configurator",
+          source_page: "/build",
+          ...schemaAutoFill(leadSchema?.fieldsSchema ?? [], {
+            firstName,
+            email: email || undefined,
+            phone: phoneNo || undefined,
+            suburb: String(fd.get("suburb") || "").trim() || undefined,
+          }),
+          build_solar_kw: solar.sizeKw,
+          build_panel_count: solar.panels,
+          build_brand: brand,
+          build_inverter: inverter ? `${inverter.brand} ${inverter.model}` : null,
+          build_battery: battery ? `${battery.model} ${battery.kwh}kWh` : null,
+          build_ev_charger: ev.price ? ev.label : null,
+          build_supply_phase: phase,
+          build_roof_sqft: sqFt,
+          build_roof_orientation: orientation,
+          build_roof_shading: shading,
+          build_est_total_low: costRange.lo,
+          build_est_total_high: costRange.hi,
+          build_est_saving_low: saveRange.lo,
+          build_est_saving_high: saveRange.hi,
+          build_est_payback_years: paybackRange,
+        },
+        ...attribution(),
+        // Always identify the page itself, even with no external referrer.
+        referrerUrl:
+          attribution().referrerUrl ??
+          (typeof window !== "undefined" ? window.location.href : undefined),
+      });
+      setMode("sent");
+    } catch {
+      setSendError("Couldn't send just now — please try again or call us.");
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
     <div className="grid grid-cols-1 gap-7 lg:grid-cols-[1fr_372px]">
@@ -499,48 +671,131 @@ export function SystemConfigurator() {
           </div>
 
           <div className="font-body text-[12.5px] font-bold uppercase tracking-[0.06em] text-ash-500">
-            Estimated total
+            Estimated investment
           </div>
-          <div className="font-display text-[38px] font-extrabold leading-none text-green-600">
-            {money(totalCost)}
+          <div className="font-display text-[clamp(22px,1.9vw,27px)] font-extrabold leading-tight text-green-600">
+            {moneyRange(costRange)}
           </div>
-          <div className="mt-1.5 font-body text-[13px] text-ash-500">after rebates · +GST</div>
+          <div className="mt-1 font-body text-[13px] text-ash-500">after rebates · incl. GST</div>
 
-          {/* Savings + payback */}
+          {/* Savings + payback — estimated ranges */}
           <div className="mt-4 grid grid-cols-2 gap-3">
             <div className="rounded-md bg-green-50 p-3.5">
-              <div className="font-display text-[20px] font-extrabold leading-none text-forest-700">
-                {money(annualSaving)}
+              <div className="font-display text-[15px] font-extrabold leading-snug text-forest-700">
+                {moneyRange(saveRange)}
               </div>
-              <div className="mt-1 font-body text-[11.5px] text-ash-500">Saved / year</div>
+              <div className="mt-1 font-body text-[11.5px] text-ash-500">Est. saved / year</div>
             </div>
             <div className="rounded-md bg-paper p-3.5">
-              <div className="font-display text-[20px] font-extrabold leading-none text-navy-800">
-                {paybackYears.toFixed(1)} <span className="text-[13px] font-bold text-ash-500">yrs</span>
+              <div className="font-display text-[15px] font-extrabold leading-snug text-navy-800">
+                {paybackRange} <span className="text-[12px] font-bold text-ash-500">yrs</span>
               </div>
-              <div className="mt-1 font-body text-[11.5px] text-ash-500">Payback</div>
+              <div className="mt-1 font-body text-[11.5px] text-ash-500">Typical payback</div>
             </div>
           </div>
 
-          {!done ? (
+          {/* Estimate notice — this is not a quote. */}
+          <div className="mt-4 flex gap-2.5 rounded-md border border-gold-400/50 bg-gold-300/15 p-3.5">
+            <Icon name="shield" size={16} stroke={2.2} className="mt-0.5 flex-none text-gold-500" />
+            <p className="m-0 font-body text-[12.5px] leading-relaxed text-ash-700">
+              <strong className="text-navy-700">This is an initial estimate, not a quote.</strong>{" "}
+              Final pricing is confirmed after a free site assessment — roof
+              condition, switchboard and metering can change the design.
+            </p>
+          </div>
+
+          {/* Assumptions behind the numbers */}
+          <details className="mt-2.5 rounded-md border border-ash-200 bg-white">
+            <summary className="cursor-pointer select-none px-3.5 py-2.5 font-display text-[12.5px] font-bold text-forest-700">
+              How we estimate
+            </summary>
+            <ul className="m-0 flex flex-col gap-1.5 px-3.5 pb-3.5 font-body text-[12px] leading-relaxed text-ash-700">
+              <li>Prices include GST with the STC rebate already deducted.</li>
+              <li>Battery prices include current state and federal rebates.</li>
+              <li>
+                Savings assume ≈ $231 per kW per year on a north-facing,
+                unshaded roof, adjusted for your orientation and shading, plus
+                ≈ $320/yr extra self-consumption with a battery.
+              </li>
+              <li>Actual savings depend on your tariff and usage patterns.</li>
+            </ul>
+          </details>
+
+          {mode === "cta" && (
             <button
-              onClick={() => setDone(true)}
+              onClick={() => setMode("form")}
               className="ke-press mt-5 inline-flex w-full items-center justify-center gap-2.5 rounded-pill bg-green-500 px-6 py-[14px] font-display text-[15.5px] font-bold text-white shadow-green hover:bg-green-600"
             >
-              Request This Build <Icon name="arrow" size={18} stroke={2.4} />
+              Get my exact quote <Icon name="arrow" size={18} stroke={2.4} />
             </button>
-          ) : (
+          )}
+
+          {mode === "form" && (
+            <form onSubmit={handleRequestBuild} className="mt-5 flex flex-col gap-2.5" noValidate>
+              <div className="font-display text-[13.5px] font-bold text-navy-700">
+                Send this build to our team
+              </div>
+              <input
+                name="firstName"
+                required
+                placeholder="First name"
+                className="w-full rounded-md border-[1.5px] border-ash-300 bg-white px-3.5 py-2.5 font-body text-[14px] text-ink outline-none"
+              />
+              <input
+                name="email"
+                type="email"
+                placeholder="Email"
+                className="w-full rounded-md border-[1.5px] border-ash-300 bg-white px-3.5 py-2.5 font-body text-[14px] text-ink outline-none"
+              />
+              <div className="grid grid-cols-2 gap-2.5">
+                <input
+                  name="phone"
+                  type="tel"
+                  placeholder="Phone"
+                  className="w-full rounded-md border-[1.5px] border-ash-300 bg-white px-3.5 py-2.5 font-body text-[14px] text-ink outline-none"
+                />
+                <input
+                  name="suburb"
+                  placeholder="Suburb"
+                  className="w-full rounded-md border-[1.5px] border-ash-300 bg-white px-3.5 py-2.5 font-body text-[14px] text-ink outline-none"
+                />
+              </div>
+              {sendError && (
+                <p className="m-0 rounded-md bg-red-50 px-3 py-2 font-body text-[12.5px] text-red-700">
+                  {sendError}
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={sending}
+                className={cn(
+                  "ke-press inline-flex w-full items-center justify-center gap-2.5 rounded-pill bg-green-500 px-6 py-[13px] font-display text-[15px] font-bold text-white shadow-green hover:bg-green-600",
+                  sending && "opacity-70",
+                )}
+              >
+                {sending ? "Sending…" : "Request my exact quote"}
+                {!sending && <Icon name="arrow" size={17} stroke={2.4} />}
+              </button>
+              <p className="m-0 text-center font-body text-[11px] text-ash-500">
+                We include your full configuration so the first call is useful.
+              </p>
+            </form>
+          )}
+
+          {mode === "sent" && (
             <div className="mt-5 rounded-lg bg-green-50 p-4 text-center">
               <Icon name="check" size={28} stroke={3} className="mx-auto mb-1.5 text-green-600" />
-              <div className="font-display text-[15px] font-bold text-forest-700">Build saved!</div>
+              <div className="font-display text-[15px] font-bold text-forest-700">Build sent!</div>
               <div className="mt-0.5 font-body text-[13px] text-ash-700">
-                A consultant will confirm your configuration and exact price.
+                A consultant will review your configuration and confirm exact
+                pricing after a free site assessment.
               </div>
             </div>
           )}
 
           <p className="mt-3.5 text-center font-body text-[11.5px] leading-relaxed text-ash-500">
-            Indicative pricing &amp; savings — final quote confirmed after a free site assessment.
+            Estimated ranges only — your final quote is confirmed after a free
+            site assessment.
           </p>
         </div>
       </div>
