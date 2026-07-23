@@ -18,7 +18,10 @@ import { ZONE_RATING, zoneForPostcode, type Zone } from "./postcodeZones";
 export { ZONE_RATING, zoneForPostcode, type Zone };
 
 /** Date all rates below were last checked against primary sources. */
-export const VERIFIED = "2026-06-22";
+export const VERIFIED = "2026-07-23";
+
+/** Federal STC ("solar rebate") authority — Clean Energy Regulator, SRES. */
+export const CER_STC_URL = "https://www.cleanenergyregulator.gov.au/";
 
 /* --------------------------------------------------------------- STC */
 
@@ -140,6 +143,8 @@ export type StateScheme = {
   name: string;
   /** Plain-language status of the current battery/solar incentive. */
   battery: string;
+  /** Compact, accurate scheme name for tight UI (e.g. the promo strip). */
+  short: string;
   url: string;
 };
 
@@ -153,41 +158,50 @@ export const STATE_SCHEMES: Record<StateCode, StateScheme> = {
   NSW: {
     name: "New South Wales",
     battery: "Peak Demand Reduction Scheme (PDRS) battery incentive + VPP connection bonus.",
+    short: "PDRS battery incentive + VPP bonus",
     url: "https://www.energy.nsw.gov.au/households/rebates-grants-and-schemes",
   },
   VIC: {
     name: "Victoria",
-    battery: "Solar Victoria interest-free battery loans (eligibility applies).",
+    battery:
+      "Solar Victoria solar-panel rebate (income-tested). State battery loans are closed — batteries are now covered by the federal Cheaper Home Batteries program.",
+    short: "Solar Victoria solar rebate (battery via federal program)",
     url: "https://www.solar.vic.gov.au/",
   },
   QLD: {
     name: "Queensland",
     battery: "Battery rebates run periodically — check current round before quoting.",
+    short: "Periodic state battery rebate rounds",
     url: "https://www.qld.gov.au/housing/buying-owning-home/energy-water-home/solar",
   },
   SA: {
     name: "South Australia",
     battery: "No active state battery cash rebate; retailer VPP plans available.",
+    short: "Retailer VPP plans (no state cash rebate)",
     url: "https://www.sa.gov.au/topics/energy-and-environment",
   },
   WA: {
     name: "Western Australia",
     battery: "WA Residential Battery Scheme rebate (Synergy/Horizon network areas).",
-    url: "https://www.wa.gov.au/service/energy-and-environment",
+    short: "WA Residential Battery Scheme rebate",
+    url: "https://www.energy.wa.gov.au/",
   },
   TAS: {
     name: "Tasmania",
     battery: "Energy Saver Loan Scheme — interest-free finance for batteries.",
+    short: "Energy Saver Loan Scheme",
     url: "https://www.energy.tas.gov.au/",
   },
   ACT: {
     name: "Australian Capital Territory",
     battery: "Sustainable Household Scheme — zero-interest loans for batteries.",
+    short: "Sustainable Household Scheme loans",
     url: "https://www.climatechoices.act.gov.au/policy-programs/sustainable-household-scheme",
   },
   NT: {
     name: "Northern Territory",
     battery: "Home and Business Battery Scheme grant (subject to current funding).",
+    short: "Home & Business Battery Scheme grant",
     url: "https://nt.gov.au/environment/energy",
   },
 };

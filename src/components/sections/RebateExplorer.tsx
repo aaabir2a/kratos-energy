@@ -3,21 +3,38 @@
 import { useState } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
+import { STATE_SCHEMES, calcStc, CER_STC_URL, VERIFIED, type StateCode } from "@/lib/rebates";
+
+/** "2026-07-23" -> "23 July 2026" */
+function verifiedDate(iso: string) {
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
+}
+
+/** System size the figures below are quoted for. */
+const SAMPLE_KW = 6.6;
+/** Representative capital-city postcode per state, used to compute the STC
+ *  zone. The federal STC figure is derived live from the rebate engine so it
+ *  can never drift from the real deeming-based amount. */
+const REP_POSTCODE: Record<string, number> = { NSW: 2000, VIC: 3000, WA: 6000 };
 
 type Rebate = {
   state: string;
   name: string;
-  federalStc: number;
+  /** State solar-panel rebate (0 where the state has none). */
   stateRebate: number;
+  /** State battery incentive on a typical 10kWh battery (0 where none). */
   batteryRebate: number;
   note: string;
 };
 
-// Indicative figures for a typical 6.6kW system — replace with live data.
+// Verified against government sources 2026-07-23 (see per-state source links).
+// State battery/solar figures are indicative for a typical system; the federal
+// STC below is computed live, not hard-coded.
 const REBATES: Rebate[] = [
-  { state: "NSW", name: "New South Wales", federalStc: 2230, stateRebate: 640, batteryRebate: 1600, note: "Empowering Homes + federal STCs." },
-  { state: "VIC", name: "Victoria", federalStc: 2230, stateRebate: 1400, batteryRebate: 2950, note: "Solar Victoria rebate + interest-free loan." },
-  { state: "WA", name: "Western Australia", federalStc: 2230, stateRebate: 0, batteryRebate: 1300, note: "Federal STCs + DEBS buyback." },
+  { state: "NSW", name: "New South Wales", stateRebate: 0, batteryRebate: 1600, note: "PDRS battery incentive + federal STCs." },
+  { state: "VIC", name: "Victoria", stateRebate: 1400, batteryRebate: 0, note: "Solar Victoria solar rebate; batteries via the federal program." },
+  { state: "WA", name: "Western Australia", stateRebate: 0, batteryRebate: 1300, note: "WA Residential Battery Scheme (Synergy) + federal STCs." },
 ];
 
 function money(n: number) {
@@ -27,7 +44,11 @@ function money(n: number) {
 export function RebateExplorer() {
   const [active, setActive] = useState("NSW");
   const r = REBATES.find((x) => x.state === active)!;
-  const total = r.federalStc + r.stateRebate;
+  const scheme = STATE_SCHEMES[active as StateCode];
+  // Live federal STC for the sample system in this state (deeming-based).
+  const federalStc =
+    calcStc(SAMPLE_KW, REP_POSTCODE[r.state], new Date().getFullYear())?.rebate ?? 0;
+  const total = federalStc + r.stateRebate;
   const totalWithBattery = total + r.batteryRebate;
 
   return (
@@ -68,7 +89,7 @@ export function RebateExplorer() {
 
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
           {[
-            ["Federal STCs", r.federalStc, "Applied at point of sale"],
+            ["Federal STCs", federalStc, "Applied at point of sale"],
             ["State rebate", r.stateRebate, "On a typical 6.6kW system"],
             ["Battery rebate", r.batteryRebate, "If adding storage"],
           ].map(([label, val, sub]) => (
@@ -108,6 +129,40 @@ export function RebateExplorer() {
           system size, STC price and program availability. A consultant will
           confirm your exact entitlements.
         </p>
+
+        {/* Verify with the official government sources */}
+        <div className="mt-4 rounded-lg border border-ash-200 bg-paper p-4">
+          <div className="flex items-center gap-2 font-display text-[13px] font-bold text-navy-700">
+            <Icon name="shield" size={16} stroke={2.2} className="flex-none text-forest-700" />
+            Verify these figures with the official sources
+          </div>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-5">
+            <a
+              href={CER_STC_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-1.5 font-display text-[13px] font-bold text-green-600 hover:text-green-700"
+            >
+              <Icon name="zap" size={14} stroke={2.2} className="flex-none" />
+              Federal STCs — Clean Energy Regulator
+              <Icon name="arrow" size={13} stroke={2.4} className="-rotate-45 transition-transform group-hover:translate-x-0.5" />
+            </a>
+            <a
+              href={scheme.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-1.5 font-display text-[13px] font-bold text-green-600 hover:text-green-700"
+            >
+              <Icon name="mapPin" size={14} stroke={2.2} className="flex-none" />
+              {r.state} — {scheme.short}
+              <Icon name="arrow" size={13} stroke={2.4} className="-rotate-45 transition-transform group-hover:translate-x-0.5" />
+            </a>
+          </div>
+          <p className="mt-2.5 font-body text-[11.5px] text-ash-500">
+            Last checked against government sources on {verifiedDate(VERIFIED)}. Programs
+            change often — always confirm current eligibility on the official site.
+          </p>
+        </div>
       </div>
     </div>
   );
