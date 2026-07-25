@@ -3,13 +3,16 @@
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { cn, scrollToId } from "@/lib/utils";
+import { CER_STC_URL } from "@/lib/rebates";
 
-// STC step-down for a typical 10kW NSW system (Zone 3) as deeming falls to
-// the 2030 scheme end. Figures from the rebate engine — see src/lib/rebates.
+// Federal STC ("solar rebate") step-down for a typical 10kW system as the
+// deeming period shrinks toward the 2030 SRES scheme end. This is the national
+// federal scheme, not a state-specific rebate. Figures from the rebate engine —
+// see src/lib/rebates.
 const COLS: [string, string, boolean][] = [
-  ["$2,620", "Current Rebate (2026)", true],
-  ["$2,090", "2027 Rebate (est.)", false],
-  ["$1,560", "2028 Rebate (est.)", false],
+  ["$2,620", "Federal STC · 2026", true],
+  ["$2,090", "Federal STC · 2027 (est.)", false],
+  ["$1,560", "Federal STC · 2028 (est.)", false],
 ];
 
 export function RebateBanner() {
@@ -24,11 +27,11 @@ export function RebateBanner() {
             </span>
           </div>
           <h2 className="mb-3 font-display text-[clamp(28px,3.2vw,40px)] font-extrabold leading-[1.1] tracking-[-0.02em] text-white">
-            NSW solar rebates are ending soon.
+            The federal solar rebate is ending soon.
           </h2>
           <p className="mb-6 max-w-[440px] font-body text-[17px] leading-relaxed text-[#c4d2ef]">
-            Government rebates reduce every year. Lock in maximum savings before
-            the next step-down.
+            The federal STC rebate steps down every year until the scheme ends in
+            2030. Lock in maximum savings before the next step-down.
           </p>
           <Button
             variant="gold"
@@ -70,6 +73,18 @@ export function RebateBanner() {
             </div>
           ))}
         </div>
+
+        {/* Let visitors verify the federal figures at the source. */}
+        <a
+          href={CER_STC_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex items-center gap-1.5 font-body text-[12.5px] font-semibold text-[#c4d2ef] underline-offset-2 hover:text-white hover:underline"
+        >
+          <Icon name="shield" size={14} stroke={2.2} className="text-gold-400" />
+          Source: Clean Energy Regulator (federal STC scheme)
+          <Icon name="arrow" size={12} stroke={2.4} className="-rotate-45" />
+        </a>
       </div>
     </section>
   );
