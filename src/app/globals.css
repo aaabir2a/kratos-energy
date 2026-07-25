@@ -92,4 +92,37 @@
   .ke-lift {
     @apply transition-all duration-200 ease-soft hover:-translate-y-1 hover:shadow-lg;
   }
+
+  /* Custom Prose styles for CMS blogs */
+  .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    @apply font-display font-extrabold text-navy-800 tracking-[-0.015em] mb-3 mt-7;
+  }
+  .prose h1 { @apply text-[28px] sm:text-[32px] mt-9; }
+  .prose h2 { @apply text-[22px] sm:text-[25px] mt-8; }
+  .prose h3 { @apply text-[19px] sm:text-[21px] mt-7; }
+  .prose h4 { @apply text-[17px] sm:text-[18px]; }
+  
+  .prose p {
+    @apply font-body text-ash-700 leading-relaxed text-[16px] sm:text-[16.5px] mb-4;
+  }
+  
+  .prose a {
+    @apply text-forest-700 underline font-semibold transition-colors hover:text-forest-800;
+  }
+  
+  .prose ul {
+    @apply list-disc pl-5 mb-5 space-y-1.5 font-body text-[16px] text-ash-700;
+  }
+  
+  .prose ol {
+    @apply list-decimal pl-5 mb-5 space-y-1.5 font-body text-[16px] text-ash-700;
+  }
+  
+  .prose li {
+    @apply leading-relaxed;
+  }
+
+  .prose strong {
+    @apply font-bold text-navy-900;
+  }
 }
