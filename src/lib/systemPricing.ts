@@ -165,8 +165,8 @@ export const SHADING = [
 ] as const;
 export type ShadingId = (typeof SHADING)[number]["id"];
 
-/** Installed footprint of a 475W panel incl. spacing, in square feet. */
-const SQFT_PER_PANEL = 22;
+/** Installed footprint of a 475W panel incl. spacing, in square metres. */
+const SQM_PER_PANEL = 2.05;
 /** Base share of a roof actually usable after setbacks/obstructions. */
 const BASE_USABLE = 0.6;
 /** Baseline first-year saving per kW on a north-facing, unshaded roof. */
@@ -181,18 +181,18 @@ export type RoofEstimate = {
   yieldFactor: number;
 };
 
-/** From roof area (sq ft) + orientation + shading, estimate how much
+/** From roof area (m²) + orientation + shading, estimate how much
  *  solar fits and which standard system to recommend. */
 export function estimateRoof(
-  sqFt: number,
+  sqM: number,
   orientationId: OrientationId,
   shadingId: ShadingId,
 ): RoofEstimate {
   const shading = SHADING.find((s) => s.id === shadingId)!;
   const orientation = ORIENTATIONS.find((o) => o.id === orientationId)!;
 
-  const usableSqFt = sqFt * BASE_USABLE * shading.usable;
-  const maxPanels = Math.max(0, Math.floor(usableSqFt / SQFT_PER_PANEL));
+  const usableSqM = sqM * BASE_USABLE * shading.usable;
+  const maxPanels = Math.max(0, Math.floor(usableSqM / SQM_PER_PANEL));
   const maxKw = Math.round(maxPanels * 0.475 * 10) / 10;
 
   // Largest standard system that fits; fall back to the smallest.

@@ -185,11 +185,11 @@ export function SystemConfigurator() {
   const [step, setStep] = useState(0);
 
   // Roof
-  const [sqFt, setSqFt] = useState(1500);
+  const [sqM, setSqM] = useState(140);
   const [orientation, setOrientation] = useState<OrientationId>("N");
   const [shading, setShading] = useState<ShadingId>("none");
 
-  const roof = useMemo(() => estimateRoof(sqFt, orientation, shading), [sqFt, orientation, shading]);
+  const roof = useMemo(() => estimateRoof(sqM, orientation, shading), [sqM, orientation, shading]);
 
   // System. Selections are stored as overrides and the effective values are
   // derived, so changing brand/phase/roof can't leave a stale choice selected.
@@ -286,7 +286,7 @@ export function SystemConfigurator() {
       `- Battery: ${battery ? `${battery.brand} ${battery.model} (${battery.kwh} kWh)` : "none"}`,
       `- EV charger: ${ev.price ? ev.label : "none"}`,
       `- Supply: ${phase === "1P" ? "single-phase" : "three-phase"} · Brand: ${brand}`,
-      `- Roof: ${sqFt.toLocaleString()} sq ft, ${orient}, ${shade}`,
+      `- Roof: ${sqM.toLocaleString()} m², ${orient}, ${shade}`,
       `- Estimated investment: ${moneyRange(costRange)} (after rebates, incl. GST)`,
       `- Estimated saving: ${moneyRange(saveRange)}/yr · payback ${paybackRange} yrs`,
     ].join("\n");
@@ -317,7 +317,7 @@ export function SystemConfigurator() {
           build_battery: battery ? `${battery.model} ${battery.kwh}kWh` : null,
           build_ev_charger: ev.price ? ev.label : null,
           build_supply_phase: phase,
-          build_roof_sqft: sqFt,
+          build_roof_sqm: sqM,
           build_roof_orientation: orientation,
           build_roof_shading: shading,
           build_est_total_low: costRange.lo,
@@ -386,22 +386,22 @@ export function SystemConfigurator() {
                 <div className="mb-1.5 flex items-center justify-between">
                   <span className="font-display text-[13.5px] font-bold text-ash-700">Roof area</span>
                   <span className="font-display text-[16px] font-extrabold text-forest-700">
-                    {sqFt.toLocaleString()} sq ft
+                    {sqM.toLocaleString()} m²
                   </span>
                 </div>
                 <input
                   type="range"
-                  min={500}
-                  max={4000}
-                  step={50}
-                  value={sqFt}
-                  onChange={(e) => setSqFt(+e.target.value)}
+                  min={45}
+                  max={370}
+                  step={5}
+                  value={sqM}
+                  onChange={(e) => setSqM(+e.target.value)}
                   className="w-full"
-                  aria-label="Roof area in square feet"
+                  aria-label="Roof area in square metres"
                 />
                 <div className="mt-1 flex justify-between font-body text-[11.5px] text-ash-500">
-                  <span>Small (500)</span>
-                  <span>Large (4,000)</span>
+                  <span>Small (45 m²)</span>
+                  <span>Large (370 m²)</span>
                 </div>
               </div>
 
@@ -676,7 +676,9 @@ export function SystemConfigurator() {
           <div className="font-display text-[clamp(22px,1.9vw,27px)] font-extrabold leading-tight text-green-600">
             {step === last ? moneyRange(costRange) : "—"}
           </div>
-          <div className="mt-1 font-body text-[13px] text-ash-500">after rebates · incl. GST</div>
+          <div className="mt-1 font-body text-[13px] text-ash-500">
+            Incl. GST · after the federal STC rebate (and battery rebates where applicable)
+          </div>
 
           {/* Savings + payback — estimated ranges */}
           <div className="mt-4 grid grid-cols-2 gap-3">

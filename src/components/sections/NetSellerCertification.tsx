@@ -77,7 +77,7 @@ export function NetSellerCertification() {
           </h2>
 
           <p className="font-body text-[16px] leading-relaxed text-ash-700">
-            As a signatory to the <strong className="text-navy-900 font-bold">New Energy Tech Consumer Code</strong>, we have committed to uphold the consumer protection standards outlines to protect you through your entire solar journey.
+            As a signatory to the <strong className="text-navy-900 font-bold">New Energy Tech Consumer Code</strong>, we have committed to uphold the consumer protection standards outlined to protect you through your entire solar journey.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">

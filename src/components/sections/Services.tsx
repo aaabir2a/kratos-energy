@@ -29,7 +29,7 @@ const FEATURED: Service = {
   body: "Power your home with clean, reliable solar. Perfect for families looking to slash bills.",
   points: [
     "Systems from 3kW to 15kW",
-    "From $5,990 after rebates",
+    "From $5,990 incl. GST, after the federal STC rebate",
     "Free design & installation",
   ],
 };
@@ -228,7 +228,7 @@ export function Services() {
           </h2>
           <p className="mx-auto mt-3 max-w-[540px] font-body text-lg text-ash-700">
             {showPackages
-              ? "Fully-installed packages, priced after rebates. Every system designed, installed and supported by one Australian-owned team."
+              ? "Fully-installed packages, priced incl. GST after the federal STC rebate. Every system designed, installed and supported by one Australian-owned team."
               : "One Australian-owned team handles design, install and support — kilowatt to megawatt."}
           </p>
         </div>

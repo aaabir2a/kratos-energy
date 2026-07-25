@@ -188,7 +188,7 @@ export function BatteryRange() {
                     <span className="font-display text-[17px] font-extrabold text-navy-700">
                       {AUD.format(c.price)}
                     </span>{" "}
-                    after rebates
+                    incl. GST, after rebates
                   </div>
                 )}
                 <ul className="mt-4 flex flex-col gap-2.5">

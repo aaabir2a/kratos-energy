@@ -28,7 +28,7 @@ const REVIEWS: Review[] = [
     when: "1 year ago",
   },
   {
-    q: "I'd like to thank Nessar and my neighbour Hasan for doing a wonderful job organizing the installation of solar panels on my house. Wei and his team worked incredibly hard, especially since my home is double-storey, making the installation quite challenging. They spent the entire day ensuring everything was completed correctly. I'm very happy with the service.",
+    q: "I'd like to thank Nessar and my neighbour Hasan for doing a wonderful job organising the installation of solar panels on my house. Wei and his team worked incredibly hard, especially since my home is double-storey, making the installation quite challenging. They spent the entire day ensuring everything was completed correctly. I'm very happy with the service.",
     n: "Legend",
     when: "9 months ago",
   },

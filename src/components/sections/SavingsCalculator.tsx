@@ -13,7 +13,7 @@ const STATE_FACTOR: Record<string, number> = {
 
 const SIDE_STATS: [string, string][] = [
   ["$8.2M", "Customer savings"],
-  ["3,100+", "Systems installed"],
+  ["2,847+", "Homes powered"],
   ["25 yr", "Asset lifespan"],
 ];
 

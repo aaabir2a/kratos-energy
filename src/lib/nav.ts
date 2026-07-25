@@ -34,13 +34,13 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
   {
     id: "residential",
     label: "Residential Systems",
-    description: "High-performance solar and battery solutions tailored for Australian homes to maximize your energy savings.",
+    description: "High-performance solar and battery solutions tailored for Australian homes to maximise your energy savings.",
     icon: "sun",
     subcategories: [
       { label: "6.6kW System", href: "/systems/6-6kw", description: "Our most popular size, ideal for standard 2–4 person homes." },
       { label: "10.12kW System", href: "/systems/10kw", description: "Perfect for medium homes with higher usage or ducted air-con." },
       { label: "12.2kW System", href: "/systems/12-2kw", description: "Designed for larger families, high energy loads, or battery readiness." },
-      { label: "Customized Solution", href: "/get-a-quote", description: "Custom designed solar and storage layouts matching your exact needs." }
+      { label: "Customised Solution", href: "/get-a-quote", description: "Custom-designed solar and storage layouts matching your exact needs." }
     ]
   },
   {
@@ -52,7 +52,7 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
       { label: "30kW System", href: "/systems/30kw", description: "Cut overheads for cafés, local medical clinics, and small offices." },
       { label: "50kW System", href: "/systems/50kw", description: "Standard configuration for small-medium warehouses and industrial units." },
       { label: "100kW System", href: "/systems/100kw", description: "Our largest standard commercial configuration for high-yield operations." },
-      { label: "Customized System", href: "/get-a-quote", description: "Tailored multi-inverter configurations with utility grid connection support." }
+      { label: "Customised System", href: "/get-a-quote", description: "Tailored multi-inverter configurations with utility grid connection support." }
     ]
   },
   {
