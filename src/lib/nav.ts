@@ -116,11 +116,11 @@ export const NAV: NavLink[] = [
   },
   { label: "Projects", href: "/#reviews" },
   { label: "Blog", href: "/blog" },
-  { label: "Refer", href: "/refer" },
+  // { label: "Refer", href: "/refer" },
   { label: "Contact", href: "/contact" },
 ];
 
 /** Phone number used across the site chrome. */
 export const PHONE = "1300 089 547";
 export const PHONE_HREF = "tel:1300089547";
-export const EMAIL = "sales@kratos-energy.com";
+export const EMAIL = "info@kratos-energy.com";

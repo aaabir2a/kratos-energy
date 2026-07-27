@@ -20,7 +20,7 @@ const COLUMNS: { heading: string; items: { label: string; href: string }[] }[] =
       { label: "Blog & Guides", href: "/blog" },
       { label: "Our Projects", href: "/#reviews" },
       { label: "Finance & $0 Upfront", href: "/finance" },
-      { label: "Refer a Friend", href: "/refer" },
+      // { label: "Refer a Friend", href: "/refer" },
       { label: "Government Rebates", href: "/rebates" },
     ],
   },

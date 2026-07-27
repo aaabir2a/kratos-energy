@@ -7,7 +7,7 @@ import { ChatWidget } from "./ChatWidget";
 
 /**
  * Standard page wrapper: promo strip + sticky header + footer,
- * the floating WhatsApp launcher, and the embedded support chat widget.
+ * the floating "Call us" launcher, and the embedded support chat widget.
  * Wrap any routed page's content with this for consistent chrome.
  */
 export function SiteLayout({ children }: { children: React.ReactNode }) {
