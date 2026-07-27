@@ -1,14 +1,19 @@
 import { Icon } from "@/components/ui/Icon";
 import { PHONE, PHONE_HREF } from "@/lib/nav";
 import { RebateTicker } from "./RebateTicker";
+import { Socials } from "./Socials";
 
 /** Slim utility / promo strip above the header. */
 export function PromoBar() {
   return (
     <div className="sticky top-0 z-[60] bg-forest-900 text-[13px] text-[#eaf3e6]">
-      <div className="flex h-[38px] w-full items-center gap-[18px] px-5 sm:px-8">
-        <RebateTicker />
-        <div className="ml-auto hidden items-center gap-[22px] font-semibold md:flex">
+      <div className="flex h-[38px] w-full items-center gap-[14px] px-5 sm:gap-[18px] sm:px-8">
+        <div className="flex min-w-0 flex-1">
+          <RebateTicker />
+        </div>
+        {/* Socials — visible on every breakpoint, including mobile. */}
+        <Socials variant="bar" className="flex-none" />
+        <div className="hidden items-center gap-[22px] font-semibold md:flex">
           <span className="inline-flex items-center gap-[7px] opacity-90">
             <Icon name="mapPin" size={13} stroke={2.2} /> NSW . Victoria . ACT
           </span>

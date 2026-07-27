@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Logo } from "@/components/ui/Logo";
 import { Icon } from "@/components/ui/Icon";
 import { PHONE, EMAIL } from "@/lib/nav";
+import { Socials } from "./Socials";
 
 const COLUMNS: { heading: string; items: { label: string; href: string }[] }[] = [
   {
@@ -70,6 +71,13 @@ export function Footer() {
                 North Wollongong NSW 2500 Australia
               </span>
             </address>
+
+            <div className="mt-6">
+              <div className="mb-2.5 font-display text-[12.5px] font-bold uppercase tracking-[0.06em] text-[#8aa896]">
+                Follow us
+              </div>
+              <Socials variant="footer" />
+            </div>
           </div>
 
           {COLUMNS.map((col) => (
