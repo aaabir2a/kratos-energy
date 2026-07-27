@@ -3,16 +3,49 @@ import Image from "next/image";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
-// import { GuideDownload } from "@/components/sections/GuideDownload";
-import { POSTS } from "@/lib/posts";
 
 export const metadata: Metadata = {
-  title: "Solar Blog & Guides",
+  title: "Solar Blog & Guides | Kratos Energy",
   description:
     "Practical, no-jargon guides on solar costs, batteries, rebates and getting the most from your system — from the Kratos Energy team.",
 };
 
+export const revalidate = 60; // ISR revalidation every 60 seconds
+
+type SearchParams = Promise<{ category?: string; page?: string }>;
+
+async function fetchBlogData(category = "", page = 1) {
+  const base = process.env.NEXT_PUBLIC_API_BASE || "http://192.168.0.220:4000/api/v1";
+  try {
+    const [postsRes, catsRes] = await Promise.all([
+      fetch(`${base}/public/blog/posts?page=${page}&limit=10&category=${category}`, {
+        next: { revalidate: 60 },
+      }),
+      fetch(`${base}/public/blog/categories`, {
+        next: { revalidate: 60 },
+      }),
+    ]);
+
+    const postsData = await postsRes.json();
+    const catsData = await catsRes.json();
+
+    return {
+      posts: postsData.data?.posts || [],
+      pagination: postsData.data?.pagination || { total: 0, page: 1, limit: 10, totalPages: 1 },
+      categories: catsData.data || [],
+    };
+  } catch (e) {
+    console.error("Error fetching blog data from backend API:", e);
+    return {
+      posts: [],
+      pagination: { total: 0, page: 1, limit: 10, totalPages: 1 },
+      categories: [],
+    };
+  }
+}
+
 function formatDate(d: string) {
+  if (!d) return "";
   return new Date(d).toLocaleDateString("en-AU", {
     day: "numeric",
     month: "short",
@@ -20,99 +53,140 @@ function formatDate(d: string) {
   });
 }
 
-export default function BlogPage() {
-  const [feature, ...rest] = POSTS;
+export default async function BlogPage(props: { searchParams: SearchParams }) {
+  const searchParams = await props.searchParams;
+  const selectedCategory = searchParams.category || "";
+  const page = parseInt(searchParams.page || "1") || 1;
+
+  const { posts, pagination, categories } = await fetchBlogData(selectedCategory, page);
+
+  const displayPosts = posts;
 
   return (
     <SiteLayout>
       <PageHero
-        eyebrow="Blog & Guides"
+        eyebrow="Latest News & Insights"
         title={
           <>
             Everything to know <span className="text-green-600">before going solar.</span>
           </>
         }
-        subtitle="Honest, practical guides on costs, batteries, rebates and getting the most from your system."
+        subtitle="Expert tips on solar technology, sustainable living, and how to maximize your energy savings in Australia."
       />
 
       <section className="bg-white py-14">
         <div className="container-ke">
-          {/* Featured */}
-          <Link
-            href={`/blog/${feature.slug}`}
-            className="ke-lift group grid grid-cols-1 overflow-hidden rounded-xl border border-ash-200 bg-white shadow-md lg:grid-cols-2"
-          >
-            <div className="relative h-60 lg:h-auto">
-              <Image
-                src={feature.cover}
-                alt={feature.title}
-                fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="flex flex-col justify-center p-8 sm:p-10">
-              <div className="mb-3 flex items-center gap-3">
-                <span className="rounded-pill bg-green-50 px-3 py-1 font-display text-[12px] font-bold text-forest-700">
-                  {feature.category}
-                </span>
-                <span className="font-body text-[13px] text-ash-500">
-                  {formatDate(feature.date)} · {feature.readMins} min read
-                </span>
-              </div>
-              <h2 className="font-display text-[clamp(24px,2.6vw,32px)] font-extrabold leading-[1.12] tracking-[-0.02em] text-navy-800">
-                {feature.title}
-              </h2>
-              <p className="mt-3 font-body text-[16px] leading-relaxed text-ash-700">
-                {feature.excerpt}
-              </p>
-              <span className="mt-5 font-display text-[14.5px] font-bold text-forest-700 group-hover:underline">
-                Read article →
-              </span>
-            </div>
-          </Link>
 
-          {/* Grid */}
-          <div className="mt-7 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {rest.map((p) => (
+          {/* Category Tabs */}
+          <div className="mb-10 flex flex-wrap gap-2 border-b pb-6">
+            <Link
+              href="/blog"
+              className={`rounded-full px-4 py-2 font-display text-[13.5px] font-bold transition-all ${
+                !selectedCategory
+                  ? "bg-green-600 text-white shadow-sm"
+                  : "bg-ash-100 hover:bg-ash-200 text-ash-700"
+              }`}
+            >
+              All Posts
+            </Link>
+            {categories.map((cat: any) => (
               <Link
-                key={p.slug}
-                href={`/blog/${p.slug}`}
-                className="ke-lift group flex flex-col overflow-hidden rounded-lg border border-ash-200 bg-white shadow-md"
+                key={cat.id}
+                href={`/blog?category=${cat.slug}`}
+                className={`rounded-full px-4 py-2 font-display text-[13.5px] font-bold transition-all ${
+                  selectedCategory === cat.slug
+                    ? "bg-green-600 text-white shadow-sm"
+                    : "bg-ash-100 hover:bg-ash-200 text-ash-700"
+                }`}
               >
-                <div className="relative h-44">
-                  <Image
-                    src={p.cover}
-                    alt={p.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover"
-                  />
-                  <span className="absolute left-3 top-3 rounded-pill bg-white/95 px-2.5 py-1 font-display text-[11px] font-bold text-forest-700 shadow-sm">
-                    {p.category}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <div className="mb-2 font-body text-[12.5px] text-ash-500">
-                    {formatDate(p.date)} · {p.readMins} min read
-                  </div>
-                  <h3 className="font-display text-[18px] font-bold leading-[1.2] text-navy-700">
-                    {p.title}
-                  </h3>
-                  <p className="mt-2 flex-1 font-body text-[14px] leading-relaxed text-ash-700">
-                    {p.excerpt}
-                  </p>
-                  <span className="mt-4 font-display text-[13.5px] font-bold text-forest-700 group-hover:underline">
-                    Read more →
-                  </span>
-                </div>
+                {cat.name}
               </Link>
             ))}
           </div>
+
+          {/* Grid of Articles */}
+          {displayPosts.length > 0 ? (
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {displayPosts.map((p: any) => (
+                <Link
+                  key={p.slug}
+                  href={`/blog/${p.slug}`}
+                  className="ke-lift group flex flex-col overflow-hidden rounded-xl border border-ash-200 bg-white shadow-md hover:shadow-lg transition-shadow"
+                >
+                  <div className="relative h-48 bg-muted/10">
+                    <Image
+                      src={p.cover}
+                      alt={p.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
+                    />
+                    <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 font-display text-[11px] font-bold text-forest-700 shadow-sm border">
+                      {p.category}
+                    </span>
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <div className="mb-2 font-body text-[12.5px] text-ash-500">
+                      {formatDate(p.date)} · {p.readMins} min read
+                    </div>
+                    <h3 className="font-display text-[19px] font-bold leading-[1.25] text-navy-700 group-hover:text-forest-700 transition-colors line-clamp-2">
+                      {p.title}
+                    </h3>
+                    <p className="mt-3 flex-1 font-body text-[14px] leading-relaxed text-ash-700 line-clamp-3">
+                      {p.excerpt}
+                    </p>
+                    <span className="mt-5 inline-flex items-center gap-1 font-display text-[13.5px] font-bold text-forest-700 group-hover:underline">
+                      Read more →
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20 border-2 border-dashed rounded-xl bg-paper">
+              <p className="text-ash-500 font-bold text-[16px]">No articles found in this category.</p>
+              <Link href="/blog" className="mt-4 inline-block text-forest-600 underline font-semibold text-sm">
+                Back to all posts
+              </Link>
+            </div>
+          )}
+
+          {/* Pagination Controls */}
+          {pagination && pagination.totalPages > 1 && (
+            <div className="mt-14 flex items-center justify-center gap-2">
+              {page > 1 && (
+                <Link
+                  href={`/blog?page=${page - 1}${selectedCategory ? `&category=${selectedCategory}` : ""}`}
+                  className="px-4 py-2 border rounded-lg text-sm font-semibold hover:bg-muted/10 transition-colors"
+                >
+                  Previous
+                </Link>
+              )}
+              {Array.from({ length: pagination.totalPages }, (_, i) => (
+                <Link
+                  key={i + 1}
+                  href={`/blog?page=${i + 1}${selectedCategory ? `&category=${selectedCategory}` : ""}`}
+                  className={`w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold transition-all ${
+                    page === i + 1
+                      ? "bg-green-600 text-white"
+                      : "border hover:bg-muted/10"
+                  }`}
+                >
+                  {i + 1}
+                </Link>
+              ))}
+              {page < pagination.totalPages && (
+                <Link
+                  href={`/blog?page=${page + 1}${selectedCategory ? `&category=${selectedCategory}` : ""}`}
+                  className="px-4 py-2 border rounded-lg text-sm font-semibold hover:bg-muted/10 transition-colors"
+                >
+                  Next
+                </Link>
+              )}
+            </div>
+          )}
         </div>
       </section>
-
-      {/* <GuideDownload /> */}
     </SiteLayout>
   );
 }

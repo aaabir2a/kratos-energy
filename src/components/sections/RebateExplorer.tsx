@@ -16,7 +16,7 @@ const SAMPLE_KW = 6.6;
 /** Representative capital-city postcode per state, used to compute the STC
  *  zone. The federal STC figure is derived live from the rebate engine so it
  *  can never drift from the real deeming-based amount. */
-const REP_POSTCODE: Record<string, number> = { NSW: 2000, VIC: 3000, WA: 6000 };
+const REP_POSTCODE: Record<string, number> = { NSW: 2000, VIC: 3000, ACT: 2600 };
 
 type Rebate = {
   state: string;
@@ -34,7 +34,7 @@ type Rebate = {
 const REBATES: Rebate[] = [
   { state: "NSW", name: "New South Wales", stateRebate: 0, batteryRebate: 1600, note: "PDRS battery incentive + federal STCs." },
   { state: "VIC", name: "Victoria", stateRebate: 1400, batteryRebate: 0, note: "Solar Victoria solar rebate; batteries via the federal program." },
-  { state: "WA", name: "Western Australia", stateRebate: 0, batteryRebate: 1300, note: "WA Residential Battery Scheme (Synergy) + federal STCs." },
+  { state: "ACT", name: "Australian Capital Territory", stateRebate: 0, batteryRebate: 0, note: "Sustainable Household Scheme (zero-interest loans) + federal STCs." },
 ];
 
 function money(n: number) {

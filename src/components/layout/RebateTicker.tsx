@@ -2,7 +2,7 @@
 
 /**
  * Rotating rebate strip for the PromoBar. Cycles the regions Kratos serves
- * (NSW, VIC, WA), naming each region's actual government scheme from the
+ * (NSW, VIC, ACT), naming each region's actual government scheme from the
  * rebate engine — never a federal figure mislabeled as a state rebate. The
  * whole strip links to /rebates, where the exact amounts are calculated.
  */
@@ -17,7 +17,7 @@ const ROTATE_MS = 4500;
 const TICKER: { code: StateCode; region: string }[] = [
   { code: "NSW", region: "NSW" },
   { code: "VIC", region: "Victoria" },
-  { code: "WA", region: "WA" },
+  { code: "ACT", region: "ACT" },
 ];
 
 export function RebateTicker() {

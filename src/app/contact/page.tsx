@@ -43,7 +43,7 @@ const DETAILS: Detail[] = [
   },
 ];
 
-const SERVICE_AREAS = ["NSW", "Victoria", "Western Australia"];
+const SERVICE_AREAS = ["NSW", "Victoria", "ACT"];
 
 export default function ContactPage() {
   return (

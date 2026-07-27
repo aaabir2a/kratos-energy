@@ -8,7 +8,7 @@ import { cn, scrollToId } from "@/lib/utils";
 const STATE_FACTOR: Record<string, number> = {
   NSW: 1.0,
   VIC: 0.94,
-  WA: 1.02,
+  ACT: 1.0,
 };
 
 const SIDE_STATS: [string, string][] = [

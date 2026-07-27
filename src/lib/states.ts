@@ -40,14 +40,14 @@ export const STATE_META: StateMeta[] = [
       "Victoria's cooler, cloudier winters mean a little less generation per kW, but lower install costs and solid rebates keep solar very worthwhile across the state.",
   },
   {
-    code: "WA",
-    slug: "wa",
-    name: "Western Australia",
-    capital: "Perth",
-    capitalPostcode: 6000,
-    zoneNote: "Perth sits in STC Zone 3, while WA's vast north climbs into Zones 1 and 2.",
+    code: "ACT",
+    slug: "act",
+    name: "Australian Capital Territory",
+    capital: "Canberra",
+    capitalPostcode: 2600,
+    zoneNote: "Canberra sits in STC Zone 3, with clear, sunny winters that lift generation.",
     intro:
-      "Perth enjoys some of the highest generation per kW of any capital. WA's Distributed Energy Buyback Scheme also rewards evening exports, making batteries especially valuable.",
+      "The ACT has strong year-round sun and some of the country's most supportive clean-energy policy. Canberra's cold, clear winters keep panels efficient, and the Sustainable Household Scheme offers zero-interest loans for batteries.",
   },
 ];
 
