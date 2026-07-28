@@ -3,9 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
+import { BatteryGrid } from "@/components/sections/BatteryGrid";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
-import { BATTERIES } from "@/lib/batteries";
 
 export const metadata: Metadata = {
   title: "Home Battery Storage",
@@ -100,51 +100,7 @@ export default function BatteryPage() {
               Premium, CEC-approved storage.
             </h2>
           </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {BATTERIES.map((b) => (
-              <article
-                key={b.brand}
-                className="ke-lift flex flex-col overflow-hidden rounded-lg border border-ash-200 bg-white shadow-md"
-              >
-                <div className="relative aspect-square border-b border-ash-200 bg-white">
-                  <Image
-                    src={b.image}
-                    alt={`${b.brand} ${b.model} home battery`}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-contain p-6"
-                  />
-                  <span className="absolute left-4 top-4 rounded-pill bg-forest-900/90 px-3 py-1.5 font-display text-[12px] font-bold text-white">
-                    {b.brand}
-                  </span>
-                </div>
-                <div className="flex flex-1 flex-col p-7">
-                  <h3 className="font-display text-[20px] font-bold text-navy-700">
-                    {b.model}
-                  </h3>
-                  <div className="mt-1 font-display text-[15px] font-extrabold text-green-600">
-                    {b.capacity}
-                  </div>
-                  <ul className="mt-4 flex flex-col gap-2.5">
-                    {b.features.map((f) => (
-                      <li
-                        key={f}
-                        className="flex items-center gap-2.5 font-body text-[14px] text-ink"
-                      >
-                        <Icon
-                          name="check"
-                          size={15}
-                          stroke={3}
-                          className="flex-none text-green-500"
-                        />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </article>
-            ))}
-          </div>
+          <BatteryGrid />
         </div>
       </section>
 
