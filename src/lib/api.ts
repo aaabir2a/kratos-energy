@@ -69,6 +69,17 @@ export type HeroImages = {
   mobile: HeroImage[];
 };
 
+export type Project = {
+  id: string;
+  title: string;
+  description: string | null;
+  /** Always an array; images[0] is the cover. */
+  images: string[];
+  location: string | null;
+  projectDate: string | null;
+  createdAt: string;
+};
+
 export type LeadFieldType =
   | "text"
   | "textarea"
@@ -184,6 +195,22 @@ export function getHeroImagesServer(): Promise<HeroImages> {
 /** Global CRM-managed lead form schema. `null` when none configured. */
 export function getLeadForm(signal?: AbortSignal): Promise<LeadForm | null> {
   return request<LeadForm | null>("/public/lead-form", { signal });
+}
+
+export function getProjects(
+  params: { limit?: number } = {},
+  signal?: AbortSignal,
+): Promise<Project[]> {
+  const q = new URLSearchParams();
+  q.set("limit", String(params.limit ?? 24));
+  return request<Project[]>(`/public/projects?${q.toString()}`, { signal });
+}
+
+/** Server-side (RSC) variant, ISR-cached so project data ships in the HTML. */
+export function getProjectsServer(limit = 24): Promise<Project[]> {
+  return request<Project[]>(`/public/projects?limit=${limit}`, {
+    next: { revalidate: 300 },
+  } as RequestInit);
 }
 
 export function getProducts(

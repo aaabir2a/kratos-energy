@@ -1,12 +1,12 @@
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Hero } from "@/components/sections/Hero";
-import { getHeroImagesServer, type HeroImages } from "@/lib/api";
+import { getHeroImagesServer, getProjectsServer, type HeroImages, type Project } from "@/lib/api";
+import { ProjectShowcase } from "@/components/sections/Projects";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { SystemPricing } from "@/components/sections/SystemPricing";
 import { BatteryRange } from "@/components/sections/BatteryRange";
 import { BrandWall } from "@/components/sections/BrandWall";
 import { SavingsCalculator } from "@/components/sections/SavingsCalculator";
-import { Services } from "@/components/sections/Services";
 import { CaseStudies } from "@/components/sections/CaseStudies";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { RebateBanner } from "@/components/sections/RebateBanner";
@@ -24,8 +24,16 @@ async function loadHeroImages(): Promise<HeroImages> {
   }
 }
 
+async function loadProjects(): Promise<Project[]> {
+  try {
+    return await getProjectsServer(12);
+  } catch {
+    return [];
+  }
+}
+
 export default async function HomePage() {
-  const heroImages = await loadHeroImages();
+  const [heroImages, projects] = await Promise.all([loadHeroImages(), loadProjects()]);
   return (
     <SiteLayout>
       <Hero images={heroImages} />
@@ -35,6 +43,7 @@ export default async function HomePage() {
       <BrandWall />
       <SavingsCalculator />
       {/* <Services /> */}
+      <ProjectShowcase projects={projects} />
       <CaseStudies />
       <Testimonials />
       <RebateBanner />

@@ -114,7 +114,7 @@ export const NAV: NavLink[] = [
       { label: "Finance & $0 Upfront", href: "/finance" },
     ],
   },
-  { label: "Projects", href: "/#reviews" },
+  { label: "Projects", href: "/projects" },
   { label: "Blog", href: "/blog" },
   // { label: "Refer", href: "/refer" },
   { label: "Contact", href: "/contact" },
