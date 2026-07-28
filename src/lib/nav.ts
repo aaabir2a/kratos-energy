@@ -39,7 +39,7 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     subcategories: [
       { label: "6.6kW System", href: "/systems/6-6kw", description: "Our most popular size, ideal for standard 2–4 person homes." },
       { label: "10.12kW System", href: "/systems/10kw", description: "Perfect for medium homes with higher usage or ducted air-con." },
-      { label: "12.2kW System", href: "/systems/12-2kw", description: "Designed for larger families, high energy loads, or battery readiness." },
+      { label: "13.2kW System", href: "/systems/13-2kw", description: "Designed for larger families, high energy loads, or battery readiness." },
       { label: "Customised Solution", href: "/get-a-quote", description: "Custom-designed solar and storage layouts matching your exact needs." }
     ]
   },
@@ -85,8 +85,8 @@ export const NAV: NavLink[] = [
     label: "Our Services",
     href: "/#services",
     menu: [
-      { label: "Residential Solar", href: "/#systems" },
-      { label: "Commercial Solar", href: "/#systems" },
+      { label: "Residential Solar", href: "/residential-solar" },
+      { label: "Commercial Solar", href: "/commercial-solar" },
       { label: "Battery Storage", href: "/battery-storage" },
       { label: "EV Charging", href: "/ev-charging" },
       { label: "Maintenance & Support", href: "/support" },
