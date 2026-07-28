@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
-import { QuoteFunnel } from "@/components/sections/QuoteFunnel";
+import { LeadForm } from "@/components/LeadForm";
 import { Icon } from "@/components/ui/Icon";
 import { Stars } from "@/components/ui/Stars";
 
 export const metadata: Metadata = {
   title: "Get a Free Solar Quote",
   description:
-    "Answer four quick questions and get a tailored solar quote from Kratos Energy — no obligation, no pushy sales calls.",
+    "Tell us about your place and get a tailored solar quote from Kratos Energy — no obligation, no pushy sales calls.",
 };
 
 const PROMISES = [
@@ -28,7 +28,7 @@ export default function QuotePage() {
             Your tailored quote, <span className="text-green-600">in 2 minutes.</span>
           </>
         }
-        subtitle="Four quick questions about your place — we'll handle the design, rebates and numbers."
+        subtitle="Tell us a little about your place and we'll tailor the numbers — design, rebates and all. No obligation."
       >
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5">
           {PROMISES.map((p) => (
@@ -45,7 +45,12 @@ export default function QuotePage() {
 
       <section className="bg-white py-14">
         <div className="container-ke">
-          <QuoteFunnel />
+          <LeadForm
+            staticTitle="Get your free quote"
+            staticSubmitLabel="Get my free quote"
+            successNote="Thanks. A Kratos Energy specialist will call you within one business day with your tailored quote."
+            className="mx-auto max-w-[560px] rounded-xl border border-ash-200 bg-white p-[30px] shadow-lg"
+          />
           <div className="mt-8 flex items-center justify-center gap-2.5 font-body text-[14px] font-bold text-ash-700">
             <Stars size={16} /> 4.9/5 from 2,847 Australian installs
           </div>
