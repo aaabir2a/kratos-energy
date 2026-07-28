@@ -47,10 +47,11 @@ export default function CommercialSolarPage() {
       <SolarSegment
         category="commercial"
         eyebrow="Commercial Solar"
+        heroBgImage="https://api.kratos-energy.com/kratos-uploads/hero/desktop/fc169765-17c9-4c33-a532-19a323767493/optimized.webp"
         title={
           <>
             Cut operating costs with{" "}
-            <span className="text-green-600">commercial solar.</span>
+            <span className="text-green-300">commercial solar.</span>
           </>
         }
         subtitle="Scalable commercial solar that reduces overheads and meets your sustainability goals. From 30kW rooftops to 100kW+ installations — with ROI modelling, finance and ongoing support."

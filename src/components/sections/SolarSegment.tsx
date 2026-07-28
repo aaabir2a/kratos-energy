@@ -23,6 +23,7 @@ export function SolarSegment({
   eyebrow,
   title,
   subtitle,
+  heroBgImage,
   services,
   servicesHeading,
   systemsHeading,
@@ -32,6 +33,7 @@ export function SolarSegment({
   eyebrow: string;
   title: ReactNode;
   subtitle: string;
+  heroBgImage: string;
   services: Service[];
   servicesHeading: string;
   systemsHeading: string;
@@ -42,28 +44,39 @@ export function SolarSegment({
   return (
     <>
       {/* Hero */}
-      <section className="bg-white pb-14 pt-12">
-        <div className="container-ke max-w-[760px]">
-          <Eyebrow>{eyebrow}</Eyebrow>
-          <h1 className="mt-3 font-display text-[clamp(36px,4.8vw,60px)] font-extrabold leading-[1.02] tracking-[-0.025em] text-navy-800 [text-wrap:balance]">
-            {title}
-          </h1>
-          <p className="mt-4 max-w-[560px] font-body text-[18px] leading-relaxed text-ash-700">
-            {subtitle}
-          </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Link
-              href="/get-a-quote"
-              className="ke-press inline-flex items-center justify-center gap-2.5 rounded-pill bg-green-500 px-[32px] py-[15px] font-display text-[16px] font-bold text-white shadow-green hover:bg-green-600"
-            >
-              Get a Free Quote <Icon name="arrow" size={20} stroke={2.4} />
-            </Link>
-            <Link
-              href="/build"
-              className="ke-press inline-flex items-center gap-2.5 rounded-pill border-[1.5px] border-green-300 bg-white px-7 py-[14px] font-display text-[16px] font-bold text-forest-700 hover:bg-green-50"
-            >
-              Build your system
-            </Link>
+      <section className="pb-16 pt-12 relative isolate bg-forest-900 text-white min-h-[500px] flex flex-col justify-center overflow-hidden py-16 lg:py-20">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={heroBgImage}
+          alt=""
+          className="absolute inset-0 -z-10 h-full w-full object-cover object-center"
+        />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(105deg,#0c3b28_6%,rgba(12,59,40,0.85)_40%,rgba(12,59,40,0.40)_70%,rgba(12,59,40,0.12)_100%)]" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-forest-900 via-forest-900/30 to-transparent" />
+
+        <div className="container-ke relative z-10">
+          <div className="max-w-[760px]">
+            <Eyebrow light>{eyebrow}</Eyebrow>
+            <h1 className="mt-3 font-display text-[clamp(40px,5vw,60px)] font-extrabold leading-[1.02] tracking-[-0.025em] text-white [text-wrap:balance]">
+              {title}
+            </h1>
+            <p className="mt-4 max-w-[560px] font-body text-[18px] leading-relaxed text-white/85">
+              {subtitle}
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link
+                href="/get-a-quote"
+                className="ke-press inline-flex items-center justify-center gap-2.5 rounded-pill bg-green-500 px-[32px] py-[15px] font-display text-[16px] font-bold text-white shadow-green hover:bg-green-600"
+              >
+                Get a Free Quote <Icon name="arrow" size={20} stroke={2.4} />
+              </Link>
+              <Link
+                href="/build"
+                className="ke-press inline-flex items-center gap-2.5 rounded-pill border-[1.5px] border-white/25 bg-white/10 px-7 py-[14px] font-display text-[16px] font-bold text-white hover:bg-white/20 transition-colors"
+              >
+                Build your system
+              </Link>
+            </div>
           </div>
         </div>
       </section>

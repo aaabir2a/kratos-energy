@@ -47,9 +47,10 @@ export default function ResidentialSolarPage() {
       <SolarSegment
         category="residential"
         eyebrow="Residential Solar"
+        heroBgImage="https://api.kratos-energy.com/kratos-uploads/hero/desktop/dd403ceb-d379-48e9-8102-589925043402/optimized.webp"
         title={
           <>
-            Power your home with <span className="text-green-600">the sun.</span>
+            Power your home with <span className="text-green-300">the sun.</span>
           </>
         }
         subtitle="Premium home solar and battery systems, designed and installed by an Australian-owned team. From compact 6.6kW setups to whole-home 13kW systems — rebates handled, 25-year warranty."
