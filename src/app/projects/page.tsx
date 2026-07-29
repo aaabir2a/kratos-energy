@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
-import { PageHero } from "@/components/sections/PageHero";
 import { ProjectsGallery } from "@/components/sections/Projects";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Icon } from "@/components/ui/Icon";
-import { Stars } from "@/components/ui/Stars";
 import { getProjectsServer, type Project } from "@/lib/api";
+
+const HEADER_IMAGE =
+  "https://api.kratos-energy.com/kratos-uploads/hero/desktop/dd403ceb-d379-48e9-8102-589925043402/optimized.webp";
 
 export const metadata: Metadata = {
   title: "Our Projects",
@@ -27,22 +28,41 @@ export default async function ProjectsPage() {
 
   return (
     <SiteLayout>
-      <PageHero
-        eyebrow="Our Projects"
-        title={
-          <>
-            Real installs, <span className="text-green-600">real savings.</span>
-          </>
-        }
-        subtitle="A look at the solar and battery systems we've designed and installed for Australian homes and businesses."
-      >
-        <div className="flex items-center justify-center gap-2.5 font-body text-[14px] font-bold text-ash-700">
-          <Stars size={16} /> 4.9/5 from 2,847 Australian installs
+      {/* Header — statement left, audited-quality card right */}
+      <section className="pb-16 pt-12 relative isolate bg-forest-900 text-white min-h-[500px] flex flex-col justify-center overflow-hidden py-16 lg:py-20">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={HEADER_IMAGE}
+          alt=""
+          className="absolute inset-0 -z-10 h-full w-full object-cover object-center"
+        />
+        <div className="absolute inset-0 -z-10 bg-[linear-gradient(105deg,#0c3b28_6%,rgba(12,59,40,0.85)_40%,rgba(12,59,40,0.40)_70%,rgba(12,59,40,0.12)_100%)]" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-forest-900 via-forest-900/30 to-transparent" />
+
+        <div className="container-ke relative z-10">
+          <div className="max-w-[760px]">
+            <h1 className="m-0 font-display text-[clamp(40px,5vw,60px)] font-extrabold leading-[1.02] tracking-[-0.025em] text-white [text-wrap:balance]">
+              Our Projects
+            </h1>
+            <p className="mt-4 max-w-[560px] font-body text-[18px] leading-relaxed text-white/85">
+              Real solar and battery installations designed and delivered by our
+              Australian-owned team — for homes and businesses generating their
+              own clean power. Explore the systems we&rsquo;ve built.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <span className="inline-flex items-center gap-2 rounded-pill border border-white/20 bg-white/10 px-4 py-2 font-display text-[13px] font-bold text-white transition-colors">
+                <Icon name="shield" size={15} stroke={2.2} /> CEC-Accredited Installer
+              </span>
+              <span className="inline-flex items-center gap-2 rounded-pill border border-white/20 bg-white/10 px-4 py-2 font-display text-[13px] font-bold text-white transition-colors">
+                <Icon name="award" size={15} stroke={2.2} /> 2,847+ Homes Powered
+              </span>
+            </div>
+          </div>
         </div>
-      </PageHero>
+      </section>
 
       {/* Gallery */}
-      <section className="bg-white py-14 sm:py-[72px]">
+      <section className="bg-paper py-14 sm:py-[64px]">
         <div className="container-ke">
           <ProjectsGallery projects={projects} />
         </div>

@@ -14,6 +14,32 @@ function projectMonth(iso: string | null): string {
   return d.toLocaleDateString("en-AU", { month: "short", year: "numeric" });
 }
 
+/** Residential vs Commercial label inferred from the system size in the title. */
+function categoryLabel(title: string): string {
+  const m = title.match(/(\d+(?:\.\d+)?)\s?kw\b/i);
+  const kw = m ? parseFloat(m[1]) : null;
+  if (kw !== null) return kw >= 30 ? "Commercial Solar" : "Residential Solar";
+  return "Solar & Battery";
+}
+
+/** Pull short spec "highlight" chips from the title + description. */
+function specChips(text: string): string[] {
+  const out: string[] = [];
+  const push = (v: string) => {
+    if (v && !out.includes(v)) out.push(v);
+  };
+  const kw = text.match(/(\d+(?:\.\d+)?)\s?kw\b/i);
+  if (kw) push(`${kw[1]}kW system`);
+  const panels = text.match(/(\d+)\s?panels?/i);
+  if (panels) push(`${panels[1]} panels`);
+  const kwh = text.match(/(\d+(?:\.\d+)?)\s?kwh\b/i);
+  if (kwh) push(`${kwh[1]}kWh battery`);
+  const brand = text.match(/\b(goodwe|sungrow|fronius|fox\s?ess|sigenergy|sofar|tesla|huawei|jinko|trina)\b/i);
+  if (brand) push(`${brand[1].replace(/\s+/g, " ")} hardware`);
+  if (/inverter/i.test(text)) push("Hybrid inverter");
+  return out.slice(0, 4);
+}
+
 /** Cover-image card. Location + date badge, title on a gradient scrim. */
 function ProjectCard({
   project,
@@ -82,8 +108,16 @@ function ProjectCard({
 
 /* -------------------------------------------------------------- lightbox -- */
 
-function Lightbox({ project, onClose }: { project: Project; onClose: () => void }) {
-  const [i, setI] = useState(0);
+function Lightbox({
+  project,
+  onClose,
+  initial = 0,
+}: {
+  project: Project;
+  onClose: () => void;
+  initial?: number;
+}) {
+  const [i, setI] = useState(initial);
   const count = project.images.length;
   const month = projectMonth(project.projectDate);
 
@@ -112,19 +146,19 @@ function Lightbox({ project, onClose }: { project: Project; onClose: () => void 
       aria-label={project.title}
     >
       <div
-        className="relative flex max-h-full w-full max-w-[1000px] flex-col overflow-hidden rounded-xl bg-white shadow-2xl lg:flex-row"
+        className="relative flex max-h-[95vh] w-[95vw] max-w-[1280px] flex-col overflow-hidden rounded-xl bg-white shadow-2xl lg:flex-row lg:h-[82vh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Image stage */}
-        <div className="relative flex-1 bg-forest-900">
-          <div className="relative aspect-[4/3] w-full lg:aspect-auto lg:h-full lg:min-h-[440px]">
+        <div className="relative flex-1 bg-[#0b100e]">
+          <div className="relative h-[40vh] w-full lg:aspect-auto lg:h-full lg:min-h-[440px]">
             {project.images[i] && (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={project.images[i]}
                 src={project.images[i]}
                 alt={`${project.title} — image ${i + 1}`}
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full object-contain"
               />
             )}
           </div>
@@ -134,17 +168,17 @@ function Lightbox({ project, onClose }: { project: Project; onClose: () => void 
                 type="button"
                 onClick={() => go(-1)}
                 aria-label="Previous image"
-                className="ke-press absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-forest-900 shadow-md hover:bg-white"
+                className="absolute left-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-navy-800 shadow-lg transition-all hover:bg-white hover:scale-105 active:scale-95"
               >
-                <Icon name="chevron" size={20} className="rotate-90" />
+                <Icon name="chevron" size={24} className="rotate-90" />
               </button>
               <button
                 type="button"
                 onClick={() => go(1)}
                 aria-label="Next image"
-                className="ke-press absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-forest-900 shadow-md hover:bg-white"
+                className="absolute right-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-navy-800 shadow-lg transition-all hover:bg-white hover:scale-105 active:scale-95"
               >
-                <Icon name="chevron" size={20} className="-rotate-90" />
+                <Icon name="chevron" size={24} className="-rotate-90" />
               </button>
               <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
                 {project.images.map((img, idx) => (
@@ -162,16 +196,16 @@ function Lightbox({ project, onClose }: { project: Project; onClose: () => void 
         </div>
 
         {/* Details */}
-        <div className="flex w-full flex-col p-6 sm:p-7 lg:w-[340px] lg:flex-none">
-          <div className="mb-2 flex flex-wrap items-center gap-x-3 gap-y-1 font-body text-[13px] font-semibold text-forest-700">
+        <div className="flex w-full flex-col p-6 sm:p-8 lg:w-[380px] lg:flex-none bg-white">
+          <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-body text-[13.5px] font-semibold text-forest-700">
             {project.location && (
               <span className="inline-flex items-center gap-1.5">
-                <Icon name="mapPin" size={14} className="text-green-500" /> {project.location}
+                <Icon name="mapPin" size={15} className="text-green-500" /> {project.location}
               </span>
             )}
             {month && (
               <span className="inline-flex items-center gap-1.5 text-ash-500">
-                <Icon name="clock" size={13} /> {month}
+                <Icon name="clock" size={14} /> {month}
               </span>
             )}
           </div>
@@ -179,23 +213,34 @@ function Lightbox({ project, onClose }: { project: Project; onClose: () => void 
             {project.title}
           </h3>
           {project.description && (
-            <p className="mt-3 font-body text-[14.5px] leading-relaxed text-ash-700">
+            <p className="mt-3 font-body text-[14.5px] leading-relaxed text-ash-700 line-clamp-2">
               {project.description}
             </p>
           )}
-          <Link
-            href="/get-a-quote"
-            className="ke-press mt-6 inline-flex items-center justify-center gap-2 rounded-pill bg-green-500 px-6 py-3 font-display text-[14.5px] font-bold text-white shadow-green hover:bg-green-600"
-          >
-            Get a system like this <Icon name="arrow" size={17} stroke={2.4} />
-          </Link>
+
+          <div className="mt-auto pt-6 flex flex-col gap-3">
+            <Link
+              href={`/projects/${encodeURIComponent(project.title)}`}
+              onClick={onClose}
+              className="ke-press flex w-full items-center justify-center gap-2 rounded-pill bg-forest-900 px-6 py-3.5 font-display text-[14.5px] font-bold text-white shadow-md hover:bg-forest-800"
+            >
+              View Details <Icon name="arrow" size={17} stroke={2.4} className="text-green-400" />
+            </Link>
+            <Link
+              href="/get-a-quote"
+              onClick={onClose}
+              className="ke-press flex w-full items-center justify-center gap-2 rounded-pill border-[1.5px] border-green-500 bg-white px-6 py-3.5 font-display text-[14.5px] font-bold text-forest-700 hover:bg-green-50"
+            >
+              Get a system like this
+            </Link>
+          </div>
         </div>
 
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="ke-press absolute right-3 top-3 z-[2] flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-forest-900 shadow-md hover:bg-white"
+          className="absolute right-3 top-3 z-[2] flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-forest-900 shadow-md transition-all hover:bg-white hover:scale-105 active:scale-95"
         >
           <Icon name="x" size={18} stroke={2.4} />
         </button>
@@ -206,8 +251,141 @@ function Lightbox({ project, onClose }: { project: Project; onClose: () => void 
 
 /* -------------------------------------------------- gallery (page) --------- */
 
+/** Wide two-column project card (institution-style): identity + gallery + meta
+ *  on the left, overview + highlights + CTAs on the right. */
+function WideProjectCard({
+  project,
+  onOpen,
+}: {
+  project: Project;
+  onOpen: (imageIndex: number) => void;
+}) {
+  const cover = project.images[0];
+  const thumbs = project.images.slice(0, 3);
+  const month = projectMonth(project.projectDate);
+  const chips = specChips(`${project.title} ${project.description ?? ""}`);
+
+  return (
+    <article className="grid gap-6 rounded-2xl border border-ash-200 bg-white p-5 shadow-md sm:p-6 lg:grid-cols-[minmax(0,1fr)_1.25fr]">
+      {/* Left — identity, gallery, meta */}
+      <div className="flex flex-col">
+        <div className="flex items-center gap-3.5">
+          {cover ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={cover}
+              alt={project.title}
+              loading="lazy"
+              className="h-14 w-14 flex-none rounded-lg object-cover"
+            />
+          ) : (
+            <span className="flex h-14 w-14 flex-none items-center justify-center rounded-lg bg-green-50 text-green-600">
+              <Icon name="sun" size={26} />
+            </span>
+          )}
+          <div className="min-w-0">
+            <h3 className="font-display text-[20px] font-extrabold leading-tight tracking-[-0.01em] text-navy-800">
+              {project.title}
+            </h3>
+            <span className="font-display text-[11.5px] font-bold uppercase tracking-[0.09em] text-green-600">
+              {categoryLabel(project.title)}
+            </span>
+          </div>
+        </div>
+
+        {/* Left column description removed as requested */}
+
+        {thumbs.length > 0 && (
+          <div className="mt-5 grid grid-cols-3 gap-2.5">
+            {thumbs.map((img, i) => (
+              <button
+                key={img}
+                type="button"
+                onClick={() => onOpen(i)}
+                aria-label={`Open ${project.title} gallery`}
+                className="ke-press relative aspect-[4/3] overflow-hidden rounded-md ring-1 ring-inset ring-ash-200"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img} alt="" loading="lazy" className="h-full w-full object-cover" />
+                {i === 2 && project.images.length > 3 && (
+                  <span className="absolute inset-0 flex items-center justify-center bg-forest-900/65 font-display text-[14px] font-bold text-white">
+                    +{project.images.length - 3}
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-5 flex flex-col gap-2 border-t border-ash-200 pt-4 font-body text-[13.5px] font-semibold text-ash-700">
+          {project.location && (
+            <span className="inline-flex items-center gap-2">
+              <Icon name="mapPin" size={15} className="text-green-500" /> {project.location}
+            </span>
+          )}
+          {month && (
+            <span className="inline-flex items-center gap-2">
+              <Icon name="clock" size={14} className="text-green-500" /> Completed {month}
+            </span>
+          )}
+          <span className="inline-flex items-center gap-2">
+            <Icon name="play" size={13} className="text-green-500" /> {project.images.length}{" "}
+            photo{project.images.length === 1 ? "" : "s"}
+          </span>
+        </div>
+      </div>
+
+      {/* Right — overview, highlights, CTAs */}
+      <div className="flex flex-col lg:border-l lg:border-ash-200 lg:pl-8">
+        <h4 className="font-display text-[13px] font-bold uppercase tracking-[0.08em] text-navy-700">
+          Project Overview
+        </h4>
+        <p className="mt-2 font-body text-[14px] leading-relaxed text-ash-700 line-clamp-3">
+          {project.description ||
+            `A solar${/battery/i.test(project.title) ? " and battery" : ""
+            } installation delivered end-to-end by the Kratos Energy team${project.location ? ` in ${project.location}` : ""
+            }.`}
+        </p>
+
+        {chips.length > 0 && (
+          <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+            {chips.map((c) => (
+              <span key={c} className="flex items-center gap-2 font-body text-[13.5px] text-ink">
+                <Icon name="check" size={15} stroke={3} className="flex-none text-green-500" />
+                {c}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-auto flex flex-wrap gap-2.5 pt-5">
+          <Link
+            href={`/projects/${encodeURIComponent(project.title)}`}
+            className="ke-press inline-flex flex-1 items-center justify-center gap-2 rounded-pill bg-forest-900 px-4 py-2.5 font-display text-[13.5px] font-bold text-white hover:bg-forest-800"
+          >
+            Details <Icon name="arrow" size={15} stroke={2.4} className="text-green-400" />
+          </Link>
+          <button
+            type="button"
+            onClick={() => onOpen(0)}
+            className="ke-press inline-flex flex-1 items-center justify-center gap-2 rounded-pill border border-ash-300 bg-white px-4 py-2.5 font-display text-[13.5px] font-bold text-navy-700 hover:bg-ash-50"
+          >
+            Gallery
+          </button>
+          <Link
+            href="/get-a-quote"
+            className="ke-press inline-flex flex-1 items-center justify-center gap-2 rounded-pill border border-green-500 bg-green-50 px-4 py-2.5 font-display text-[13.5px] font-bold text-forest-700 hover:bg-green-100"
+          >
+            Get Quote
+          </Link>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export function ProjectsGallery({ projects }: { projects: Project[] }) {
-  const [open, setOpen] = useState<number | null>(null);
+  const [open, setOpen] = useState<{ p: number; img: number } | null>(null);
 
   if (projects.length === 0) {
     return (
@@ -223,13 +401,21 @@ export function ProjectsGallery({ projects }: { projects: Project[] }) {
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="flex flex-col gap-6">
         {projects.map((p, idx) => (
-          <ProjectCard key={p.id} project={p} onOpen={() => setOpen(idx)} />
+          <WideProjectCard
+            key={p.id}
+            project={p}
+            onOpen={(img) => setOpen({ p: idx, img })}
+          />
         ))}
       </div>
-      {open !== null && projects[open] && (
-        <Lightbox project={projects[open]} onClose={() => setOpen(null)} />
+      {open !== null && projects[open.p] && (
+        <Lightbox
+          project={projects[open.p]}
+          initial={open.img}
+          onClose={() => setOpen(null)}
+        />
       )}
     </>
   );
