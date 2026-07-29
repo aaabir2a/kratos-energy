@@ -131,18 +131,77 @@
   }
   
   .prose ul {
-    @apply list-disc pl-5 mb-5 space-y-1.5 font-body text-[16px] text-ash-700;
+    @apply list-disc pl-5 mb-5 space-y-1 font-body text-[16px] text-slate-900;
+    color: #0f172a !important;
   }
   
   .prose ol {
-    @apply list-decimal pl-5 mb-5 space-y-1.5 font-body text-[16px] text-ash-700;
+    @apply list-decimal pl-5 mb-5 space-y-1 font-body text-[16px] text-slate-900;
+    color: #0f172a !important;
   }
   
   .prose li {
-    @apply leading-relaxed;
+    @apply leading-relaxed text-slate-900;
+    color: #0f172a !important;
+  }
+
+  .prose li p {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    color: #0f172a !important;
+  }
+
+  .prose ul ::marker, .prose ol ::marker, .prose li::marker {
+    color: #0f172a !important;
+    font-weight: 700 !important;
   }
 
   .prose strong {
     @apply font-bold text-navy-900;
   }
+
+  /* Table styling for CMS blogs */
+  .prose table {
+    border-collapse: collapse !important;
+    margin: 1.5rem 0 !important;
+    width: 100% !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  .prose th, .prose td {
+    border: 1px solid #cbd5e1 !important;
+    box-sizing: border-box;
+    padding: 10px 14px !important;
+    vertical-align: top !important;
+  }
+
+  .prose th {
+    background-color: #8bc34a !important; /* Leaf green-400 */
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    text-align: left !important;
+    border: 1px solid #7cb342 !important;
+  }
+
+  .prose th p {
+    color: #ffffff !important;
+    margin: 0 !important;
+    font-weight: 700 !important;
+  }
+
+  .prose td p {
+    margin: 0 !important;
+  }
+
+  .prose tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+
+  .prose tbody tr:hover {
+    background-color: #f1f5f9;
+  }
 }
+

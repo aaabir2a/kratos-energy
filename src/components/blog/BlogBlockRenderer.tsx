@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
 
 interface BlockData {
@@ -16,7 +15,7 @@ export function BlogBlockRenderer({ blocks }: { blocks: BlockData[] }) {
   if (!blocks || !Array.isArray(blocks)) return null;
 
   return (
-    <div className="space-y-8 font-body text-ash-700 leading-relaxed text-[16.5px]">
+    <div className="space-y-8 font-body text-gray-700 leading-relaxed text-[16.5px]">
       {blocks.map((block) => (
         <RenderBlock key={block.id} block={block} />
       ))}
@@ -30,8 +29,8 @@ function RenderBlock({ block }: { block: BlockData }) {
     case "texteditor":
       return (
         <div
-          className="prose max-w-none prose-headings:font-display prose-headings:font-extrabold prose-headings:text-navy-800 prose-h2:text-[24px] prose-h2:mt-8 prose-h2:mb-3 prose-p:mb-4 prose-a:text-forest-600 prose-a:underline hover:prose-a:text-forest-700"
-          dangerouslySetInnerHTML={{ __html: block.content }}
+          className="prose max-w-none prose-headings:font-display prose-headings:font-extrabold prose-headings:text-navy-800 prose-h2:text-[24px] prose-h2:mt-8 prose-h2:mb-3 prose-p:mb-4 prose-a:text-[#8bc34a] prose-a:underline hover:prose-a:text-[#7cb342]"
+          dangerouslySetInnerHTML={{ __html: typeof block.content === 'string' ? block.content : block.content?.html || '' }}
         />
       );
 
@@ -40,7 +39,7 @@ function RenderBlock({ block }: { block: BlockData }) {
       if (!imageUrl) return null;
       return (
         <figure className="my-8 text-center">
-          <div className="relative w-full h-[240px] sm:h-[400px] overflow-hidden rounded-xl shadow-sm bg-muted/10">
+          <div className="relative w-full h-[260px] sm:h-[420px] overflow-hidden rounded-2xl shadow-sm border border-gray-100 bg-gray-50">
             <Image
               src={imageUrl}
               alt={alt || caption || "Blog content image"}
@@ -50,7 +49,7 @@ function RenderBlock({ block }: { block: BlockData }) {
             />
           </div>
           {caption && (
-            <figcaption className="mt-2.5 text-[13px] text-ash-500 italic">
+            <figcaption className="mt-3 text-[13px] text-gray-500 italic font-body">
               {caption}
             </figcaption>
           )}
@@ -79,7 +78,7 @@ function RenderBlock({ block }: { block: BlockData }) {
         <div className={`my-8 flex w-full ${align}`}>
           <a
             href={url || "#"}
-            className="inline-flex items-center gap-2 px-6 py-3 border border-transparent text-[15px] font-display font-bold rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors shadow-sm"
+            className="inline-flex items-center gap-2 px-7 py-3.5 border border-transparent text-[15px] font-display font-bold rounded-xl text-white bg-[#8bc34a] hover:bg-[#7cb342] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
           >
             {text || "Click Here"}
           </a>
@@ -108,27 +107,39 @@ function AccordionBlock({ items }: { items?: any[] }) {
   };
 
   return (
-    <div className="my-8 border border-ash-200 rounded-xl overflow-hidden divide-y divide-ash-200 bg-white shadow-sm">
+    <div className="my-8 space-y-4">
       {items.map((item, idx) => {
         const isOpen = openIdxs.includes(idx);
         return (
-          <div key={idx}>
+          <div
+            key={idx}
+            className={`rounded-xl overflow-hidden shadow-sm transition-all duration-200 border ${
+              isOpen
+                ? "border-[#8bc34a] bg-white shadow-md"
+                : "border-gray-200 bg-white hover:border-[#8bc34a]/60 hover:shadow-md"
+            }`}
+          >
             <button
               type="button"
               onClick={() => toggle(idx)}
-              className="w-full flex items-center justify-between p-4.5 font-display font-bold text-navy-800 hover:text-forest-700 text-left transition-colors text-[15.5px]"
+              className={`w-full flex items-center justify-between px-6 py-4 font-display font-bold text-left transition-colors text-[16px] leading-snug min-h-[54px] gap-4 ${
+                isOpen
+                  ? "bg-[#8bc34a] text-white"
+                  : "bg-white text-gray-900 hover:text-[#8bc34a]"
+              }`}
             >
-              <span>{item.title}</span>
+              <span className="flex-1 font-semibold">{item.title}</span>
               <Icon
                 name="chevron"
-                size={14}
-                className={`text-ash-400 transition-transform ${
-                  isOpen ? "" : "-rotate-90"
+                size={18}
+                stroke={2.5}
+                className={`transition-transform duration-200 shrink-0 ${
+                  isOpen ? "text-white rotate-180" : "text-[#8bc34a]"
                 }`}
               />
             </button>
             {isOpen && (
-              <div className="p-5 pt-0 font-body text-ash-600 text-[14.5px] leading-relaxed bg-paper border-t border-ash-50">
+              <div className="px-6 py-5 text-gray-700 text-[15px] leading-relaxed font-body bg-white border-t border-[#8bc34a]/20">
                 {item.content}
               </div>
             )}
@@ -144,24 +155,24 @@ function TabsBlock({ tabs }: { tabs?: any[] }) {
   if (!tabs || !Array.isArray(tabs)) return null;
 
   return (
-    <div className="my-8 border border-ash-200 rounded-xl overflow-hidden bg-white shadow-sm">
-      <div className="flex border-b border-ash-200 overflow-x-auto bg-paper">
+    <div className="my-8 border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-sm">
+      <div className="flex border-b border-gray-200 overflow-x-auto bg-slate-50/80 px-3 pt-3 gap-2">
         {tabs.map((tab, idx) => (
           <button
             key={idx}
             type="button"
             onClick={() => setActiveTab(idx)}
-            className={`px-5 py-3.5 font-display text-[14.5px] font-bold border-b-2 text-center whitespace-nowrap transition-all ${
+            className={`px-5 py-3 font-display text-[14.5px] font-bold rounded-t-xl transition-all border-b-2 text-center whitespace-nowrap ${
               activeTab === idx
-                ? "border-forest-600 text-forest-700 bg-white"
-                : "border-transparent text-ash-500 hover:text-navy-800"
+                ? "border-[#8bc34a] text-[#8bc34a] bg-white shadow-xs"
+                : "border-transparent text-gray-500 hover:text-gray-900 hover:bg-gray-100/60"
             }`}
           >
             {tab.title}
           </button>
         ))}
       </div>
-      <div className="p-6 font-body text-ash-600 text-[14.5px] leading-relaxed">
+      <div className="p-6 font-body text-gray-700 text-[15px] leading-relaxed">
         {tabs[activeTab]?.content}
       </div>
     </div>
@@ -176,32 +187,32 @@ function CardsBlock({ items }: { items?: any[] }) {
       {items.map((item, idx) => (
         <div
           key={idx}
-          className="border border-ash-200 rounded-xl overflow-hidden bg-white shadow-sm flex flex-col hover:shadow-md transition-shadow"
+          className="border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-sm flex flex-col hover:shadow-md hover:border-[#8bc34a]/40 transition-all group"
         >
           {item.imageUrl && (
-            <div className="h-44 relative bg-muted/10">
+            <div className="h-48 relative bg-gray-50 overflow-hidden">
               <Image
                 src={item.imageUrl}
                 alt={item.title || "Card image"}
                 fill
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform duration-300"
                 sizes="(max-width: 768px) 100vw, 300px"
               />
             </div>
           )}
-          <div className="p-5 flex-1 flex flex-col">
-            <h4 className="font-display font-bold text-navy-800 text-[17px] mb-2 leading-snug">
+          <div className="p-6 flex-1 flex flex-col">
+            <h4 className="font-display font-bold text-gray-900 text-[17px] mb-2 leading-snug group-hover:text-[#8bc34a] transition-colors">
               {item.title}
             </h4>
-            <p className="font-body text-ash-600 text-[14px] leading-relaxed flex-1">
+            <p className="font-body text-gray-600 text-[14px] leading-relaxed flex-1">
               {item.description}
             </p>
             {item.link && (
               <a
                 href={item.link}
-                className="mt-4 inline-flex items-center gap-1 font-display text-[13.5px] font-bold text-forest-700 hover:underline"
+                className="mt-4 inline-flex items-center gap-1.5 font-display text-[14px] font-bold text-[#8bc34a] hover:underline"
               >
-                Learn more <Icon name="chevron" size={10} className="-rotate-90" />
+                Learn more <Icon name="chevron" size={12} className="-rotate-90 text-[#8bc34a]" />
               </a>
             )}
           </div>
@@ -231,7 +242,7 @@ function LayoutGridBlock({ content }: { content: any }) {
   const renderColumn = (type: "text" | "image", text: string, img: string) => {
     if (type === "image") {
       return img ? (
-        <div className="relative w-full h-[200px] overflow-hidden rounded-lg bg-muted/10 shadow-sm">
+        <div className="relative w-full h-[220px] overflow-hidden rounded-xl bg-gray-50 shadow-sm border border-gray-100">
           <Image
             src={img}
             alt="Column media content"
@@ -244,7 +255,7 @@ function LayoutGridBlock({ content }: { content: any }) {
     }
     return (
       <div
-        className="prose max-w-none text-[15px] leading-relaxed font-body text-ash-600 whitespace-pre-wrap"
+        className="prose max-w-none text-[15px] leading-relaxed font-body text-gray-700 whitespace-pre-wrap"
         dangerouslySetInnerHTML={{ __html: text }}
       />
     );
@@ -260,3 +271,4 @@ function LayoutGridBlock({ content }: { content: any }) {
     </div>
   );
 }
+
