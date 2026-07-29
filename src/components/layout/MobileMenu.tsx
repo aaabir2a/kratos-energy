@@ -17,6 +17,8 @@ export function MobileMenu({
 }) {
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
+  const handleClose = () => setTimeout(onClose, 150);
+
   return (
     <div
       className={cn(
@@ -43,7 +45,7 @@ export function MobileMenu({
               <Link
                 key={item.label}
                 href={item.href}
-                onClick={onClose}
+                onClick={handleClose}
                 className="border-b border-white/10 py-3.5 text-left font-display text-[22px] font-bold text-white"
               >
                 {item.label}
@@ -77,7 +79,6 @@ export function MobileMenu({
                     {isProducts ? (
                       PRODUCT_CATEGORIES.map((cat) => (
                         <div key={cat.id} className="mt-4 first:mt-1 last:mb-2">
-                          {/* Category Heading / Label */}
                           <div className="flex items-center gap-2 px-1 py-1 font-display text-[14px] font-bold text-green-400 uppercase tracking-wider">
                             <Icon name={cat.icon} size={15} stroke={2.5} className="text-green-400" />
                             {cat.label}
@@ -88,7 +89,7 @@ export function MobileMenu({
                                 <Link
                                   key={sub.label}
                                   href={sub.href}
-                                  onClick={onClose}
+                                  onClick={handleClose}
                                   className="flex items-center gap-2 py-2 font-body text-[16px] font-semibold text-[#cfe0c6] active:text-white"
                                 >
                                   <span className="h-1 w-1 flex-none rounded-full bg-green-400/70" />
@@ -96,11 +97,10 @@ export function MobileMenu({
                                 </Link>
                               ))
                             ) : (
-                              // For large scale system itself
                               <Link
                                 key={cat.label}
                                 href={cat.href || "/systems/large-scale"}
-                                onClick={onClose}
+                                onClick={handleClose}
                                 className="flex items-center gap-2 py-2 font-body text-[16px] font-semibold text-[#cfe0c6] active:text-white"
                               >
                                 <span className="h-1 w-1 flex-none rounded-full bg-green-400/70" />
@@ -115,7 +115,7 @@ export function MobileMenu({
                         <Link
                           key={sub.label}
                           href={sub.href}
-                          onClick={onClose}
+                          onClick={handleClose}
                           className="flex items-center gap-2.5 py-2.5 font-body text-[16.5px] font-semibold text-[#cfe0c6]"
                         >
                           <span className="h-1.5 w-1.5 flex-none rounded-full bg-green-400" />

@@ -376,7 +376,7 @@ function WideProjectCard({
             href="/get-a-quote"
             className="ke-press inline-flex flex-1 items-center justify-center gap-2 rounded-pill border border-green-500 bg-green-50 px-4 py-2.5 font-display text-[13.5px] font-bold text-forest-700 hover:bg-green-100"
           >
-            Get Quote
+            Get Similar System
           </Link>
         </div>
       </div>
