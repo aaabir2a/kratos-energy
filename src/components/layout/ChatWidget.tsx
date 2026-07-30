@@ -25,7 +25,8 @@ const LAUNCHER_CSS = `
 @media (prefers-reduced-motion: reduce) {
   .rc-launcher { animation: none; }
 }
-/* Fix for mobile chat window pushed off screen by keyboard */
+/* Fix for mobile chat window pushed off screen by keyboard. Base cap; the
+   exact height/bottom is driven by visualViewport JS when the keyboard opens. */
 .ke-rc-window {
   max-height: calc(100dvh - 40px) !important;
 }
@@ -36,6 +37,47 @@ const LAUNCHER_CSS = `
   }
 }
 `;
+
+let vvBound = false;
+
+/**
+ * Size the chat window to the *visible* viewport on mobile. When the on-screen
+ * keyboard opens, `visualViewport.height` shrinks; we pin the window directly
+ * above the keyboard and fill the remaining space so there's no dead gap and
+ * the whole panel stays on screen.
+ */
+function syncChatViewport() {
+  const root = document.querySelector("[data-ragchat]")?.shadowRoot;
+  if (!root) return;
+  // The panel div may only be created when the chat opens — tag it on demand.
+  Array.from(root.children).forEach((el) => {
+    if (el.tagName === "DIV" && !el.classList.contains("rc-launcher")) {
+      el.classList.add("ke-rc-window");
+    }
+  });
+  const win = root.querySelector(".ke-rc-window") as HTMLElement | null;
+  if (!win) return;
+
+  const vv = window.visualViewport;
+  const isMobile = window.innerWidth <= 640;
+  const keyboardOpen = !!vv && window.innerHeight - vv.height > 120;
+
+  if (isMobile && vv && keyboardOpen) {
+    const bottom = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+    win.style.setProperty("height", `${Math.round(vv.height)}px`, "important");
+    win.style.setProperty("max-height", `${Math.round(vv.height)}px`, "important");
+    win.style.setProperty("bottom", `${bottom}px`, "important");
+    win.style.setProperty("top", "auto", "important");
+    win.style.setProperty("border-radius", "0", "important");
+  } else {
+    // Keyboard closed / desktop — hand control back to the base CSS.
+    win.style.removeProperty("height");
+    win.style.removeProperty("max-height");
+    win.style.removeProperty("bottom");
+    win.style.removeProperty("top");
+    win.style.removeProperty("border-radius");
+  }
+}
 
 /** Inject the brand sun icon + attention halo into the widget's shadow DOM. */
 function setupLauncher() {
@@ -58,6 +100,15 @@ function setupLauncher() {
         style.id = "ke-rc-style";
         style.textContent = LAUNCHER_CSS;
         root.appendChild(style);
+      }
+
+      // Keep the window matched to the visible viewport as the keyboard opens.
+      syncChatViewport();
+      if (!vvBound && window.visualViewport) {
+        vvBound = true;
+        window.visualViewport.addEventListener("resize", syncChatViewport);
+        window.visualViewport.addEventListener("scroll", syncChatViewport);
+        window.addEventListener("orientationchange", syncChatViewport);
       }
       return;
     }
