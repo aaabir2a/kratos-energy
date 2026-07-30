@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect, useState, useRef } from "react";
 import Script from "next/script";
+import { Icon } from "@/components/ui/Icon";
 
 // Brand sun glyph (gold), matching <Icon name="sun" className="text-gold-400" />.
 const SUN_SVG =
@@ -52,18 +54,108 @@ function setupLauncher() {
  * adds a calm halo so visitors notice it.
  */
 export function ChatWidget() {
+  const [showBubble, setShowBubble] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  // Show initially after loaded
+  useEffect(() => {
+    if (dismissed) return;
+    const t = setTimeout(() => setShowBubble(true), 1500);
+    return () => clearTimeout(t);
+  }, [dismissed]);
+
+  // Hide on scroll, reschedule after interval
+  useEffect(() => {
+    if (dismissed) return;
+
+    const handleScroll = () => {
+      setShowBubble(false);
+
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+
+      // Pop up again after 10 seconds of no scrolling
+      scrollTimeout.current = setTimeout(() => {
+        setShowBubble(true);
+      }, 2000);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
+    };
+  }, [dismissed]);
+
   return (
-    <Script
-      src="https://api.ambrosianuk.com/widget.js"
-      strategy="afterInteractive"
-      data-api-url="https://api.ambrosianuk.com"
-      data-api-key="sk__qDL1B2opmjj3vZEhJSQzor2XRTuo2-yFluwhH76cm4"
-      data-chatbot-id="bb7f52662f124ba5b188978d8549c165"
-      data-primary-color="#6cae34"
-      data-title="Support"
-      data-position="bottom-right"
-      onReady={setupLauncher}
-      onLoad={setupLauncher}
-    />
+    <>
+      <style>{`
+        @keyframes ke-breathe {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
+        .animate-breathe {
+          animation: ke-breathe 2.5s ease-in-out infinite;
+        }
+      `}</style>
+      <Script
+        src="https://api.ambrosianuk.com/widget.js"
+        strategy="afterInteractive"
+        data-api-url="https://api.ambrosianuk.com"
+        data-api-key="sk__qDL1B2opmjj3vZEhJSQzor2XRTuo2-yFluwhH76cm4"
+        data-chatbot-id="bb7f52662f124ba5b188978d8549c165"
+        data-primary-color="#6cae34"
+        data-title="Support"
+        data-position="bottom-right"
+        onReady={setupLauncher}
+        onLoad={setupLauncher}
+      />
+
+      {showBubble && !dismissed && (
+        <div className="pointer-events-none fixed bottom-[22px] right-[86px] z-[9999] animate-in slide-in-from-right-4 fade-in duration-500">
+          <div className="animate-breathe origin-right pointer-events-auto relative flex w-[260px] items-center justify-between rounded-[24px] bg-white py-3 pl-4 pr-3 shadow-[0_8px_30px_rgb(0,0,0,0.12)] ring-1 ring-ash-200">
+
+            <div
+              className="flex cursor-pointer items-center gap-3 pr-2 flex-1 group"
+              onClick={() => {
+                const root = document.querySelector("[data-ragchat]")?.shadowRoot;
+                const launcher = root?.querySelector(".rc-launcher") as HTMLElement;
+                if (launcher) launcher.click();
+                setShowBubble(false);
+              }}
+            >
+              <div className="relative flex h-[38px] w-[38px] flex-none items-center justify-center rounded-full bg-green-500 text-white shadow-[0_0_15px_rgba(108,174,52,0.3)] transition-transform group-hover:scale-110">
+                <Icon name="sun" size={20} stroke={2.5} />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-display text-[14px] font-extrabold leading-tight text-navy-800">
+                  Want to go solar?
+                </span>
+                <span className="font-body text-[12.5px] font-semibold text-green-600">
+                  Ask our AI expert <Icon name="arrow" size={10} className="inline rotate-45 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setDismissed(true);
+                setShowBubble(false);
+              }}
+              aria-label="Close"
+              className="ke-press flex h-7 w-7 flex-none items-center justify-center rounded-full bg-ash-100 text-ash-500 transition-colors hover:bg-ash-200 hover:text-navy-800"
+            >
+              <Icon name="x" size={14} stroke={2.5} />
+            </button>
+
+            {/* Callout Tail - Right-pointing horizontal tail */}
+            <div className="absolute -right-[6px] top-1/2 -mt-[6px] h-[12px] w-[12px] rotate-45 border-r border-t border-ash-200 bg-white" />
+          </div>
+        </div>
+      )}
+    </>
   );
 }
