@@ -25,6 +25,16 @@ const LAUNCHER_CSS = `
 @media (prefers-reduced-motion: reduce) {
   .rc-launcher { animation: none; }
 }
+/* Fix for mobile chat window pushed off screen by keyboard */
+.ke-rc-window {
+  max-height: calc(100dvh - 40px) !important;
+}
+@media (max-height: 650px) {
+  .ke-rc-window {
+    bottom: 5px !important;
+    max-height: calc(100dvh - 10px) !important;
+  }
+}
 `;
 
 /** Inject the brand sun icon + attention halo into the widget's shadow DOM. */
@@ -35,6 +45,14 @@ function setupLauncher() {
     const launcher = root?.querySelector(".rc-launcher");
     if (root && launcher) {
       launcher.innerHTML = SUN_SVG;
+
+      // Tag the chat window wrapper to fix its mobile view
+      Array.from(root.children).forEach((el) => {
+        if (el.tagName === 'DIV' && !el.classList.contains('rc-launcher')) {
+          el.classList.add('ke-rc-window');
+        }
+      });
+
       if (!root.getElementById("ke-rc-style")) {
         const style = document.createElement("style");
         style.id = "ke-rc-style";
@@ -76,10 +94,10 @@ export function ChatWidget() {
         clearTimeout(scrollTimeout.current);
       }
 
-      // Pop up again after 10 seconds of no scrolling
+      // Pop up again after 15 seconds of no scrolling
       scrollTimeout.current = setTimeout(() => {
-        setShowBubble(true);
-      }, 2000);
+        if (!dismissed) setShowBubble(true);
+      }, 3000);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -88,6 +106,25 @@ export function ChatWidget() {
       if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
     };
   }, [dismissed]);
+
+  // Permanently dismiss if user clicks anywhere on the actual chat widget
+  useEffect(() => {
+    const handleHostClick = (e: MouseEvent | TouchEvent) => {
+      const isChatHost = (e.target as Element).closest("[data-ragchat]");
+      if (isChatHost) {
+        setShowBubble(false);
+        setDismissed(true);
+      }
+    };
+    document.addEventListener("click", handleHostClick, { capture: true });
+    // Also capture touchstart to be safe on mobile
+    document.addEventListener("touchstart", handleHostClick, { capture: true });
+
+    return () => {
+      document.removeEventListener("click", handleHostClick, { capture: true });
+      document.removeEventListener("touchstart", handleHostClick, { capture: true });
+    };
+  }, []);
 
   return (
     <>
@@ -124,6 +161,7 @@ export function ChatWidget() {
                 const launcher = root?.querySelector(".rc-launcher") as HTMLElement;
                 if (launcher) launcher.click();
                 setShowBubble(false);
+                setDismissed(true);
               }}
             >
               <div className="relative flex h-[38px] w-[38px] flex-none items-center justify-center rounded-full bg-green-500 text-white shadow-[0_0_15px_rgba(108,174,52,0.3)] transition-transform group-hover:scale-110">
