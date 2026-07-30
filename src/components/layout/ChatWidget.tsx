@@ -25,15 +25,22 @@ const LAUNCHER_CSS = `
 @media (prefers-reduced-motion: reduce) {
   .rc-launcher { animation: none; }
 }
-/* Fix for mobile chat window pushed off screen by keyboard. Base cap; the
-   exact height/bottom is driven by visualViewport JS when the keyboard opens. */
-.ke-rc-window {
-  max-height: calc(100dvh - 40px) !important;
-}
-@media (max-height: 650px) {
-  .ke-rc-window {
-    bottom: 5px !important;
-    max-height: calc(100dvh - 10px) !important;
+/* Mobile: the widget panel (.rc-panel) is fixed at height:560px/max-height:
+   calc(100vh-130px), which ignores the on-screen keyboard. On phones make it a
+   full-screen sheet; visualViewport JS then pins it to the visible area so the
+   composer sits right above the keyboard with the messages list filling the
+   rest (no empty gap). */
+@media (max-width: 640px) {
+  .rc-panel {
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
   }
 }
 `;
@@ -41,41 +48,29 @@ const LAUNCHER_CSS = `
 let vvBound = false;
 
 /**
- * Size the chat window to the *visible* viewport on mobile. When the on-screen
- * keyboard opens, `visualViewport.height` shrinks; we pin the window directly
- * above the keyboard and fill the remaining space so there's no dead gap and
- * the whole panel stays on screen.
+ * On mobile, size the panel to the *visible* viewport. When the keyboard opens
+ * `visualViewport.height` shrinks; we set the panel height to it and pin the
+ * top so the composer ends up directly above the keyboard, the flex messages
+ * list fills the space, and nothing sits behind the keyboard.
  */
 function syncChatViewport() {
   const root = document.querySelector("[data-ragchat]")?.shadowRoot;
-  if (!root) return;
-  // The panel div may only be created when the chat opens — tag it on demand.
-  Array.from(root.children).forEach((el) => {
-    if (el.tagName === "DIV" && !el.classList.contains("rc-launcher")) {
-      el.classList.add("ke-rc-window");
-    }
-  });
-  const win = root.querySelector(".ke-rc-window") as HTMLElement | null;
-  if (!win) return;
+  const panel = root?.querySelector(".rc-panel") as HTMLElement | null;
+  if (!panel) return;
 
   const vv = window.visualViewport;
   const isMobile = window.innerWidth <= 640;
-  const keyboardOpen = !!vv && window.innerHeight - vv.height > 120;
 
-  if (isMobile && vv && keyboardOpen) {
-    const bottom = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
-    win.style.setProperty("height", `${Math.round(vv.height)}px`, "important");
-    win.style.setProperty("max-height", `${Math.round(vv.height)}px`, "important");
-    win.style.setProperty("bottom", `${bottom}px`, "important");
-    win.style.setProperty("top", "auto", "important");
-    win.style.setProperty("border-radius", "0", "important");
+  if (isMobile && vv) {
+    panel.style.setProperty("height", `${Math.round(vv.height)}px`, "important");
+    panel.style.setProperty("max-height", `${Math.round(vv.height)}px`, "important");
+    panel.style.setProperty("top", `${Math.round(vv.offsetTop)}px`, "important");
+    panel.style.setProperty("bottom", "auto", "important");
   } else {
-    // Keyboard closed / desktop — hand control back to the base CSS.
-    win.style.removeProperty("height");
-    win.style.removeProperty("max-height");
-    win.style.removeProperty("bottom");
-    win.style.removeProperty("top");
-    win.style.removeProperty("border-radius");
+    panel.style.removeProperty("height");
+    panel.style.removeProperty("max-height");
+    panel.style.removeProperty("top");
+    panel.style.removeProperty("bottom");
   }
 }
 
@@ -88,13 +83,6 @@ function setupLauncher() {
     if (root && launcher) {
       launcher.innerHTML = SUN_SVG;
 
-      // Tag the chat window wrapper to fix its mobile view
-      Array.from(root.children).forEach((el) => {
-        if (el.tagName === 'DIV' && !el.classList.contains('rc-launcher')) {
-          el.classList.add('ke-rc-window');
-        }
-      });
-
       if (!root.getElementById("ke-rc-style")) {
         const style = document.createElement("style");
         style.id = "ke-rc-style";
@@ -102,7 +90,7 @@ function setupLauncher() {
         root.appendChild(style);
       }
 
-      // Keep the window matched to the visible viewport as the keyboard opens.
+      // Keep the panel matched to the visible viewport as the keyboard opens.
       syncChatViewport();
       if (!vvBound && window.visualViewport) {
         vvBound = true;
@@ -157,25 +145,6 @@ export function ChatWidget() {
       if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
     };
   }, [dismissed]);
-
-  // Permanently dismiss if user clicks anywhere on the actual chat widget
-  useEffect(() => {
-    const handleHostClick = (e: MouseEvent | TouchEvent) => {
-      const isChatHost = (e.target as Element).closest("[data-ragchat]");
-      if (isChatHost) {
-        setShowBubble(false);
-        setDismissed(true);
-      }
-    };
-    document.addEventListener("click", handleHostClick, { capture: true });
-    // Also capture touchstart to be safe on mobile
-    document.addEventListener("touchstart", handleHostClick, { capture: true });
-
-    return () => {
-      document.removeEventListener("click", handleHostClick, { capture: true });
-      document.removeEventListener("touchstart", handleHostClick, { capture: true });
-    };
-  }, []);
 
   return (
     <>
