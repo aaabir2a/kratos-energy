@@ -3,6 +3,7 @@ import { Hero } from "@/components/sections/Hero";
 import { getHeroImagesServer, getProjectsServer, type HeroImages, type Project } from "@/lib/api";
 import { ProjectShowcase } from "@/components/sections/Projects";
 import { TrustBar } from "@/components/sections/TrustBar";
+import { GetawayPromoSection } from "@/components/sections/GetawayPromoSection";
 import { SystemPricing } from "@/components/sections/SystemPricing";
 import { BatteryRange } from "@/components/sections/BatteryRange";
 import { BrandWall } from "@/components/sections/BrandWall";
@@ -38,6 +39,7 @@ export default async function HomePage() {
     <SiteLayout>
       <Hero images={heroImages} />
       <TrustBar />
+      <GetawayPromoSection />
       <BatteryRange />
       <SystemPricing />
       <BrandWall />

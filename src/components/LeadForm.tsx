@@ -185,11 +185,13 @@ function Field({ field, error }: { field: LeadFormField; error?: string }) {
 }
 
 export function LeadForm({
+  formId,
   staticTitle = "Get Your Free Quote",
   staticSubmitLabel = "Get My Free Quote",
   successNote = "Thanks. A Kratos Energy specialist will call you within one business day with your tailored quote.",
   className = "rounded-xl bg-white p-[30px] shadow-lg",
 }: {
+  formId?: string;
   staticTitle?: string;
   staticSubmitLabel?: string;
   successNote?: string;
@@ -204,8 +206,8 @@ export function LeadForm({
   const loadLeadForm = useContentStore((s) => s.loadLeadForm);
 
   useEffect(() => {
-    loadLeadForm();
-  }, [loadLeadForm]);
+    loadLeadForm(formId);
+  }, [loadLeadForm, formId]);
 
   // Use the CRM-managed form once it's fetched and configured; otherwise the
   // built-in static form keeps working (slow API / none configured / error).
@@ -300,7 +302,11 @@ export function LeadForm({
 
     setSending(true);
     try {
-      await submitLead({ ...(top as unknown as LeadSubmission), ...attribution() });
+      await submitLead({
+        ...(top as unknown as LeadSubmission),
+        customLeadFormId: formId,
+        ...attribution(),
+      });
       setSent(true);
     } catch (err) {
       const fe = fieldErrorsFrom(err);

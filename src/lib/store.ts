@@ -26,7 +26,7 @@ type ContentState = {
   leadForm: Slice<LeadForm | null>;
   loadProducts: (category?: string) => void;
   loadPackages: () => void;
-  loadLeadForm: () => void;
+  loadLeadForm: (id?: string) => void;
 };
 
 const inflight = new Map<string, Promise<unknown>>();
@@ -74,8 +74,8 @@ export const useContentStore = create<ContentState>((set, get) => {
         packages: { status: "ready", data },
       })),
 
-    loadLeadForm: () =>
-      load("leadForm", "leadForm", () => getLeadForm(), (data) => ({
+    loadLeadForm: (id?: string) =>
+      load("leadForm", `leadForm:${id || "global"}`, () => getLeadForm(id), (data) => ({
         leadForm: { status: "ready", data },
       })),
   };

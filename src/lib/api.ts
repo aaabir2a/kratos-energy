@@ -124,6 +124,7 @@ export type LeadSubmission = {
   postcode?: string;
   message?: string;
   consentMarketing?: boolean;
+  customLeadFormId?: string;
   customFields?: Record<string, unknown>;
   utmSource?: string;
   utmMedium?: string;
@@ -192,9 +193,10 @@ export function getHeroImagesServer(): Promise<HeroImages> {
   } as RequestInit);
 }
 
-/** Global CRM-managed lead form schema. `null` when none configured. */
-export function getLeadForm(signal?: AbortSignal): Promise<LeadForm | null> {
-  return request<LeadForm | null>("/public/lead-form", { signal });
+/** CRM-managed lead form schema (specific form ID or fallback to global). */
+export function getLeadForm(id?: string, signal?: AbortSignal): Promise<LeadForm | null> {
+  const url = id ? `/public/lead-form?id=${id}` : "/public/lead-form";
+  return request<LeadForm | null>(url, { signal });
 }
 
 export function getProjects(

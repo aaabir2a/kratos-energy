@@ -49,6 +49,11 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
     return () => window.removeEventListener("hashchange", checkHash);
   }, [pathname]);
 
+  // Keep active category in sync with the route
+  useEffect(() => {
+    setActiveCat(getDefaultCategory(pathname));
+  }, [pathname]);
+
   // Handle outside clicks to close the menu
   useEffect(() => {
     if (!isLocked) return;
@@ -74,10 +79,37 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
     };
   }, [isLocked]);
 
-  const isActive = (href: string) =>
-    href.startsWith("/") && !href.includes("#") && href !== "/"
-      ? pathname.startsWith(href)
-      : false;
+  const getDefaultCategory = (path: string): string => {
+    if (
+      path === "/commercial-solar" ||
+      path.startsWith("/systems/30kw") ||
+      path.startsWith("/systems/50kw") ||
+      path.startsWith("/systems/100kw")
+    ) {
+      return "commercial";
+    }
+    if (path === "/systems/large-scale") {
+      return "large-scale";
+    }
+    return "residential";
+  };
+
+  const isActive = (item: typeof NAV[number]) => {
+    if (item.href.startsWith("/") && !item.href.includes("#") && item.href !== "/") {
+      if (pathname.startsWith(item.href)) return true;
+    }
+    if (item.label === "Our Services") {
+      const serviceRoutes = ["/residential-solar", "/commercial-solar", "/battery-storage", "/ev-charging", "/support"];
+      if (serviceRoutes.some((route) => pathname.startsWith(route))) return true;
+    }
+    if (item.label === "Our Products") {
+      if (pathname.startsWith("/systems/")) return true;
+    }
+    if (item.menu) {
+      return item.menu.some((sub) => sub.href.startsWith("/") && pathname.startsWith(sub.href));
+    }
+    return false;
+  };
 
   return (
     <header
@@ -100,7 +132,7 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
         <div className="ml-auto hidden items-center gap-4 nav:flex">
         <nav className="flex items-stretch h-[78px] gap-0.5">
           {NAV.map((item, i) => {
-            const active = isActive(item.href);
+            const active = isActive(item);
             const isProducts = item.label === "Our Products";
             const hasMenu = item.menu || isProducts;
             return (
@@ -112,7 +144,7 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
                   if (hasMenu) {
                     setOpen(i);
                     if (isProducts) {
-                      setActiveCat("residential");
+                      setActiveCat(getDefaultCategory(pathname));
                     }
                   } else {
                     setOpen(null);
@@ -136,7 +168,7 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
                         setOpen(i);
                         setIsLocked(true);
                         if (isProducts) {
-                          setActiveCat("residential");
+                          setActiveCat(getDefaultCategory(pathname));
                         }
                       }
                     }
