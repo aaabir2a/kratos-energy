@@ -114,6 +114,21 @@ export type LeadForm = {
   fieldsSchema: LeadFormField[];
 };
 
+/** CRM-managed landing page (GET /p/:slug), including its attached form. */
+export type LandingPage = {
+  id: string;
+  title: string;
+  urlSlug: string;
+  heroDescription: string | null;
+  heroImageUrl: string | null;
+  detailedDescription: string | null;
+  thankYouMessage: string | null;
+  redirectUrl: string | null;
+  seoMeta: Record<string, unknown> | null;
+  themeConfig: Record<string, unknown> | null;
+  customLeadForm: LeadForm | null;
+};
+
 export type LeadSubmission = {
   firstName: string;
   lastName?: string;
@@ -124,6 +139,9 @@ export type LeadSubmission = {
   postcode?: string;
   message?: string;
   consentMarketing?: boolean;
+  /** Attribute the lead to a CRM landing page (increments its conversions). */
+  landingPageSlug?: string;
+  /** Attribute to a standalone custom form. */
   customLeadFormId?: string;
   customFields?: Record<string, unknown>;
   utmSource?: string;
@@ -193,10 +211,17 @@ export function getHeroImagesServer(): Promise<HeroImages> {
   } as RequestInit);
 }
 
-/** CRM-managed lead form schema (specific form ID or fallback to global). */
+/** CRM-managed lead form schema (specific form ID, or the global form). */
 export function getLeadForm(id?: string, signal?: AbortSignal): Promise<LeadForm | null> {
-  const url = id ? `/public/lead-form?id=${id}` : "/public/lead-form";
+  const url = id ? `/public/lead-form/${encodeURIComponent(id)}` : "/public/lead-form";
   return request<LeadForm | null>(url, { signal });
+}
+
+/** CRM-managed landing page by slug (content + attached form). RSC ISR-cached. */
+export function getLandingPageServer(slug: string): Promise<LandingPage> {
+  return request<LandingPage>(`/p/${encodeURIComponent(slug)}`, {
+    next: { revalidate: 60 },
+  } as RequestInit);
 }
 
 export function getProjects(

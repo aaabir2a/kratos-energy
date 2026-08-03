@@ -23,11 +23,15 @@ type Slice<T> = { status: Status; data: T };
 type ContentState = {
   products: Slice<Product[]>;
   packages: Slice<Package[]>;
-  leadForm: Slice<LeadForm | null>;
+  /** Lead forms cached per id ("global" for the default form) so a page-
+   *  specific form (e.g. a campaign form) never collides with the global one. */
+  leadForms: Record<string, Slice<LeadForm | null>>;
   loadProducts: (category?: string) => void;
   loadPackages: () => void;
   loadLeadForm: (id?: string) => void;
 };
+
+export const EMPTY_LEAD_FORM: Slice<LeadForm | null> = { status: "idle", data: null };
 
 const inflight = new Map<string, Promise<unknown>>();
 
@@ -59,7 +63,7 @@ export const useContentStore = create<ContentState>((set, get) => {
   return {
     products: { status: "idle", data: [] },
     packages: { status: "idle", data: [] },
-    leadForm: { status: "idle", data: null },
+    leadForms: {},
 
     loadProducts: (category) =>
       load(
@@ -74,9 +78,22 @@ export const useContentStore = create<ContentState>((set, get) => {
         packages: { status: "ready", data },
       })),
 
-    loadLeadForm: (id?: string) =>
-      load("leadForm", `leadForm:${id || "global"}`, () => getLeadForm(id), (data) => ({
-        leadForm: { status: "ready", data },
-      })),
+    loadLeadForm: (id?: string) => {
+      const key = id || "global";
+      const cacheKey = `leadForm:${key}`;
+      const cur = get().leadForms[key] ?? EMPTY_LEAD_FORM;
+      if (cur.status === "loading" || cur.status === "ready") return;
+      if (inflight.has(cacheKey)) return;
+
+      const setForm = (slice: Slice<LeadForm | null>) =>
+        set((s) => ({ leadForms: { ...s.leadForms, [key]: slice } }));
+
+      setForm({ ...cur, status: "loading" });
+      const p = getLeadForm(id)
+        .then((data) => setForm({ status: "ready", data }))
+        .catch(() => setForm({ status: "error", data: null }))
+        .finally(() => inflight.delete(cacheKey));
+      inflight.set(cacheKey, p);
+    },
   };
 });

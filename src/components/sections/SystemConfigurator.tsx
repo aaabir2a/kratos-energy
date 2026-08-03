@@ -206,7 +206,7 @@ export function SystemConfigurator() {
   const [sendError, setSendError] = useState<string | null>(null);
 
   // Live CRM form schema — its required fields must be satisfied on submit.
-  const { data: leadSchema } = useContentStore((s) => s.leadForm);
+  const leadSchema = useContentStore((s) => s.leadForms["global"]?.data ?? null);
   const loadLeadForm = useContentStore((s) => s.loadLeadForm);
   useEffect(() => {
     loadLeadForm();

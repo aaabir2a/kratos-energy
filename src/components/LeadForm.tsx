@@ -186,12 +186,14 @@ function Field({ field, error }: { field: LeadFormField; error?: string }) {
 
 export function LeadForm({
   formId,
+  landingPageSlug,
   staticTitle = "Get Your Free Quote",
   staticSubmitLabel = "Get My Free Quote",
   successNote = "Thanks. A Kratos Energy specialist will call you within one business day with your tailored quote.",
   className = "rounded-xl bg-white p-[30px] shadow-lg",
 }: {
   formId?: string;
+  landingPageSlug?: string;
   staticTitle?: string;
   staticSubmitLabel?: string;
   successNote?: string;
@@ -202,8 +204,10 @@ export function LeadForm({
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  const { status: formStatus, data: schema } = useContentStore((s) => s.leadForm);
+  const slice = useContentStore((s) => s.leadForms[formId || "global"]);
   const loadLeadForm = useContentStore((s) => s.loadLeadForm);
+  const formStatus = slice?.status ?? "idle";
+  const schema = slice?.data ?? null;
 
   useEffect(() => {
     loadLeadForm(formId);
@@ -305,6 +309,7 @@ export function LeadForm({
       await submitLead({
         ...(top as unknown as LeadSubmission),
         customLeadFormId: formId,
+        landingPageSlug,
         ...attribution(),
       });
       setSent(true);
@@ -347,6 +352,8 @@ export function LeadForm({
         message: bill ? `Monthly electricity bill: ${bill}` : undefined,
         customFields: bill ? { monthly_bill: bill } : undefined,
         consentMarketing: true,
+        customLeadFormId: formId,
+        landingPageSlug,
         ...attribution(),
       });
       setSent(true);
