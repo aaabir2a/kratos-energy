@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
+import { CompanySeal } from "@/components/ui/CompanySeal";
 
 const PRIVACY_EMAIL = "nessarkhan@kratos-energy.com";
 
@@ -219,6 +220,9 @@ export default function PrivacyPage() {
     <SiteLayout>
       <PageHero
         eyebrow="Legal"
+        media={
+          <CompanySeal className="mx-auto h-[132px] w-auto text-forest-900/85" />
+        }
         title={
           <>
             Privacy <span className="text-green-600">Policy</span>
