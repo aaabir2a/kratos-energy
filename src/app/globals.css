@@ -113,6 +113,15 @@
     @apply transition-all duration-200 ease-soft hover:-translate-y-1 hover:shadow-lg;
   }
 
+  /* Legal pages (privacy policy, terms) — lettered/roman clause lists */
+  .ke-legal-list {
+    @apply mt-2 flex list-outside flex-col gap-2 pl-6;
+    list-style-type: lower-alpha;
+  }
+  .ke-legal-list--roman {
+    list-style-type: lower-roman;
+  }
+
   /* Custom Prose styles for CMS blogs */
   .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
     @apply font-display font-extrabold text-navy-800 tracking-[-0.015em] mb-3 mt-7;

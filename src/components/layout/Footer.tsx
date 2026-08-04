@@ -105,8 +105,17 @@ export function Footer() {
           <span>
             © 2026 Kratos Energy. All rights reserved. Clean Energy Council Approved
           </span>
-          <span>
-            {PHONE} · {EMAIL}
+          <span className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <Link
+              href="/privacy"
+              className="transition-colors hover:text-white"
+            >
+              Privacy Policy
+            </Link>
+            <span aria-hidden>·</span>
+            <span>
+              {PHONE} · {EMAIL}
+            </span>
           </span>
         </div>
       </div>
