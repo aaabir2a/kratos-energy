@@ -80,7 +80,7 @@ export default async function NewsPage(props: { searchParams: SearchParams }) {
               {displayPosts.map((p) => (
                 <Link
                   key={p.slug}
-                  href={`/blog/${p.slug}`}
+                  href={`/news/${p.slug}`}
                   className="ke-lift group flex flex-col overflow-hidden rounded-xl border border-ash-200 bg-white shadow-md hover:shadow-lg transition-shadow"
                 >
                   <div className="relative h-48 bg-muted/10">

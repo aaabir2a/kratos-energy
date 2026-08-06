@@ -60,7 +60,10 @@ export default async function BlogPage(props: { searchParams: SearchParams }) {
 
   const { posts, pagination, categories } = await fetchBlogData(selectedCategory, page);
 
-  const displayPosts = posts;
+  // News items live on /news — never list them on the blog.
+  const displayPosts = posts.filter(
+    (p: { typeSlug?: string }) => String(p.typeSlug || "").toLowerCase() !== "news",
+  );
 
   return (
     <SiteLayout>
@@ -89,7 +92,7 @@ export default async function BlogPage(props: { searchParams: SearchParams }) {
             >
               All Posts
             </Link>
-            {categories.map((cat: any) => (
+            {categories.map((cat: { id: string | number; slug: string; name: string }) => (
               <Link
                 key={cat.id}
                 href={`/blog?category=${cat.slug}`}
@@ -107,7 +110,7 @@ export default async function BlogPage(props: { searchParams: SearchParams }) {
           {/* Grid of Articles */}
           {displayPosts.length > 0 ? (
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {displayPosts.map((p: any) => (
+              {displayPosts.map((p: { slug: string; cover: string; title: string; category?: string; date: string; readMins: number; excerpt: string }) => (
                 <Link
                   key={p.slug}
                   href={`/blog/${p.slug}`}
