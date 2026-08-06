@@ -13,6 +13,7 @@ import Image from "next/image";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { Stars } from "@/components/ui/Stars";
+import { NETBadge } from "@/components/layout/NETBadge";
 import { scrollToId } from "@/lib/utils";
 import type { HeroImage, HeroImages } from "@/lib/api";
 
@@ -218,6 +219,14 @@ export function Hero({ images }: { images: HeroImages }) {
                 <Icon name="calculator" size={19} /> Calculate Savings
               </button>
             </div>
+
+            {/* New Energy Tech Approved Seller */}
+            <div
+              className="animate-fade-up mt-6 inline-flex max-w-full items-center rounded-xl bg-white/10 px-3.5 py-2.5 ring-1 ring-inset ring-white/15 sm:px-4"
+              style={{ animationDelay: "300ms" }}
+            >
+              <NETBadge scale={0.95} logoScale={1.35} tone="dark" />
+            </div>
           </div>
 
           <div
@@ -297,6 +306,14 @@ export function Hero({ images }: { images: HeroImages }) {
               >
                 Calculate my savings <Icon name="arrow" size={15} stroke={2.4} />
               </button>
+            </div>
+
+            {/* New Energy Tech Approved Seller — fills the gap under the CTA row */}
+            <div
+              className="animate-fade-up mt-8 inline-flex items-center rounded-xl border border-ash-200 bg-paper px-5 py-3.5"
+              style={{ animationDelay: "250ms" }}
+            >
+              <NETBadge scale={1.25} logoScale={2} />
             </div>
           </div>
 
