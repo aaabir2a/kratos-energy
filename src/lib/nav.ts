@@ -116,6 +116,7 @@ export const NAV: NavLink[] = [
   },
   { label: "Projects", href: "/projects" },
   { label: "Blog", href: "/blog" },
+  { label: "News", href: "/news" },
   // { label: "Refer", href: "/refer" },
   { label: "Contact", href: "/contact" },
 ];
