@@ -14,8 +14,21 @@ export const revalidate = 3600;
 
 export async function GET(): Promise<Response> {
   const { entries, degraded } = await getDynamicSitemapEntries();
+
   if (degraded) {
-    console.error("[sitemap-dynamic] CMS unreachable — serving fallback URLs");
+    console.error(
+      "[sitemap-dynamic] CMS unreachable — serving fallback URLs. " +
+        `Check NEXT_PUBLIC_API_BASE (${process.env.NEXT_PUBLIC_API_BASE ?? "unset"}).`,
+    );
+    // Say so in the file too. Otherwise a short sitemap looks like a bug in
+    // the sitemap rather than an unreachable API.
+    return xmlResponse(
+      renderUrlset(entries).replace(
+        "<urlset",
+        "<!-- DEGRADED: could not reach the CMS, so this lists fallback URLs only. -->\n<urlset",
+      ),
+    );
   }
+
   return xmlResponse(renderUrlset(entries));
 }
