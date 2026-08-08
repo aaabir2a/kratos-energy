@@ -2,14 +2,20 @@ services:
   web:
     build:
       context: .
+      # All three are baked into the bundle at BUILD time — a container restart
+      # never picks up a change, only `docker compose build`.
+      #
+      # Values come from a `.env` file sitting next to this compose file on the
+      # server (git-ignored, and excluded from the image by .dockerignore).
+      # The defaults after `:-` are what production should use, so a missing
+      # .env still builds correctly.
       args:
-        # Baked into the client bundle at build time. Change + rebuild to point
-        # at a different API.
-        NEXT_PUBLIC_API_BASE: https://api.kratos-energy.com/api/v1
-        # Canonical origin for canonicals, sitemaps, robots and JSON-LD.
-        NEXT_PUBLIC_SITE_URL: https://kratos-energy.com
-        # Paste the Search Console token here once issued, then rebuild.
-        NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ""
+        NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-https://api.kratos-energy.com/api/v1}
+        # Canonical origin. Anything but the production URL makes the build
+        # non-indexable (robots.txt serves "Disallow: /").
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://kratos-energy.com}
+        # Search Console token — the content value only, not the whole meta tag.
+        NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ${NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION:-}
     image: kratos-energy
     container_name: kratos-energy
     restart: unless-stopped
