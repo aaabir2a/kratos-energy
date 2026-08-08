@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
@@ -6,12 +5,17 @@ import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { BatteryGrid } from "@/components/sections/BatteryGrid";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { serviceLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = {
-  title: "Home Battery Storage",
+export const metadata = pageMetadata({
+  title: "Home Battery Storage & Rebates",
   description:
-    "Store your daytime solar and power your home after dark. Kratos Energy installs Fox ESS, GoodWe and Sigenergy batteries with generous state rebates.",
-};
+    "Store your daytime solar and run your home after dark. Fox ESS, GoodWe and Sigenergy batteries installed across NSW, VIC and ACT, with 2026 rebates applied.",
+  path: "/battery-storage",
+  keywords: ["home battery storage Australia", "solar battery rebate", "Fox ESS battery"],
+});
 
 const BENEFITS = [
   ["leaf", "Use solar after dark", "Store excess daytime generation and run your home all evening on free solar."],
@@ -23,6 +27,15 @@ const BENEFITS = [
 export default function BatteryPage() {
   return (
     <SiteLayout>
+      <JsonLd
+        data={serviceLd({
+          name: "Home Battery Installation",
+          description:
+            "Supply and installation of home battery storage with blackout protection, VPP readiness and federal rebate handling.",
+          path: "/battery-storage",
+          serviceType: "Battery storage installation",
+        })}
+      />
       {/* Hero */}
       <section className="bg-white pb-16 pt-12">
         <div className="container-ke grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_1fr]">

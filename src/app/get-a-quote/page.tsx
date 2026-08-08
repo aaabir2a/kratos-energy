@@ -1,15 +1,19 @@
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { LeadForm } from "@/components/LeadForm";
 import { Icon } from "@/components/ui/Icon";
 import { Stars } from "@/components/ui/Stars";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Get a Free Solar Quote",
   description:
     "Tell us about your place and get a tailored solar quote from Kratos Energy — no obligation, no pushy sales calls.",
-};
+  path: "/get-a-quote",
+  // Thin conversion page that duplicates /contact's intent — keep the
+  // links, drop it from the index.
+  noIndex: true,
+});
 
 const PROMISES = [
   "Free, no-obligation quote",

@@ -1,22 +1,20 @@
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { BatteryRebateCalculator } from "@/components/sections/BatteryRebateCalculator";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Icon } from "@/components/ui/Icon";
+import { faqLd, breadcrumbLd, calculatorLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { RelatedCalculators } from "@/components/sections/RelatedCalculators";
 
-export const metadata: Metadata = {
-  title: "Battery Rebate Calculator 2026 — Cheaper Home Batteries by kWh",
+export const metadata = pageMetadata({
+  title: "Battery Rebate Calculator 2026 (per kWh)",
   description:
-    "Calculate your 2026 federal home battery rebate under the Cheaper Home Batteries Program. See the tiered amount per usable kWh plus state support by postcode.",
-  alternates: { canonical: "/calculators/battery-rebate" },
-  openGraph: {
-    title: "Battery Rebate Calculator — Cheaper Home Batteries 2026",
-    description:
-      "Estimate your federal home battery rebate by usable kWh, with the 1 May 2026 tiered rates.",
-    type: "website",
-  },
-};
+    "Calculate your 2026 federal home battery rebate under the Cheaper Home Batteries Program — the tiered amount per usable kWh, plus state support by postcode.",
+  path: "/calculators/battery-rebate",
+  keywords: ["battery rebate calculator", "Cheaper Home Batteries Program", "home battery rebate 2026"],
+});
 
 const FAQ: { q: string; a: string }[] = [
   {
@@ -42,29 +40,26 @@ const FAQ: { q: string; a: string }[] = [
 ];
 
 export default function BatteryRebatePage() {
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
-
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Calculators", item: "/calculators" },
-      { "@type": "ListItem", position: 2, name: "Battery Rebate Calculator", item: "/calculators/battery-rebate" },
-    ],
-  };
+  const structuredData = [
+    faqLd(FAQ),
+    breadcrumbLd([
+      { name: "Calculators", path: "/calculators" },
+      { name: "Battery Rebate Calculator", path: "/calculators/battery-rebate" },
+    ]),
+    calculatorLd({
+      name: "Battery Rebate Calculator",
+      description:
+        "Calculate your federal home battery rebate under the Cheaper Home Batteries Program, including the tiered rate per usable kWh.",
+      path: "/calculators/battery-rebate",
+      featureList: ["Tiered rate per usable kWh", "State battery support", "Postcode aware"],
+    }),
+  ];
 
   return (
     <SiteLayout>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      {structuredData.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
 
       <PageHero
         eyebrow="Battery Rebate"
@@ -132,6 +127,8 @@ export default function BatteryRebatePage() {
       </section>
 
       <QuoteCTA />
+      <RelatedCalculators currentPath="/calculators/battery-rebate" />
+
     </SiteLayout>
   );
 }

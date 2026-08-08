@@ -1,16 +1,20 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { serviceLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Home EV Charger Installation",
   description:
-    "Charge your electric vehicle from your own solar. Kratos Energy installs smart 7kW & 22kW home EV chargers with fully licensed electricians.",
-};
+    "Charge your electric vehicle from your own solar. Smart 7kW and 22kW home EV chargers installed by licensed electricians across NSW, Victoria and the ACT.",
+  path: "/ev-charging",
+  keywords: ["home EV charger installation", "EV charger Australia", "solar EV charging"],
+});
 
 const FEATURES = [
   ["sun", "Charge from solar", "Top up your car on free daytime solar instead of grid power."],
@@ -28,6 +32,15 @@ const CHARGERS = [
 export default function EVChargerPage() {
   return (
     <SiteLayout>
+      <JsonLd
+        data={serviceLd({
+          name: "EV Charger Installation",
+          description:
+            "Supply and licensed installation of 7kW and 22kW smart home EV chargers, integrated with your solar.",
+          path: "/ev-charging",
+          serviceType: "EV charger installation",
+        })}
+      />
       <PageHero
         eyebrow="Smart EV Charging"
         title={

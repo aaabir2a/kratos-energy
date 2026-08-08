@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Icon } from "@/components/ui/Icon";
 import { BlogBlockRenderer } from "@/components/blog/BlogBlockRenderer";
 import { SYSTEMS } from "@/lib/systems";
+import { absoluteUrl, postPath } from "@/lib/seo/site";
+import { articleLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -46,16 +49,27 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!post) return { title: "Article not found" };
 
   return {
-    title: `${post.metaTitle || post.title} | Kratos Energy`,
+    // No manual brand suffix — the root template already appends
+    // " · Kratos Energy".
+    title: post.metaTitle || post.title,
     description: post.metaDescription || post.excerpt,
     alternates: {
-      canonical: post.canonicalUrl || undefined,
+      // Fall back to a self-referencing canonical; a post with no CMS
+      // canonicalUrl previously got none at all.
+      canonical: post.canonicalUrl || absoluteUrl(postPath("blog", post.slug || slug)),
     },
     openGraph: {
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.excerpt,
+      url: absoluteUrl(postPath("blog", post.slug || slug)),
       images: post.featuredImage ? [{ url: post.featuredImage }] : undefined,
       type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.metaTitle || post.title,
+      description: post.metaDescription || post.excerpt,
+      ...(post.featuredImage ? { images: [post.featuredImage] } : {}),
     },
   };
 }
@@ -161,45 +175,31 @@ export default async function PostPage({ params }: Params) {
   const post = await fetchPost(slug);
   if (!post) notFound();
 
+  // News articles live at /news/<slug>. Without this guard they render here
+  // too, duplicating every news post across two indexable URLs.
+  if (String(post.typeSlug || "").toLowerCase() === "news") {
+    redirect(postPath("news", post.slug || slug));
+  }
+
   const related = await fetchRelated(post.categorySlug, post.slug);
 
   // Author initials for avatar icon
   const authorName = post.author || "Kratos Energy";
 
-  // JSON-LD Schema.org SEO headers
-  const schemaJson = {
-    "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "headline": post.title,
-    "description": post.excerpt,
-    "image": post.featuredImage || "https://kratosenergy.com.au/logo.svg",
-    "author": {
-      "@type": "Person",
-      "name": authorName,
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Kratos Energy",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://kratosenergy.com.au/logo.svg",
-      },
-    },
-    "datePublished": post.publishedAt || post.createdAt,
-    "dateModified": post.updatedAt,
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://kratosenergy.com.au/blog/${post.slug}`,
-    },
-  };
+  const schemaJson = articleLd({
+    type: "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    image: post.featuredImage,
+    authorName,
+    datePublished: post.publishedAt || post.createdAt,
+    dateModified: post.updatedAt,
+    path: postPath("blog", post.slug || slug),
+  });
 
   return (
     <SiteLayout>
-      {/* Schema.org markup */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
-      />
+      <JsonLd data={schemaJson} />
 
       <article className="bg-white">
         {/* Full-width Cover Hero Section */}

@@ -6,6 +6,9 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Icon } from "@/components/ui/Icon";
 import { BlogBlockRenderer } from "@/components/blog/BlogBlockRenderer";
 import { SYSTEMS } from "@/lib/systems";
+import { absoluteUrl, postPath } from "@/lib/seo/site";
+import { articleLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -51,14 +54,24 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!post) return { title: "Update not found" };
 
   return {
-    title: `${post.metaTitle || post.title} | Kratos Energy News`,
+    // The root template appends " · Kratos Energy" — no manual suffix.
+    title: post.metaTitle || post.title,
     description: post.metaDescription || post.excerpt,
-    alternates: { canonical: post.canonicalUrl || undefined },
+    alternates: {
+      canonical: post.canonicalUrl || absoluteUrl(postPath("news", post.slug || slug)),
+    },
     openGraph: {
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.excerpt,
+      url: absoluteUrl(postPath("news", post.slug || slug)),
       images: post.featuredImage ? [{ url: post.featuredImage }] : undefined,
       type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.metaTitle || post.title,
+      description: post.metaDescription || post.excerpt,
+      ...(post.featuredImage ? { images: [post.featuredImage] } : {}),
     },
   };
 }
@@ -156,32 +169,20 @@ export default async function NewsPostPage({ params }: Params) {
   const related = await fetchRelatedNews(post.slug);
   const authorName = post.author || "Kratos Energy";
 
-  const schemaJson = {
-    "@context": "https://schema.org",
-    "@type": "NewsArticle",
-    "headline": post.title,
-    "description": post.excerpt,
-    "image": post.featuredImage || "https://kratos-energy.com/logo.svg",
-    "author": { "@type": "Person", "name": authorName },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Kratos Energy",
-      "logo": { "@type": "ImageObject", "url": "https://kratos-energy.com/logo.svg" },
-    },
-    "datePublished": post.publishedAt || post.createdAt,
-    "dateModified": post.updatedAt,
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": `https://kratos-energy.com/news/${post.slug}`,
-    },
-  };
+  const schemaJson = articleLd({
+    type: "NewsArticle",
+    headline: post.title,
+    description: post.excerpt,
+    image: post.featuredImage,
+    authorName,
+    datePublished: post.publishedAt || post.createdAt,
+    dateModified: post.updatedAt,
+    path: postPath("news", post.slug || slug),
+  });
 
   return (
     <SiteLayout>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
-      />
+      <JsonLd data={schemaJson} />
 
       <article className="bg-white">
         <div className="relative w-full overflow-hidden bg-[#0e4a31] text-white min-h-[300px] flex items-center">

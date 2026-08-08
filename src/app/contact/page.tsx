@@ -1,15 +1,18 @@
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { LeadForm } from "@/components/LeadForm";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { PHONE, PHONE_HREF, EMAIL } from "@/lib/nav";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { organizationLd, breadcrumbLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Contact Kratos Energy",
   description:
-    "Talk to Kratos Energy about solar, batteries and EV charging. Call, email or send an enquiry — an Australian-owned team, based in Wollongong NSW.",
-};
+    "Talk to Kratos Energy about solar, batteries and EV charging. Call 1300 089 547, email or send an enquiry — an Australian-owned team based in Wollongong NSW.",
+  path: "/contact",
+});
 
 type Detail = {
   icon: IconName;
@@ -48,6 +51,10 @@ const SERVICE_AREAS = ["NSW", "Victoria", "ACT"];
 export default function ContactPage() {
   return (
     <SiteLayout>
+      {/* Business identity for local results — the same entity the root
+          layout references by @id, repeated here where the NAP is visible. */}
+      <JsonLd data={{ "@context": "https://schema.org", ...organizationLd() }} />
+      <JsonLd data={breadcrumbLd([{ name: "Contact", path: "/contact" }])} />
       <PageHero
         eyebrow="Contact Us"
         title={

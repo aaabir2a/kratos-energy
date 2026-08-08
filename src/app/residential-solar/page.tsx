@@ -1,12 +1,16 @@
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { SolarSegment, type Service } from "@/components/sections/SolarSegment";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { serviceLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = {
-  title: "Residential Solar",
+export const metadata = pageMetadata({
+  title: "Residential Solar Panels & Batteries",
   description:
-    "Home solar and battery systems from Kratos Energy — 6.6kW to 13kW, Tier-1 panels, CEC-accredited installation, rebates handled and a 25-year warranty.",
-};
+    "Home solar from 6.6kW to 13.2kW with Tier-1 panels, CEC-accredited installation and a 25-year warranty. We handle every rebate across NSW, VIC and the ACT.",
+  path: "/residential-solar",
+  keywords: ["residential solar", "home solar panels Australia", "6.6kW solar system"],
+});
 
 const SERVICES: Service[] = [
   {
@@ -44,6 +48,15 @@ const SERVICES: Service[] = [
 export default function ResidentialSolarPage() {
   return (
     <SiteLayout>
+      <JsonLd
+        data={serviceLd({
+          name: "Residential Solar Installation",
+          description:
+            "Design, supply and CEC-accredited installation of home solar and battery systems from 6.6kW to 13.2kW.",
+          path: "/residential-solar",
+          serviceType: "Solar panel installation",
+        })}
+      />
       <SolarSegment
         category="residential"
         eyebrow="Residential Solar"

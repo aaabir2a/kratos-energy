@@ -1,15 +1,19 @@
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { ReferForm } from "@/components/sections/ReferForm";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Refer a Friend",
   description:
     "Love your Kratos solar? Refer a friend and you'll both be rewarded when they install. $200 for you, $200 off for them.",
-};
+  path: "/refer",
+  // Thin conversion page that duplicates /contact's intent — keep the
+  // links, drop it from the index.
+  noIndex: true,
+});
 
 const STEPS = [
   ["Share your link", "Send your unique referral to friends, family or neighbours."],

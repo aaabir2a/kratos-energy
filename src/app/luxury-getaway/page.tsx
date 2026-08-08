@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { LeadForm } from "@/components/LeadForm";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Free 7-Night Luxury Getaway Offer",
   description:
-    "Switch to solar and battery with Kratos Energy and claim a complimentary seven-night luxury holiday accommodation in Bali, Phuket, or Mombasa. Eligible NSW homeowners can access government incentives & $0-interest loans up to $15,000.",
-};
+    "Switch to solar and battery with Kratos Energy and claim seven nights of complimentary luxury accommodation in Bali, Phuket or Mombasa. NSW homeowners, 2026.",
+  path: "/luxury-getaway",
+});
 
 const DESTINATIONS = [
   {

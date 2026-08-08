@@ -15,6 +15,9 @@ import {
   zoneForPostcode,
 } from "@/lib/rebates";
 import { ENERGY_BY_STATE, annualCo2Saved, annualGeneration } from "@/lib/energy";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { faqLd, breadcrumbLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 const YEAR = 2026;
 const SYSTEMS = [6.6, 10, 13.2];
@@ -31,16 +34,16 @@ export async function generateMetadata({
   const { state } = await params;
   const s = stateBySlug(state);
   if (!s) return {};
-  return {
-    title: `Solar Rebates & Costs in ${s.name} ${YEAR} — STC, Battery & Savings`,
-    description: `Solar in ${s.name}: ${YEAR} STC rebate amounts, the federal battery rebate, generation, feed-in tariffs and savings for ${s.capital} and beyond. Free calculators from Kratos Energy.`,
-    alternates: { canonical: `/solar/${s.slug}` },
-    openGraph: {
-      title: `Solar Rebates & Costs in ${s.name} ${YEAR}`,
-      description: `STC rebates, battery rebate, generation and feed-in tariffs for ${s.name}.`,
-      type: "website",
-    },
-  };
+  return pageMetadata({
+    title: `Solar Rebates & Costs in ${s.name} ${YEAR}`,
+    description: `Solar in ${s.name}: ${YEAR} STC rebate amounts, the federal battery rebate, generation, feed-in tariffs and savings for ${s.capital} and beyond.`,
+    path: `/solar/${s.slug}`,
+    keywords: [
+      `solar rebate ${s.slug.toUpperCase()}`,
+      `solar panels ${s.name}`,
+      `feed-in tariff ${s.name}`,
+    ],
+  });
 }
 
 export default async function StatePage({ params }: { params: Promise<{ state: string }> }) {
@@ -64,44 +67,36 @@ export default async function StatePage({ params }: { params: Promise<{ state: s
     ["battery", `${energy.feedInTariff}c`, "typical feed-in /kWh"],
   ];
 
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
+  const structuredData = [
+    faqLd([
       {
-        "@type": "Question",
-        name: `What solar rebate can I get in ${s.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `${s.capital} is in STC Zone ${zone}. In ${YEAR} a 6.6 kW system earns about ${money(
-            stcRows[0].stc.rebate,
-          )} in STCs, a 10 kW system about ${money(stcRows[1].stc.rebate)}. A home battery adds the federal Cheaper Home Batteries rebate on top.`,
-        },
+        q: `What solar rebate can I get in ${s.name}?`,
+        a: `${s.capital} is in STC Zone ${zone}. In ${YEAR} a 6.6 kW system earns about ${money(
+          stcRows[0].stc.rebate,
+        )} in STCs, a 10 kW system about ${money(stcRows[1].stc.rebate)}. A home battery adds the federal Cheaper Home Batteries rebate on top.`,
       },
       {
-        "@type": "Question",
-        name: `How much solar power will I generate in ${s.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Around ${energy.genPerKwDay} kWh per kW per day on average near ${s.capital} — about ${gen66.toLocaleString()} kWh a year from a 6.6 kW system.`,
-        },
+        q: `How much solar power will I generate in ${s.name}?`,
+        a: `Around ${energy.genPerKwDay} kWh per kW per day on average near ${s.capital} — about ${gen66.toLocaleString()} kWh a year from a 6.6 kW system.`,
       },
       {
-        "@type": "Question",
-        name: `Is there a battery rebate in ${s.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Yes — the federal Cheaper Home Batteries rebate applies Australia-wide (about ${money(
-            battery13,
-          )} on a 13.5 kWh battery). ${scheme.battery}`,
-        },
+        q: `Is there a battery rebate in ${s.name}?`,
+        a: `Yes — the federal Cheaper Home Batteries rebate applies Australia-wide (about ${money(
+          battery13,
+        )} on a 13.5 kWh battery). ${scheme.battery}`,
       },
-    ],
-  };
+    ]),
+    breadcrumbLd([
+      { name: "Solar by State", path: "/solar" },
+      { name: s.name, path: `/solar/${s.slug}` },
+    ]),
+  ];
 
   return (
     <SiteLayout>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      {structuredData.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
 
       <PageHero
         eyebrow={`Solar in ${s.name}`}

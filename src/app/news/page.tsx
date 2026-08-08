@@ -3,18 +3,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
-
-export const metadata: Metadata = {
-  title: "News & Updates | Kratos Energy",
-  description:
-    "The latest news, announcements and updates from Kratos Energy — new products, rebates, projects and company milestones.",
-};
+import { pageMetadata } from "@/lib/seo/metadata";
 
 export const revalidate = 60; // ISR
 
 const PER_PAGE = 12;
 
 type SearchParams = Promise<{ page?: string }>;
+
+/** Self-referencing canonical per page — never collapse page 2 onto page 1. */
+export async function generateMetadata(props: {
+  searchParams: SearchParams;
+}): Promise<Metadata> {
+  const sp = await props.searchParams;
+  const page = parseInt(sp.page || "1") || 1;
+  const suffix = page > 1 ? ` — Page ${page}` : "";
+
+  return pageMetadata({
+    title: `News & Updates${suffix}`,
+    description:
+      "The latest solar news from Kratos Energy — rebate changes, new products, completed projects and company milestones across NSW, Victoria and the ACT.",
+    path: `/news${page > 1 ? `?page=${page}` : ""}`,
+  });
+}
 
 type NewsPost = {
   slug: string;

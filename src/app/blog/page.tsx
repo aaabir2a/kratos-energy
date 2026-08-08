@@ -3,16 +3,36 @@ import Image from "next/image";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
-
-export const metadata: Metadata = {
-  title: "Solar Blog & Guides | Kratos Energy",
-  description:
-    "Practical, no-jargon guides on solar costs, batteries, rebates and getting the most from your system — from the Kratos Energy team.",
-};
+import { pageMetadata } from "@/lib/seo/metadata";
 
 export const revalidate = 60; // ISR revalidation every 60 seconds
 
 type SearchParams = Promise<{ category?: string; page?: string }>;
+
+/**
+ * Self-referencing canonical that keeps ?page and ?category. Pointing page 2 at
+ * page 1 would orphan every post that only appears deeper in the list.
+ */
+export async function generateMetadata(props: {
+  searchParams: SearchParams;
+}): Promise<Metadata> {
+  const sp = await props.searchParams;
+  const page = parseInt(sp.page || "1") || 1;
+  const category = sp.category || "";
+
+  const query = new URLSearchParams();
+  if (category) query.set("category", category);
+  if (page > 1) query.set("page", String(page));
+  const qs = query.toString();
+
+  const suffix = page > 1 ? ` — Page ${page}` : "";
+  return pageMetadata({
+    title: `Solar Blog & Guides${suffix}`,
+    description:
+      "Practical, no-jargon Australian guides on solar costs, batteries, rebates and getting the most from your system — written by the Kratos Energy team.",
+    path: `/blog${qs ? `?${qs}` : ""}`,
+  });
+}
 
 async function fetchBlogData(category = "", page = 1) {
   const base = process.env.NEXT_PUBLIC_API_BASE || "http://192.168.0.220:4000/api/v1";

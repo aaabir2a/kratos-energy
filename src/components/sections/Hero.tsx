@@ -90,15 +90,16 @@ function Slider({
         className="animate-hero-slide absolute inset-0 z-[1] h-full w-full object-cover object-center"
       />
 
-      {/* Preload the rest. */}
-      <div className="hidden">
-        {images.map((img, idx) =>
-          idx === i ? null : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img key={`pl-${img.url}`} src={img.url} alt="" loading="lazy" decoding="async" />
-          ),
-        )}
-      </div>
+      {/* Prefetch the next frame only. A hidden <img> block for every slide
+          either gets skipped entirely or competes with the LCP image for
+          bandwidth on mobile; a single link prefetch does neither. */}
+      {images.length > 1 && (
+        <link
+          rel="prefetch"
+          as="image"
+          href={images[(i + 1) % images.length].url}
+        />
+      )}
 
       {/* Optional segmented progress bars (mobile hero only). */}
       {showNav && images.length > 1 && (
@@ -190,6 +191,8 @@ export function Hero({ images }: { images: HeroImages }) {
               </span>
             </div>
 
+            {/* Both hero variants render at once (one hidden by breakpoint), so
+                only this one carries the h1 — the desktop panel uses a p. */}
             <h1
               className="animate-fade-up m-0 font-display text-[clamp(40px,5.6vw,74px)] font-extrabold leading-[0.96] tracking-[-0.03em] text-white [text-wrap:balance]"
               style={{ animationDelay: "130ms" }}
@@ -197,8 +200,15 @@ export function Hero({ images }: { images: HeroImages }) {
               Power your home with <span className="text-green-300">the sun.</span>
             </h1>
 
+            <h2
+              className="animate-fade-up m-0 mt-5 max-w-[560px] font-display text-[clamp(16px,1.5vw,20px)] font-bold leading-snug text-green-200"
+              style={{ animationDelay: "170ms" }}
+            >
+              Solar panels, batteries &amp; EV charging for homes in NSW, VIC &amp; ACT
+            </h2>
+
             <p
-              className="animate-fade-up m-0 mt-6 max-w-[500px] font-body text-[clamp(16px,1.25vw,18.5px)] leading-relaxed text-white/85"
+              className="animate-fade-up m-0 mt-4 max-w-[500px] font-body text-[clamp(16px,1.25vw,18.5px)] leading-relaxed text-white/85"
               style={{ animationDelay: "200ms" }}
             >
               Premium panels, accredited installation and a 25-year warranty,
@@ -274,18 +284,26 @@ export function Hero({ images }: { images: HeroImages }) {
               </span>
             </div>
 
-            {/* Headline */}
-            <h1
+            {/* Headline — a p, not an h1: the mobile hero above owns the page's
+                single h1 and both variants are in the DOM at the same time. */}
+            <p
               className="animate-fade-up m-0 font-display text-[clamp(44px,4vw,60px)] font-extrabold leading-[1.04] tracking-[-0.03em] text-navy-700"
               style={{ animationDelay: "70ms" }}
             >
               Power your home <br />
               <span className="text-green-600">with the sun.</span>
-            </h1>
+            </p>
+
+            <h2
+              className="animate-fade-up m-0 mt-4 max-w-[470px] font-display text-[17px] font-bold leading-snug text-green-700"
+              style={{ animationDelay: "110ms" }}
+            >
+              Solar panels, batteries &amp; EV charging for homes in NSW, VIC &amp; ACT
+            </h2>
 
             {/* Description */}
             <p
-              className="animate-fade-up m-0 mt-4 max-w-[460px] font-body text-[16px] leading-relaxed text-ash-700"
+              className="animate-fade-up m-0 mt-3 max-w-[460px] font-body text-[16px] leading-relaxed text-ash-700"
               style={{ animationDelay: "140ms" }}
             >
               Premium panels, CEC-accredited installation and a 25-year warranty,

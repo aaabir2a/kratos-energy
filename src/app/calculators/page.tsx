@@ -1,92 +1,35 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Icon } from "@/components/ui/Icon";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { itemListLd, breadcrumbLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { CALCULATORS } from "@/lib/calculators";
 
-export const metadata: Metadata = {
-  title: "Solar & Battery Calculators — Rebates, Savings & System Builder",
+export const metadata = pageMetadata({
+  title: "Free Solar & Battery Calculators",
   description:
-    "Free Australian solar calculators: estimate your STC solar rebate and federal battery rebate by postcode, model your savings and payback, and build your own system.",
-  alternates: { canonical: "/calculators" },
-};
+    "Free Australian solar calculators: estimate your 2026 STC rebate and battery rebate by postcode, model savings and payback, and build your own system.",
+  path: "/calculators",
+  keywords: ["solar calculator Australia", "solar rebate calculator", "battery rebate calculator"],
+});
 
-type Calc = {
-  href: string;
-  icon: string;
-  title: string;
-  desc: string;
-  tag: string;
-};
-
-const CALCULATORS: Calc[] = [
-  {
-    href: "/calculators/solar-rebate",
-    icon: "sun",
-    title: "Solar Rebate Calculator",
-    desc: "Estimate your federal STC solar rebate by postcode, using official Clean Energy Regulator zone ratings.",
-    tag: "By postcode",
-  },
-  {
-    href: "/calculators/battery-rebate",
-    icon: "battery",
-    title: "Battery Rebate Calculator",
-    desc: "See your Cheaper Home Batteries rebate per usable kWh, with the tapered 2026 tiers and state support.",
-    tag: "Cheaper Home Batteries",
-  },
-  {
-    href: "/savings-calculator",
-    icon: "trend",
-    title: "Savings & Payback Calculator",
-    desc: "Model your yearly bill savings, payback period and 25-year return from going solar.",
-    tag: "Bill savings",
-  },
-  {
-    href: "/calculators/solar-output",
-    icon: "sun",
-    title: "Solar Output Calculator",
-    desc: "Estimate how many kWh your system generates per day, month and year, plus CO₂ avoided.",
-    tag: "Generation",
-  },
-  {
-    href: "/calculators/feed-in-tariff",
-    icon: "zap",
-    title: "Feed-in Tariff Calculator",
-    desc: "See what your exported solar earns with 2026 feed-in rates by state.",
-    tag: "Export earnings",
-  },
-  {
-    href: "/calculators/ev-charging-cost",
-    icon: "battery",
-    title: "EV Charging Cost Calculator",
-    desc: "Compare the yearly cost of charging your EV on solar versus the grid.",
-    tag: "EV charging",
-  },
-  {
-    href: "/build",
-    icon: "wrench",
-    title: "Build Your System",
-    desc: "Design a system from your roof up — panels, inverter, battery and EV charging with live pricing.",
-    tag: "System builder",
-  },
-];
 
 export default function CalculatorsHub() {
-  const itemListLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    itemListElement: CALCULATORS.map((c, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: c.title,
-      url: c.href,
-    })),
-  };
+  const structuredData = [
+    itemListLd(
+      CALCULATORS.map((c) => ({ name: c.title, path: c.href, description: c.desc })),
+    ),
+    breadcrumbLd([{ name: "Calculators", path: "/calculators" }]),
+  ];
 
   return (
     <SiteLayout>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
+      {structuredData.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
 
       <PageHero
         eyebrow="Calculators"

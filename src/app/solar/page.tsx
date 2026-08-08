@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
@@ -7,38 +6,45 @@ import { Icon } from "@/components/ui/Icon";
 import { STATE_META } from "@/lib/states";
 import { ZONE_RATING, zoneForPostcode } from "@/lib/rebates";
 import { ENERGY_BY_STATE } from "@/lib/energy";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { itemListLd, breadcrumbLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = {
-  title: "Solar Rebates & Costs by State — Australia 2026 Guide",
+/**
+ * Directory page. Deliberately does NOT target "solar rebates" — /rebates owns
+ * the scheme explainer intent and /calculators/solar-rebate owns the tool
+ * intent. This page's job is to route people to their state.
+ */
+export const metadata = pageMetadata({
+  title: "Solar by State: NSW, VIC & ACT Guides",
   description:
-    "Solar rebates, generation and feed-in tariffs for every Australian state and territory. Pick your state for 2026 STC rebate amounts, battery rebates and savings.",
-  alternates: { canonical: "/solar" },
-};
+    "Solar costs, generation and feed-in tariffs for the states we install in. Choose New South Wales, Victoria or the ACT for 2026 figures built on official data.",
+  path: "/solar",
+  keywords: ["solar NSW", "solar Victoria", "solar ACT", "solar by state Australia"],
+});
 
 export default function SolarStatesIndex() {
-  const itemListLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    itemListElement: STATE_META.map((s, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: `Solar in ${s.name}`,
-      url: `/solar/${s.slug}`,
-    })),
-  };
+  const structuredData = [
+    itemListLd(
+      STATE_META.map((s) => ({ name: `Solar in ${s.name}`, path: `/solar/${s.slug}` })),
+    ),
+    breadcrumbLd([{ name: "Solar by State", path: "/solar" }]),
+  ];
 
   return (
     <SiteLayout>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListLd) }} />
+      {structuredData.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
 
       <PageHero
         eyebrow="Solar by State"
         title={
           <>
-            Solar rebates & costs, <span className="text-green-600">state by state.</span>
+            Solar, <span className="text-green-600">state by state.</span>
           </>
         }
-        subtitle="Rebates, generation and feed-in tariffs differ across Australia. Choose your state for 2026 figures built on official data."
+        subtitle="Generation, feed-in tariffs and rebate amounts differ across Australia. Choose your state for 2026 figures built on official data."
       />
 
       <section className="bg-paper py-14 sm:py-[72px]">

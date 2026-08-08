@@ -1,19 +1,20 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProjectsGallery } from "@/components/sections/Projects";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Icon } from "@/components/ui/Icon";
 import { getProjectsServer, type Project } from "@/lib/api";
+import { pageMetadata } from "@/lib/seo/metadata";
 
 const HEADER_IMAGE =
   "https://api.kratos-energy.com/kratos-uploads/hero/desktop/dd403ceb-d379-48e9-8102-589925043402/optimized.webp";
 
-export const metadata: Metadata = {
-  title: "Our Projects",
+export const metadata = pageMetadata({
+  title: "Our Solar Projects",
   description:
-    "See real solar and battery installations by Kratos Energy across Australia — homes and businesses generating their own clean power.",
-};
+    "Real solar and battery installations by Kratos Energy across New South Wales, Victoria and the ACT — homes and businesses generating their own clean power.",
+  path: "/projects",
+});
 
 async function loadProjects(): Promise<Project[]> {
   try {

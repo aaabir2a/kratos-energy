@@ -4,34 +4,50 @@ import { Icon } from "@/components/ui/Icon";
 import { PHONE, EMAIL } from "@/lib/nav";
 import { Socials } from "./Socials";
 
+/**
+ * Sitewide link block — it renders on every page, so these links carry most of
+ * the internal link equity. Every entry points at a real route (not a homepage
+ * anchor) with keyword-bearing anchor text.
+ */
 const COLUMNS: { heading: string; items: { label: string; href: string }[] }[] = [
   {
     heading: "Solar Solutions",
     items: [
-      { label: "Residential Solar", href: "/#systems" },
-      { label: "Commercial Solar", href: "/systems/50kw" },
+      { label: "Residential Solar", href: "/residential-solar" },
+      { label: "Commercial Solar", href: "/commercial-solar" },
       { label: "Battery Storage", href: "/battery-storage" },
       { label: "EV Charging", href: "/ev-charging" },
       { label: "Build Your System", href: "/build" },
     ],
   },
   {
+    heading: "Calculators",
+    items: [
+      { label: "All Calculators", href: "/calculators" },
+      { label: "Solar Rebate Calculator", href: "/calculators/solar-rebate" },
+      { label: "Battery Rebate Calculator", href: "/calculators/battery-rebate" },
+      { label: "Savings & Payback", href: "/savings-calculator" },
+      { label: "Feed-in Tariff", href: "/calculators/feed-in-tariff" },
+      { label: "Solar Output", href: "/calculators/solar-output" },
+    ],
+  },
+  {
     heading: "Company",
     items: [
       { label: "Blog & Guides", href: "/blog" },
-      { label: "Our Projects", href: "/#reviews" },
+      { label: "News & Updates", href: "/news" },
+      { label: "Our Projects", href: "/projects" },
       { label: "Finance & $0 Upfront", href: "/finance" },
-      // { label: "Refer a Friend", href: "/refer" },
       { label: "Government Rebates", href: "/rebates" },
+      { label: "Solar by State", href: "/solar" },
     ],
   },
   {
     heading: "Support",
     items: [
       { label: "Get a Quote", href: "/get-a-quote" },
-      { label: "Savings Calculator", href: "/savings-calculator" },
       { label: "Warranty & Support", href: "/support" },
-      { label: "Contact Us", href: "/get-a-quote" },
+      { label: "Contact Us", href: "/contact" },
       { label: "FAQs", href: "/support" },
     ],
   },
@@ -41,7 +57,7 @@ export function Footer() {
   return (
     <footer className="bg-[#0a2e20] text-[#bcd4c6]">
       <div className="container-ke py-14 pb-7">
-        <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr_1fr]">
           <div>
             <div className="mb-4 inline-block rounded-md bg-white px-3.5 py-2.5">
               <Logo className="h-[38px] w-auto" />

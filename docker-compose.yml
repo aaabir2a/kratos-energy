@@ -6,6 +6,10 @@ services:
         # Baked into the client bundle at build time. Change + rebuild to point
         # at a different API.
         NEXT_PUBLIC_API_BASE: https://api.kratos-energy.com/api/v1
+        # Canonical origin for canonicals, sitemaps, robots and JSON-LD.
+        NEXT_PUBLIC_SITE_URL: https://kratos-energy.com
+        # Paste the Search Console token here once issued, then rebuild.
+        NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: ""
     image: kratos-energy
     container_name: kratos-energy
     restart: unless-stopped

@@ -1,12 +1,16 @@
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { SolarSegment, type Service } from "@/components/sections/SolarSegment";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { serviceLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = {
-  title: "Commercial Solar",
+export const metadata = pageMetadata({
+  title: "Commercial Solar Systems 30–100kW+",
   description:
-    "Commercial solar from Kratos Energy — 30kW to 100kW+ systems that cut operating costs. Energy audit, ROI modelling, finance, grid connection and ongoing O&M.",
-};
+    "Commercial solar that cuts operating costs — 30kW to 100kW+ systems with energy audit, ROI modelling, finance, grid connection and ongoing maintenance.",
+  path: "/commercial-solar",
+  keywords: ["commercial solar Australia", "business solar system", "50kW solar system"],
+});
 
 const SERVICES: Service[] = [
   {
@@ -44,6 +48,15 @@ const SERVICES: Service[] = [
 export default function CommercialSolarPage() {
   return (
     <SiteLayout>
+      <JsonLd
+        data={serviceLd({
+          name: "Commercial Solar Installation",
+          description:
+            "Commercial solar from 30kW to 100kW+, including energy audit, ROI modelling, grid connection and ongoing maintenance.",
+          path: "/commercial-solar",
+          serviceType: "Commercial solar installation",
+        })}
+      />
       <SolarSegment
         category="commercial"
         eyebrow="Commercial Solar"

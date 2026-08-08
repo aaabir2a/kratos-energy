@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
 import { PHONE, PHONE_HREF, EMAIL } from "@/lib/nav";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Support & Warranty",
   description:
-    "Get help with your Kratos Energy system — monitoring, maintenance, warranty claims and 24/7 support for the life of your system.",
-};
+    "Help with your Kratos Energy system — monitoring, maintenance, warranty claims and support for the life of your system, plus servicing for other brands.",
+  path: "/support",
+});
 
 const CHANNELS = [
   ["phone", "Call us", PHONE, PHONE_HREF],

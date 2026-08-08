@@ -14,6 +14,21 @@ import { RebateBanner } from "@/components/sections/RebateBanner";
 // import { GuideDownload } from "@/components/sections/GuideDownload";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { NetSellerCertification } from "@/components/sections/NetSellerCertification";
+import { pageMetadata } from "@/lib/seo/metadata";
+
+export const metadata = pageMetadata({
+  title: "Solar Panels & Batteries for Australian Homes",
+  description:
+    "Compare solar system costs, claim your 2026 STC rebate and see your payback in seconds. CEC-approved installation across NSW, Victoria and the ACT since 2016.",
+  path: "/",
+  keywords: [
+    "solar panels Australia",
+    "solar rebate 2026",
+    "home battery rebate",
+    "solar savings calculator",
+    "solar installer NSW",
+  ],
+});
 
 /** Hero images fetched at render time (ISR) so URLs ship in the first HTML —
  *  no post-hydration swap. Falls back to empty (static hero asset) on error. */
@@ -37,6 +52,28 @@ export default async function HomePage() {
   const [heroImages, projects] = await Promise.all([loadHeroImages(), loadProjects()]);
   return (
     <SiteLayout>
+      {/* The hero slider needs raw <img> for the crossfade, so its URL isn't
+          discoverable until React hydrates. Preloading here puts the LCP
+          request in the initial HTML parse instead. */}
+      {heroImages.desktop[0] && (
+        <link
+          rel="preload"
+          as="image"
+          href={heroImages.desktop[0].url}
+          fetchPriority="high"
+          media="(min-width: 640px)"
+        />
+      )}
+      {heroImages.mobile[0] && (
+        <link
+          rel="preload"
+          as="image"
+          href={heroImages.mobile[0].url}
+          fetchPriority="high"
+          media="(max-width: 639px)"
+        />
+      )}
+
       <Hero images={heroImages} />
       <TrustBar />
       <GetawayPromoSection />

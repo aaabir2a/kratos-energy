@@ -1,14 +1,15 @@
 import Link from "next/link";
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Large-Scale Solar Projects Australia | Solar Farms & BESS",
+export const metadata = pageMetadata({
+  title: "Large-Scale Solar Farms & BESS Australia",
   description:
-    "Kratos Energy develops and delivers large-scale solar projects, commercial solar systems, solar farms, Battery Energy Storage Solutions, and investor-ready renewable energy opportunities across Australia.",
+    "Utility-scale solar development and EPC across Australia — solar farms, Battery Energy Storage Systems, grid connection studies and investor-ready projects.",
+  path: "/systems/large-scale",
   keywords: [
     "Large-scale solar projects Australia",
     "Solar farm development Australia",
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
     "BESS projects Australia",
     "Ready-to-build solar farm investment",
   ],
-};
+});
 
 const HERO_IMAGE =
   "https://api.kratos-energy.com/kratos-uploads/hero/desktop/169b3551-ce95-4008-bb93-06aefc2257db/optimized.webp";

@@ -1,21 +1,20 @@
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { EvChargingCalculator } from "@/components/sections/EvChargingCalculator";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Icon } from "@/components/ui/Icon";
+import { faqLd, breadcrumbLd, calculatorLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { RelatedCalculators } from "@/components/sections/RelatedCalculators";
 
-export const metadata: Metadata = {
-  title: "EV Charging Cost Calculator — Solar vs Grid Charging Savings",
+export const metadata = pageMetadata({
+  title: "EV Charging Cost Calculator (Solar vs Grid)",
   description:
-    "Work out what it costs to charge your electric car each year, and how much you save charging from solar instead of the grid. By postcode and driving distance.",
-  alternates: { canonical: "/calculators/ev-charging-cost" },
-  openGraph: {
-    title: "EV Charging Cost Calculator — Solar vs Grid",
-    description: "Compare the yearly cost of charging your EV on solar versus the grid.",
-    type: "website",
-  },
-};
+    "Work out what it costs to charge your electric car each year, and how much you save charging from solar instead of the grid — by postcode and driving distance.",
+  path: "/calculators/ev-charging-cost",
+  keywords: ["EV charging cost calculator", "cost to charge electric car Australia", "solar EV charging savings"],
+});
 
 const FAQ: { q: string; a: string }[] = [
   {
@@ -37,28 +36,26 @@ const FAQ: { q: string; a: string }[] = [
 ];
 
 export default function EvChargingPage() {
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Calculators", item: "/calculators" },
-      { "@type": "ListItem", position: 2, name: "EV Charging Cost Calculator", item: "/calculators/ev-charging-cost" },
-    ],
-  };
+  const structuredData = [
+    faqLd(FAQ),
+    breadcrumbLd([
+      { name: "Calculators", path: "/calculators" },
+      { name: "EV Charging Cost Calculator", path: "/calculators/ev-charging-cost" },
+    ]),
+    calculatorLd({
+      name: "EV Charging Cost Calculator",
+      description:
+        "Work out what it costs to charge your electric car each year, and how much you save charging from solar instead of the grid.",
+      path: "/calculators/ev-charging-cost",
+      featureList: ["Solar vs grid charging", "Annual running cost", "By driving distance"],
+    }),
+  ];
 
   return (
     <SiteLayout>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      {structuredData.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
 
       <PageHero
         eyebrow="EV Charging"
@@ -100,6 +97,8 @@ export default function EvChargingPage() {
       </section>
 
       <QuoteCTA />
+      <RelatedCalculators currentPath="/calculators/ev-charging-cost" />
+
     </SiteLayout>
   );
 }

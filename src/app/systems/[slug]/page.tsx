@@ -12,6 +12,9 @@ import {
   systemsByCategory,
   type SolarSystem,
 } from "@/lib/systems";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { productLd, breadcrumbLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -24,10 +27,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const system = getSystem(slug);
   if (!system) return { title: "System not found" };
-  return {
-    title: `${system.size} Solar System`,
-    description: `${system.tagline} ${system.size} solar from Kratos Energy — Tier 1 panels, CEC-accredited install and a 25-year warranty.`,
-  };
+  return pageMetadata({
+    title: `${system.size} Solar System Price & Specs`,
+    description: `${system.tagline} ${system.size} solar with Tier 1 panels, CEC-accredited installation and a 25-year warranty — installed across NSW, VIC and the ACT.`,
+    path: `/systems/${system.slug}`,
+  });
 }
 
 function RelatedCard({ s }: { s: SolarSystem }) {
@@ -66,6 +70,23 @@ export default async function SystemPage({ params }: Params) {
 
   return (
     <SiteLayout>
+      {/* Descriptive Product only — no `offers`. System prices are "incl. GST,
+          after STC rebate" and the STC price moves with the market, so a
+          machine-readable price would drift from what we actually charge. */}
+      <JsonLd
+        data={productLd({
+          name: `${system.size} Solar System`,
+          description: `${system.tagline} ${system.size} solar system with Tier 1 panels and CEC-accredited installation.`,
+          path: `/systems/${system.slug}`,
+        })}
+      />
+      <JsonLd
+        data={breadcrumbLd([
+          { name: isResidential ? "Residential Solar" : "Commercial Solar", path: isResidential ? "/residential-solar" : "/commercial-solar" },
+          { name: `${system.size} System`, path: `/systems/${system.slug}` },
+        ])}
+      />
+
       {/* Hero */}
       <section
         className="pb-16 pt-12 relative isolate bg-forest-900 text-white min-h-[500px] flex flex-col justify-center overflow-hidden py-16 lg:py-20"

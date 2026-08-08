@@ -1,22 +1,20 @@
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { RebateCalculator } from "@/components/sections/RebateCalculator";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Icon } from "@/components/ui/Icon";
+import { faqLd, breadcrumbLd, calculatorLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { RelatedCalculators } from "@/components/sections/RelatedCalculators";
 
-export const metadata: Metadata = {
-  title: "Solar Rebate Calculator 2026 — STC & Battery Rebates by Postcode",
+export const metadata = pageMetadata({
+  title: "Solar Rebate Calculator 2026 (by Postcode)",
   description:
-    "Calculate your 2026 solar STC rebate and federal battery rebate by postcode. Accurate Clean Energy Regulator zone ratings and the Cheaper Home Batteries Program, updated for Australia.",
-  alternates: { canonical: "/calculators/solar-rebate" },
-  openGraph: {
-    title: "Solar Rebate Calculator — STC & Battery Rebates by Postcode",
-    description:
-      "Enter your postcode to estimate your solar STC rebate and federal battery rebate, using official CER zone ratings.",
-    type: "website",
-  },
-};
+    "Calculate your 2026 solar STC rebate and federal battery rebate by postcode. Uses official Clean Energy Regulator zone ratings and Cheaper Home Batteries rates.",
+  path: "/calculators/solar-rebate",
+  keywords: ["solar rebate calculator", "STC calculator", "solar rebate 2026", "how much is the solar rebate"],
+});
 
 const FAQ: { q: string; a: string }[] = [
   {
@@ -46,29 +44,26 @@ const FAQ: { q: string; a: string }[] = [
 ];
 
 export default function SolarRebatePage() {
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
-
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Calculators", item: "/calculators" },
-      { "@type": "ListItem", position: 2, name: "Solar Rebate Calculator", item: "/calculators/solar-rebate" },
-    ],
-  };
+  const structuredData = [
+    faqLd(FAQ),
+    breadcrumbLd([
+      { name: "Calculators", path: "/calculators" },
+      { name: "Solar Rebate Calculator", path: "/calculators/solar-rebate" },
+    ]),
+    calculatorLd({
+      name: "Solar Rebate Calculator",
+      description:
+        "Estimate your 2026 STC solar rebate and federal battery rebate by postcode using official Clean Energy Regulator zone ratings.",
+      path: "/calculators/solar-rebate",
+      featureList: ["STC rebate by postcode", "Federal battery rebate", "Official CER zone ratings"],
+    }),
+  ];
 
   return (
     <SiteLayout>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      {structuredData.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
 
       <PageHero
         eyebrow="Rebate Calculator"
@@ -138,6 +133,8 @@ export default function SolarRebatePage() {
       </section>
 
       <QuoteCTA />
+      <RelatedCalculators currentPath="/calculators/solar-rebate" />
+
     </SiteLayout>
   );
 }

@@ -14,6 +14,12 @@ COPY . .
 # NEXT_PUBLIC_* is inlined at build time — must be present here, not at runtime.
 ARG NEXT_PUBLIC_API_BASE=https://api.kratos-energy.com/api/v1
 ENV NEXT_PUBLIC_API_BASE=$NEXT_PUBLIC_API_BASE
+# Canonical origin. Anything other than the production URL makes the build
+# non-indexable, so staging images must override this.
+ARG NEXT_PUBLIC_SITE_URL=https://kratos-energy.com
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=
+ENV NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=$NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 

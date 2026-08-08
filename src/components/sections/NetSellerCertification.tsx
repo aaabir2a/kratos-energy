@@ -25,7 +25,7 @@ export function NetSellerCertification() {
             </div>
             <div className="relative w-28 h-28 flex-none ml-4">
               <Image
-                src="/new energy tech approvide seller.png"
+                src="/net-approved-seller.png"
                 alt="New Energy Tech Approved Seller Badge"
                 fill
                 sizes="150px"

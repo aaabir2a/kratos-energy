@@ -1,21 +1,20 @@
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { FeedInCalculator } from "@/components/sections/FeedInCalculator";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Icon } from "@/components/ui/Icon";
+import { faqLd, breadcrumbLd, calculatorLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { RelatedCalculators } from "@/components/sections/RelatedCalculators";
 
-export const metadata: Metadata = {
-  title: "Feed-in Tariff Calculator 2026 — Solar Export Earnings by State",
+export const metadata = pageMetadata({
+  title: "Feed-in Tariff Calculator 2026 (by State)",
   description:
-    "Estimate what your exported solar is worth with 2026 feed-in tariffs by state. See your annual export earnings by postcode, system size and feed-in rate.",
-  alternates: { canonical: "/calculators/feed-in-tariff" },
-  openGraph: {
-    title: "Feed-in Tariff Calculator — Solar Export Earnings",
-    description: "Estimate your solar export earnings with current state feed-in tariffs.",
-    type: "website",
-  },
-};
+    "Estimate what your exported solar is worth with 2026 feed-in tariffs by state. See annual export earnings by postcode, system size and feed-in rate.",
+  path: "/calculators/feed-in-tariff",
+  keywords: ["feed-in tariff calculator", "solar feed in tariff 2026", "solar export earnings"],
+});
 
 const FAQ: { q: string; a: string }[] = [
   {
@@ -37,28 +36,26 @@ const FAQ: { q: string; a: string }[] = [
 ];
 
 export default function FeedInPage() {
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Calculators", item: "/calculators" },
-      { "@type": "ListItem", position: 2, name: "Feed-in Tariff Calculator", item: "/calculators/feed-in-tariff" },
-    ],
-  };
+  const structuredData = [
+    faqLd(FAQ),
+    breadcrumbLd([
+      { name: "Calculators", path: "/calculators" },
+      { name: "Feed-in Tariff Calculator", path: "/calculators/feed-in-tariff" },
+    ]),
+    calculatorLd({
+      name: "Feed-in Tariff Calculator",
+      description:
+        "Estimate what your exported solar is worth using 2026 feed-in tariffs by Australian state.",
+      path: "/calculators/feed-in-tariff",
+      featureList: ["2026 feed-in rates by state", "Annual export earnings", "By system size"],
+    }),
+  ];
 
   return (
     <SiteLayout>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      {structuredData.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
 
       <PageHero
         eyebrow="Feed-in Tariff"
@@ -100,6 +97,8 @@ export default function FeedInPage() {
       </section>
 
       <QuoteCTA />
+      <RelatedCalculators currentPath="/calculators/feed-in-tariff" />
+
     </SiteLayout>
   );
 }

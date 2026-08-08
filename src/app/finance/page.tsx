@@ -1,16 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Icon } from "@/components/ui/Icon";
 import { Eyebrow } from "@/components/ui/Eyebrow";
+import { pageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Solar Finance & $0 Upfront",
+export const metadata = pageMetadata({
+  title: "Solar Finance & $0 Upfront Plans",
   description:
-    "Flexible solar finance from Kratos Energy — zero deposit, interest-free payment plans and green loans. Start saving from day one.",
-};
+    "Flexible solar finance — zero deposit, interest-free payment plans and green loans, including the ACT Sustainable Household Scheme. Start saving from day one.",
+  path: "/finance",
+  keywords: ["solar finance Australia", "$0 upfront solar", "interest free solar payment plan"],
+});
 
 const OPTIONS = [
   {

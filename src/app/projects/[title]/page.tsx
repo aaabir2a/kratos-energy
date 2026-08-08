@@ -1,20 +1,26 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Icon } from "@/components/ui/Icon";
 import { getProjectsServer } from "@/lib/api";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
+import { pageMetadata } from "@/lib/seo/metadata";
 
 type Params = { params: Promise<{ title: string }> };
 
-export async function generateMetadata({ params }: Params) {
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const { title } = await params;
     const decoded = decodeURIComponent(title);
 
-    return {
-        title: `${decoded} | Kratos Energy`,
-        description: `Solar project installation details for ${decoded}.`,
-    };
+    return pageMetadata({
+        // The root template appends the brand — no manual suffix.
+        title: decoded,
+        description: `Solar installation details for ${decoded} — system size, equipment and results from this Kratos Energy project.`,
+        // Canonical uses the raw encoded param, so it matches the URL that was
+        // actually requested and the one listed in the sitemap.
+        path: `/projects/${title}`,
+    });
 }
 
 export default async function ProjectPage({ params }: Params) {

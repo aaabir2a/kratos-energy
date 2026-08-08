@@ -1,21 +1,20 @@
-import type { Metadata } from "next";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { SolarOutputCalculator } from "@/components/sections/SolarOutputCalculator";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { Icon } from "@/components/ui/Icon";
+import { faqLd, breadcrumbLd, calculatorLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { RelatedCalculators } from "@/components/sections/RelatedCalculators";
 
-export const metadata: Metadata = {
-  title: "Solar Output Calculator — How Much Power Will My Solar Generate?",
+export const metadata = pageMetadata({
+  title: "Solar Output Calculator — kWh by Postcode",
   description:
-    "Estimate how many kWh your solar system will generate per day, month and year by postcode, plus the CO₂ you'll avoid. Based on Australian city generation averages.",
-  alternates: { canonical: "/calculators/solar-output" },
-  openGraph: {
-    title: "Solar Output Calculator — Daily, Monthly & Yearly kWh",
-    description: "See your solar generation by postcode and system size, with CO₂ savings.",
-    type: "website",
-  },
-};
+    "Estimate how many kWh your solar will generate per day, month and year by postcode, plus the CO2 you avoid. Based on Australian city generation averages.",
+  path: "/calculators/solar-output",
+  keywords: ["solar output calculator", "solar generation by postcode", "how much power will my solar generate"],
+});
 
 const FAQ: { q: string; a: string }[] = [
   {
@@ -37,28 +36,26 @@ const FAQ: { q: string; a: string }[] = [
 ];
 
 export default function SolarOutputPage() {
-  const faqLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
-  const breadcrumbLd = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Calculators", item: "/calculators" },
-      { "@type": "ListItem", position: 2, name: "Solar Output Calculator", item: "/calculators/solar-output" },
-    ],
-  };
+  const structuredData = [
+    faqLd(FAQ),
+    breadcrumbLd([
+      { name: "Calculators", path: "/calculators" },
+      { name: "Solar Output Calculator", path: "/calculators/solar-output" },
+    ]),
+    calculatorLd({
+      name: "Solar Output Calculator",
+      description:
+        "Estimate how many kWh your solar system will generate each day, month and year by postcode, plus the CO2 you avoid.",
+      path: "/calculators/solar-output",
+      featureList: ["Daily, monthly and annual kWh", "By postcode and system size", "CO2 avoided"],
+    }),
+  ];
 
   return (
     <SiteLayout>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
+      {structuredData.map((data, i) => (
+        <JsonLd key={i} data={data} />
+      ))}
 
       <PageHero
         eyebrow="Solar Output"
@@ -100,6 +97,8 @@ export default function SolarOutputPage() {
       </section>
 
       <QuoteCTA />
+      <RelatedCalculators currentPath="/calculators/solar-output" />
+
     </SiteLayout>
   );
 }

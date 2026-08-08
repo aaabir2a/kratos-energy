@@ -31,7 +31,7 @@ export function NETBadge({
         style={{ width: 44 * logoScale, height: 44 * logoScale }}
       >
         <Image
-          src="/new energy tech approvide seller.png"
+          src="/net-approved-seller.png"
           alt="New Energy Tech Approved Seller Logo"
           fill
           sizes="160px"
