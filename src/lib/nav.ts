@@ -99,19 +99,12 @@ export const NAV: NavLink[] = [
   },
   {
     label: "Solar Savings",
-    href: "/savings-calculator",
+    href: "/calculators",
+    // Deliberately short: the individual calculators are listed on the
+    // /calculators hub rather than repeated here.
     menu: [
       { label: "All Calculators", href: "/calculators" },
-      { label: "Savings Calculator", href: "/savings-calculator" },
-      { label: "Solar Rebate Calculator", href: "/calculators/solar-rebate" },
-      { label: "Battery Rebate Calculator", href: "/calculators/battery-rebate" },
-      { label: "Solar Output Calculator", href: "/calculators/solar-output" },
-      { label: "Feed-in Tariff Calculator", href: "/calculators/feed-in-tariff" },
-      { label: "EV Charging Cost", href: "/calculators/ev-charging-cost" },
-      { label: "Solar by State", href: "/solar" },
       { label: "Build Your System", href: "/build" },
-      { label: "Government Rebates", href: "/rebates" },
-      { label: "Finance & $0 Upfront", href: "/finance" },
     ],
   },
   { label: "Projects", href: "/projects" },
