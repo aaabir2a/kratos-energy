@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { SITE_URL, SITE_NAME, SITE_LOCALE, IS_INDEXABLE } from "@/lib/seo/site";
 import { siteGraphLd } from "@/lib/seo/schema";
@@ -99,6 +100,18 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://api.kratos-energy.com" />
       </head>
       <body suppressHydrationWarning>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-1STE29BHZ7"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-1STE29BHZ7');
+          `}
+        </Script>
         <JsonLd data={siteGraphLd()} />
         {children}
       </body>
