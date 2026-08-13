@@ -52,8 +52,26 @@ export const INVERTER_BRANDS: Brand[] = [
 
 /** Panels plus the racking and mounting hardware that puts them on the roof. */
 export const PANEL_BRANDS: Brand[] = [
-  { name: "Trina Solar", note: "Tier 1 modules with a 25-year product warranty" },
-  { name: "Jinko Solar", note: "Tier 1 N-type panels, high yield per square metre" },
-  { name: "Rails Cleanergy", note: "Mounting rails and roof attachment systems" },
-  { name: "Mibet", note: "Engineered racking and mounting hardware" },
+  {
+    name: "Trina Solar",
+    note: "Tier 1 modules with a 25-year product warranty",
+    logo: "/assets/brands/trina.svg",
+  },
+  {
+    name: "Jinko Solar",
+    note: "Tier 1 N-type panels, high yield per square metre",
+    logo: "/assets/brands/jinko.png",
+  },
+  {
+    // Awaiting a logo file — their site blocks automated downloads.
+    name: "Clenergy",
+    note: "Mounting rails and roof attachment systems",
+  },
+  {
+    // Symbol only: the wordmark version they publish is white-on-transparent,
+    // which would vanish against the chip. Swap if we get a dark wordmark.
+    name: "Mibet",
+    note: "Engineered racking and mounting hardware",
+    logo: "/assets/brands/mibet.webp",
+  },
 ];
