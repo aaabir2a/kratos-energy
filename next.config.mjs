@@ -22,6 +22,9 @@ const nextConfig = {
     return [
       { source: "/systems/:slug", destination: "/packages/:slug", permanent: true },
       { source: "/systems", destination: "/packages/large-scale", permanent: true },
+      // Battery and EV charging moved under /products in the same nav rework.
+      { source: "/battery-storage", destination: "/products/battery", permanent: true },
+      { source: "/ev-charging", destination: "/products/ev-charging", permanent: true },
     ];
   },
 };

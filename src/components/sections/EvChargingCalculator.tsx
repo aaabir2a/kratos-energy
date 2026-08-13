@@ -166,7 +166,7 @@ export function EvChargingCalculator() {
             </div>
 
             <a
-              href="/ev-charging"
+              href="/products/ev-charging"
               className="ke-press mt-5 inline-flex w-full items-center justify-center gap-2.5 rounded-pill bg-green-500 px-6 py-[14px] font-display text-[15.5px] font-bold text-white shadow-green hover:bg-green-600"
             >
               Explore EV Charging <Icon name="arrow" size={18} stroke={2.4} />

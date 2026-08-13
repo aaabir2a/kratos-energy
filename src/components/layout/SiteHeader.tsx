@@ -99,7 +99,7 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
       if (pathname.startsWith(item.href)) return true;
     }
     if (item.label === "Our Services") {
-      const serviceRoutes = ["/residential-solar", "/commercial-solar", "/battery-storage", "/ev-charging", "/support"];
+      const serviceRoutes = ["/residential-solar", "/commercial-solar", "/support"];
       if (serviceRoutes.some((route) => pathname.startsWith(route))) return true;
     }
     if (item.label === "Our Packages") {

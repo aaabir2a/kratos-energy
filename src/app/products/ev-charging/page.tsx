@@ -12,7 +12,7 @@ export const metadata = pageMetadata({
   title: "Home EV Charger Installation",
   description:
     "Charge your electric vehicle from your own solar. Smart 7kW and 22kW home EV chargers installed by licensed electricians across NSW, Victoria and the ACT.",
-  path: "/ev-charging",
+  path: "/products/ev-charging",
   keywords: ["home EV charger installation", "EV charger Australia", "solar EV charging"],
 });
 
@@ -37,7 +37,7 @@ export default function EVChargerPage() {
           name: "EV Charger Installation",
           description:
             "Supply and licensed installation of 7kW and 22kW smart home EV chargers, integrated with your solar.",
-          path: "/ev-charging",
+          path: "/products/ev-charging",
           serviceType: "EV charger installation",
         })}
       />

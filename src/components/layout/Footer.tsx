@@ -15,8 +15,8 @@ const COLUMNS: { heading: string; items: { label: string; href: string }[] }[] =
     items: [
       { label: "Residential Solar", href: "/residential-solar" },
       { label: "Commercial Solar", href: "/commercial-solar" },
-      { label: "Battery Storage", href: "/battery-storage" },
-      { label: "EV Charging", href: "/ev-charging" },
+      { label: "Battery Storage", href: "/products/battery" },
+      { label: "EV Charging", href: "/products/ev-charging" },
       { label: "Build Your System", href: "/build" },
     ],
   },

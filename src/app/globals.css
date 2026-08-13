@@ -62,6 +62,36 @@
   }
 }
 
+/* Brand carousel: the track holds the logo list twice, so translating it
+   exactly -50% lands on the identical second copy and the loop is seamless. */
+@keyframes brandScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-brand-scroll {
+  animation: brandScroll 38s linear infinite;
+}
+.brand-marquee:hover .animate-brand-scroll {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-brand-scroll {
+    animation: none;
+  }
+  /* Without motion the duplicate copy is noise — show one static, wrapped set. */
+  .brand-marquee {
+    overflow-x: auto;
+  }
+  .animate-brand-scroll > [data-brand-copy="duplicate"],
+  .animate-brand-scroll [data-brand-repeat]:not([data-brand-repeat="0"]) {
+    display: none;
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

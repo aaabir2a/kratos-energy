@@ -24,7 +24,7 @@ export function BatteryRange() {
               CEC-approved batteries, eligible for state rebates.
             </div>
             <Link
-              href="/battery-storage"
+              href="/products/battery"
               className="mt-3 inline-flex items-center gap-2 font-display text-[15px] font-bold text-forest-700 underline-offset-4 hover:underline"
             >
               Explore battery storage

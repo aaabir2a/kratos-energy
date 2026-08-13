@@ -13,7 +13,7 @@ export const metadata = pageMetadata({
   title: "Home Battery Storage & Rebates",
   description:
     "Store your daytime solar and run your home after dark. Fox ESS, GoodWe and Sigenergy batteries installed across NSW, VIC and ACT, with 2026 rebates applied.",
-  path: "/battery-storage",
+  path: "/products/battery",
   keywords: ["home battery storage Australia", "solar battery rebate", "Fox ESS battery"],
 });
 
@@ -32,7 +32,7 @@ export default function BatteryPage() {
           name: "Home Battery Installation",
           description:
             "Supply and installation of home battery storage with blackout protection, VPP readiness and federal rebate handling.",
-          path: "/battery-storage",
+          path: "/products/battery",
           serviceType: "Battery storage installation",
         })}
       />

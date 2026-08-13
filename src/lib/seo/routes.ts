@@ -35,9 +35,11 @@ const PAGES: StaticRoute[] = [
   { path: "/solar", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.8 },
   { path: "/residential-solar", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.8 },
   { path: "/commercial-solar", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.8 },
-  { path: "/battery-storage", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/products", lastModified: "2026-08-13", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/products/solar", lastModified: "2026-08-13", changeFrequency: "monthly", priority: 0.8 },
+  { path: "/products/battery", lastModified: "2026-08-13", changeFrequency: "monthly", priority: 0.8 },
 
-  { path: "/ev-charging", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/products/ev-charging", lastModified: "2026-08-13", changeFrequency: "monthly", priority: 0.6 },
   { path: "/finance", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.6 },
   { path: "/packages/large-scale", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.6 },
   { path: "/projects", lastModified: "2026-08-08", changeFrequency: "weekly", priority: 0.6 },

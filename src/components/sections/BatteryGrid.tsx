@@ -9,7 +9,7 @@ import { useContentStore } from "@/lib/store";
 /**
  * Battery product grid, fed by the CRM products API (category=Battery) with the
  * static BATTERIES list as fallback. Shared by the homepage BatteryRange
- * section and the /battery-storage page so both pull from the same source.
+ * section and the /products/battery page so both pull from the same source.
  */
 
 /** Unified card model so live CRM products and the static fallback render

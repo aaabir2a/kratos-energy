@@ -89,8 +89,8 @@ export const NAV: NavLink[] = [
   //   menu: [
   //     { label: "Residential Solar", href: "/residential-solar" },
   //     { label: "Commercial Solar", href: "/commercial-solar" },
-  //     { label: "Battery Storage", href: "/battery-storage" },
-  //     { label: "EV Charging", href: "/ev-charging" },
+  //     { label: "Battery Storage", href: "/products/battery" },
+  //     { label: "EV Charging", href: "/products/ev-charging" },
   //     { label: "Maintenance & Support", href: "/support" },
   //   ],
   // },
@@ -98,6 +98,15 @@ export const NAV: NavLink[] = [
     label: "Our Packages",
     href: "/#systems",
     // Handled customly via PRODUCT_CATEGORIES in SiteHeader and MobileMenu
+  },
+  {
+    label: "Our Products",
+    href: "/products",
+    menu: [
+      { label: "Solar", href: "/products/solar" },
+      { label: "Battery", href: "/products/battery" },
+      { label: "EV Charging", href: "/products/ev-charging" },
+    ],
   },
   {
     label: "Solar Savings",
