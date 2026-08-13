@@ -39,7 +39,7 @@ const PAGES: StaticRoute[] = [
 
   { path: "/ev-charging", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.6 },
   { path: "/finance", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.6 },
-  { path: "/systems/large-scale", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.6 },
+  { path: "/packages/large-scale", lastModified: "2026-08-08", changeFrequency: "monthly", priority: 0.6 },
   { path: "/projects", lastModified: "2026-08-08", changeFrequency: "weekly", priority: 0.6 },
   { path: "/blog", lastModified: "2026-08-08", changeFrequency: "daily", priority: 0.6 },
   { path: "/news", lastModified: "2026-08-08", changeFrequency: "daily", priority: 0.6 },
@@ -57,7 +57,7 @@ const PAGES: StaticRoute[] = [
 export const STATIC_ROUTES: StaticRoute[] = [
   ...PAGES,
   ...SYSTEMS.map((s) => ({
-    path: `/systems/${s.slug}`,
+    path: `/packages/${s.slug}`,
     lastModified: "2026-08-08",
     changeFrequency: "monthly" as ChangeFreq,
     priority: 0.6,

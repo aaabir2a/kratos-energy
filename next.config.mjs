@@ -16,6 +16,14 @@ const nextConfig = {
       { protocol: "https", hostname: "api.kratos-energy.com", pathname: "/kratos-uploads/**" },
     ],
   },
+  // The system pages moved to /packages/*. These paths are already indexed, so
+  // hold the old URLs open permanently and pass the ranking on to the new ones.
+  async redirects() {
+    return [
+      { source: "/systems/:slug", destination: "/packages/:slug", permanent: true },
+      { source: "/systems", destination: "/packages/large-scale", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

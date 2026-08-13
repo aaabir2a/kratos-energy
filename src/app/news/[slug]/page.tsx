@@ -147,7 +147,7 @@ function SidebarPackages() {
               Get My Price
             </Link>
             <Link
-              href={`/systems/${s.slug}`}
+              href={`/packages/${s.slug}`}
               className="block text-center font-display text-[12px] font-bold text-forest-700 hover:underline"
             >
               Learn more about system →

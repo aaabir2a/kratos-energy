@@ -87,7 +87,7 @@ function PriceCard({ s }: { s: SolarSystem }) {
           {enquire ? "Request a Quote" : "Get My Price"}
         </Button>
         <Link
-          href={`/systems/${s.slug}`}
+          href={`/packages/${s.slug}`}
           className="text-center font-display text-[13.5px] font-bold text-forest-700 underline-offset-4 hover:underline"
         >
           Learn more about the {s.size} system →

@@ -64,7 +64,7 @@ export function PaybackGuide() {
               {residential.map((s) => (
                 <tr key={s.slug} className="border-b border-ash-200">
                   <th className="px-4 py-3 font-display text-[15px] font-bold text-navy-800">
-                    <Link href={`/systems/${s.slug}`} className="hover:text-green-600">
+                    <Link href={`/packages/${s.slug}`} className="hover:text-green-600">
                       {s.size}
                     </Link>
                   </th>

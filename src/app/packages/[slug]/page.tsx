@@ -30,14 +30,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return pageMetadata({
     title: `${system.size} Solar System Price & Specs`,
     description: `${system.tagline} ${system.size} solar with Tier 1 panels, CEC-accredited installation and a 25-year warranty — installed across NSW, VIC and the ACT.`,
-    path: `/systems/${system.slug}`,
+    path: `/packages/${system.slug}`,
   });
 }
 
 function RelatedCard({ s }: { s: SolarSystem }) {
   return (
     <Link
-      href={`/systems/${s.slug}`}
+      href={`/packages/${s.slug}`}
       className="ke-lift flex flex-col rounded-lg border border-ash-200 bg-white p-6"
     >
       <div className="font-display text-[26px] font-extrabold text-navy-800">
@@ -77,13 +77,13 @@ export default async function SystemPage({ params }: Params) {
         data={productLd({
           name: `${system.size} Solar System`,
           description: `${system.tagline} ${system.size} solar system with Tier 1 panels and CEC-accredited installation.`,
-          path: `/systems/${system.slug}`,
+          path: `/packages/${system.slug}`,
         })}
       />
       <JsonLd
         data={breadcrumbLd([
           { name: isResidential ? "Residential Solar" : "Commercial Solar", path: isResidential ? "/residential-solar" : "/commercial-solar" },
-          { name: `${system.size} System`, path: `/systems/${system.slug}` },
+          { name: `${system.size} System`, path: `/packages/${system.slug}` },
         ])}
       />
 

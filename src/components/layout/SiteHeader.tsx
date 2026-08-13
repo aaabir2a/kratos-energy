@@ -35,7 +35,7 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
   useEffect(() => {
     const checkHash = () => {
       if (window.location.hash === "#systems") {
-        const productsIndex = NAV.findIndex((item) => item.label === "Our Products");
+        const productsIndex = NAV.findIndex((item) => item.label === "Our Packages");
         if (productsIndex !== -1) {
           setOpen(productsIndex);
           setIsLocked(true);
@@ -82,13 +82,13 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
   const getDefaultCategory = (path: string): string => {
     if (
       path === "/commercial-solar" ||
-      path.startsWith("/systems/30kw") ||
-      path.startsWith("/systems/50kw") ||
-      path.startsWith("/systems/100kw")
+      path.startsWith("/packages/30kw") ||
+      path.startsWith("/packages/50kw") ||
+      path.startsWith("/packages/100kw")
     ) {
       return "commercial";
     }
-    if (path === "/systems/large-scale") {
+    if (path === "/packages/large-scale") {
       return "large-scale";
     }
     return "residential";
@@ -102,8 +102,8 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
       const serviceRoutes = ["/residential-solar", "/commercial-solar", "/battery-storage", "/ev-charging", "/support"];
       if (serviceRoutes.some((route) => pathname.startsWith(route))) return true;
     }
-    if (item.label === "Our Products") {
-      if (pathname.startsWith("/systems/")) return true;
+    if (item.label === "Our Packages") {
+      if (pathname.startsWith("/packages/")) return true;
     }
     if (item.menu) {
       return item.menu.some((sub) => sub.href.startsWith("/") && pathname.startsWith(sub.href));
@@ -133,7 +133,7 @@ export function SiteHeader({ onMenu }: { onMenu: () => void }) {
         <nav className="flex items-stretch h-[78px] gap-0.5">
           {NAV.map((item, i) => {
             const active = isActive(item);
-            const isProducts = item.label === "Our Products";
+            const isProducts = item.label === "Our Packages";
             const hasMenu = item.menu || isProducts;
             return (
               <div

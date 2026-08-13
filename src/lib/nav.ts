@@ -37,9 +37,9 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     description: "High-performance solar and battery solutions tailored for Australian homes to maximise your energy savings.",
     icon: "sun",
     subcategories: [
-      { label: "6.6kW System", href: "/systems/6-6kw", description: "Our most popular size, ideal for standard 2–4 person homes." },
-      { label: "10.12kW System", href: "/systems/10kw", description: "Perfect for medium homes with higher usage or ducted air-con." },
-      { label: "13.2kW System", href: "/systems/13-2kw", description: "Designed for larger families, high energy loads, or battery readiness." },
+      { label: "6.6kW System", href: "/packages/6-6kw", description: "Our most popular size, ideal for standard 2–4 person homes." },
+      { label: "10.12kW System", href: "/packages/10kw", description: "Perfect for medium homes with higher usage or ducted air-con." },
+      { label: "13.2kW System", href: "/packages/13-2kw", description: "Designed for larger families, high energy loads, or battery readiness." },
       { label: "Customised Solution", href: "/get-a-quote", description: "Custom-designed solar and storage layouts matching your exact needs." }
     ]
   },
@@ -49,9 +49,9 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     description: "Scalable commercial solar solutions designed to reduce operating costs and meet corporate sustainability goals.",
     icon: "building",
     subcategories: [
-      { label: "30kW System", href: "/systems/30kw", description: "Cut overheads for cafés, local medical clinics, and small offices." },
-      { label: "50kW System", href: "/systems/50kw", description: "Standard configuration for small-medium warehouses and industrial units." },
-      { label: "100kW System", href: "/systems/100kw", description: "Our largest standard commercial configuration for high-yield operations." },
+      { label: "30kW System", href: "/packages/30kw", description: "Cut overheads for cafés, local medical clinics, and small offices." },
+      { label: "50kW System", href: "/packages/50kw", description: "Standard configuration for small-medium warehouses and industrial units." },
+      { label: "100kW System", href: "/packages/100kw", description: "Our largest standard commercial configuration for high-yield operations." },
       { label: "Customised System", href: "/get-a-quote", description: "Tailored multi-inverter configurations with utility grid connection support." }
     ]
   },
@@ -60,7 +60,7 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
     label: "Large Scale Systems",
     description: "Utility-scale installations requiring comprehensive planning, expert engineering, and seamless grid connection.",
     icon: "zap",
-    href: "/systems/large-scale",
+    href: "/packages/large-scale",
     customContent: {
       title: "Utility & Grid-Scale Installations",
       text: "Large-scale solar installations require meticulous planning, site assessment, grid connection studies, and engineering design. Kratos Energy manages the entire lifecycle from feasibility studies to construction and connection, ensuring maximum yield and investment returns.",
@@ -81,19 +81,21 @@ export const PRODUCT_CATEGORIES: ProductCategory[] = [
  * anchors ("/#id"), so they work from any page.
  */
 export const NAV: NavLink[] = [
+  // Hidden for now — the service pages themselves stay live and linked from
+  // the footer and homepage sections.
+  // {
+  //   label: "Our Services",
+  //   href: "/#services",
+  //   menu: [
+  //     { label: "Residential Solar", href: "/residential-solar" },
+  //     { label: "Commercial Solar", href: "/commercial-solar" },
+  //     { label: "Battery Storage", href: "/battery-storage" },
+  //     { label: "EV Charging", href: "/ev-charging" },
+  //     { label: "Maintenance & Support", href: "/support" },
+  //   ],
+  // },
   {
-    label: "Our Services",
-    href: "/#services",
-    menu: [
-      { label: "Residential Solar", href: "/residential-solar" },
-      { label: "Commercial Solar", href: "/commercial-solar" },
-      { label: "Battery Storage", href: "/battery-storage" },
-      { label: "EV Charging", href: "/ev-charging" },
-      { label: "Maintenance & Support", href: "/support" },
-    ],
-  },
-  {
-    label: "Our Products",
+    label: "Our Packages",
     href: "/#systems",
     // Handled customly via PRODUCT_CATEGORIES in SiteHeader and MobileMenu
   },

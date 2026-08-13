@@ -39,7 +39,7 @@ export function MobileMenu({
 
       <nav className="mt-6 flex flex-col">
         {NAV.map((item, i) => {
-          const isProducts = item.label === "Our Products";
+          const isProducts = item.label === "Our Packages";
           if (!item.menu && !isProducts) {
             return (
               <Link
@@ -99,7 +99,7 @@ export function MobileMenu({
                             ) : (
                               <Link
                                 key={cat.label}
-                                href={cat.href || "/systems/large-scale"}
+                                href={cat.href || "/packages/large-scale"}
                                 onClick={handleClose}
                                 className="flex items-center gap-2 py-2 font-body text-[16px] font-semibold text-[#cfe0c6] active:text-white"
                               >

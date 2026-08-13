@@ -9,7 +9,7 @@ export const metadata = pageMetadata({
   title: "Large-Scale Solar Farms & BESS Australia",
   description:
     "Utility-scale solar development and EPC across Australia — solar farms, Battery Energy Storage Systems, grid connection studies and investor-ready projects.",
-  path: "/systems/large-scale",
+  path: "/packages/large-scale",
   keywords: [
     "Large-scale solar projects Australia",
     "Solar farm development Australia",
@@ -234,7 +234,7 @@ export default function LargeScalePage() {
               Home
             </Link>
             <Icon name="chevron" size={14} className="-rotate-90 opacity-50" />
-            <span className="font-semibold text-green-300">Our Products</span>
+            <span className="font-semibold text-green-300">Our Packages</span>
             <Icon name="chevron" size={14} className="-rotate-90 opacity-50" />
             <span className="font-semibold text-white">Large-Scale Systems</span>
           </nav>

@@ -16,7 +16,7 @@ const AUD = new Intl.NumberFormat("en-AU", {
 /**
  * Reusable "solar segment" landing page (Residential / Commercial). Renders a
  * hero, the services we provide for that segment, and cards for every system
- * in the category — each linking to that product's /systems/<slug> page.
+ * in the category — each linking to that product's /packages/<slug> page.
  */
 export function SolarSegment({
   category,
@@ -110,7 +110,7 @@ export function SolarSegment({
         </div>
       </section>
 
-      {/* Systems in this category — each links to its /systems/<slug> page */}
+      {/* Systems in this category — each links to its /packages/<slug> page */}
       <section className="bg-white py-[78px]">
         <div className="container-ke">
           <div className="mb-11 max-w-[640px]">
@@ -127,7 +127,7 @@ export function SolarSegment({
             {systems.map((s) => (
               <Link
                 key={s.slug}
-                href={`/systems/${s.slug}`}
+                href={`/packages/${s.slug}`}
                 className="ke-lift group relative flex flex-col rounded-xl border border-ash-200 bg-white p-7 shadow-md transition-colors hover:border-green-500"
               >
                 {s.recommended && (
