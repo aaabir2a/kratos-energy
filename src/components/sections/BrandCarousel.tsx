@@ -12,11 +12,14 @@ export function BrandCarousel({
   brands,
   icon = "sun",
   label,
+  surface = "paper",
 }: {
   brands: Brand[];
   icon?: "sun" | "battery" | "zap";
   /** Describes the strip for screen readers, e.g. "Inverter brands we install". */
   label: string;
+  /** Background of the section this sits on, so the edge fades match it. */
+  surface?: "paper" | "white";
 }) {
   const copies: Array<"original" | "duplicate"> = ["original", "duplicate"];
 
@@ -31,9 +34,18 @@ export function BrandCarousel({
       role="group"
       aria-label={label}
     >
-      {/* Soft edges so logos fade out rather than clipping at the boundary. */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-paper to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-paper to-transparent" />
+      {/* Soft edges so logos fade out rather than clipping at the boundary.
+          Written as whole class names so Tailwind keeps them in the build. */}
+      <div
+        className={`pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r to-transparent ${
+          surface === "white" ? "from-white" : "from-paper"
+        }`}
+      />
+      <div
+        className={`pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l to-transparent ${
+          surface === "white" ? "from-white" : "from-paper"
+        }`}
+      />
 
       <div className="animate-brand-scroll flex w-max gap-3.5">
         {copies.map((copy) => (

@@ -144,6 +144,7 @@ export default function SolarProductsPage() {
               brands={INVERTER_BRANDS}
               icon="zap"
               label="Inverter brands Kratos Energy installs"
+              surface="white"
             />
           </div>
 

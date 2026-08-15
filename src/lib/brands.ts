@@ -50,6 +50,24 @@ export const INVERTER_BRANDS: Brand[] = [
   },
 ];
 
+export const BATTERY_BRANDS: Brand[] = [
+  {
+    name: "Fox ESS",
+    note: "Modular home batteries, stackable as your usage grows",
+    logo: "/assets/brands/foxess.png",
+  },
+  {
+    // Awaiting a logo file — their site blocks automated downloads.
+    name: "Sigenergy",
+    note: "All-in-one battery, inverter and EV charging stack",
+  },
+  {
+    name: "GoodWe",
+    note: "Hybrid-matched storage with blackout backup",
+    logo: "/assets/brands/goodwe.svg",
+  },
+];
+
 /** Panels plus the racking and mounting hardware that puts them on the roof. */
 export const PANEL_BRANDS: Brand[] = [
   {

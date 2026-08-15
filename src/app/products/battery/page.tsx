@@ -3,6 +3,8 @@ import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { BatteryGrid } from "@/components/sections/BatteryGrid";
+import { BrandCarousel } from "@/components/sections/BrandCarousel";
+import { BATTERY_BRANDS } from "@/lib/brands";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Icon } from "@/components/ui/Icon";
 import { pageMetadata } from "@/lib/seo/metadata";
@@ -114,6 +116,18 @@ export default function BatteryPage() {
             </h2>
           </div>
           <BatteryGrid />
+
+          <div className="mt-14">
+            <p className="mb-5 text-center font-display text-[13px] font-bold uppercase tracking-[0.14em] text-ash-600">
+              Battery brands we install
+            </p>
+            <BrandCarousel
+              brands={BATTERY_BRANDS}
+              icon="battery"
+              label="Battery brands Kratos Energy installs"
+              surface="white"
+            />
+          </div>
         </div>
       </section>
 
