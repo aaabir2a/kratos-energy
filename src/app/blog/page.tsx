@@ -4,6 +4,9 @@ import Link from "next/link";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { PageHero } from "@/components/sections/PageHero";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { breadcrumbLd, itemListLd } from "@/lib/seo/schema";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { postPath } from "@/lib/seo/site";
 
 export const revalidate = 60; // ISR revalidation every 60 seconds
 
@@ -85,8 +88,26 @@ export default async function BlogPage(props: { searchParams: SearchParams }) {
     (p: { typeSlug?: string }) => String(p.typeSlug || "").toLowerCase() !== "news",
   );
 
+  const breadcrumbJson = breadcrumbLd([
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog" },
+  ]);
+
+  // Machine-readable index of the posts actually on screen, so the list stays
+  // accurate per category filter and per page rather than describing page 1.
+  const itemListJson = itemListLd(
+    displayPosts.map((p: { slug: string; title: string; excerpt?: string }) => ({
+      name: p.title,
+      path: postPath("blog", p.slug),
+      description: p.excerpt,
+    })),
+  );
+
   return (
     <SiteLayout>
+      <JsonLd data={breadcrumbJson} />
+      {displayPosts.length > 0 && <JsonLd data={itemListJson} />}
+
       <PageHero
         eyebrow="Latest News & Insights"
         title={
