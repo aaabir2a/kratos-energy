@@ -7,7 +7,7 @@ import { Icon } from "@/components/ui/Icon";
 import { BlogBlockRenderer } from "@/components/blog/BlogBlockRenderer";
 import { SYSTEMS } from "@/lib/systems";
 import { absoluteUrl, postPath } from "@/lib/seo/site";
-import { articleLd } from "@/lib/seo/schema";
+import { articleLd, breadcrumbLd } from "@/lib/seo/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -197,9 +197,18 @@ export default async function PostPage({ params }: Params) {
     path: postPath("blog", post.slug || slug),
   });
 
+  // Mirrors the breadcrumb rendered in the DOM below, so Google can extract
+  // the trail for SERP display rather than inferring it from the URL.
+  const breadcrumbJson = breadcrumbLd([
+    { name: "Home", path: "/" },
+    { name: "Blog", path: "/blog" },
+    { name: post.title, path: postPath("blog", post.slug || slug) },
+  ]);
+
   return (
     <SiteLayout>
       <JsonLd data={schemaJson} />
+      <JsonLd data={breadcrumbJson} />
 
       <article className="bg-white">
         {/* Full-width Cover Hero Section */}
