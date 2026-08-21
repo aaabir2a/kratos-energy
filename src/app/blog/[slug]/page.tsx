@@ -7,7 +7,8 @@ import { Icon } from "@/components/ui/Icon";
 import { BlogBlockRenderer } from "@/components/blog/BlogBlockRenderer";
 import { SYSTEMS } from "@/lib/systems";
 import { absoluteUrl, postPath } from "@/lib/seo/site";
-import { articleLd, breadcrumbLd } from "@/lib/seo/schema";
+import { articleLd, breadcrumbLd, faqLd } from "@/lib/seo/schema";
+import { schemaForPostType, faqPairsFromBlocks } from "@/lib/seo/postType";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -186,8 +187,13 @@ export default async function PostPage({ params }: Params) {
   // Author initials for avatar icon
   const authorName = post.author || "Kratos Energy";
 
+  // The CMS post type drives the structured data, so a FAQ post is described
+  // as one rather than as a plain article.
+  const shape = schemaForPostType(post.typeSlug || post.type?.slug);
+  const faqPairs = shape.faq ? faqPairsFromBlocks(post.blocks) : [];
+
   const schemaJson = articleLd({
-    type: "BlogPosting",
+    type: shape.article,
     headline: post.title,
     description: post.excerpt,
     image: post.featuredImage,
@@ -209,6 +215,9 @@ export default async function PostPage({ params }: Params) {
     <SiteLayout>
       <JsonLd data={schemaJson} />
       <JsonLd data={breadcrumbJson} />
+      {/* Only worth emitting when the body actually yielded Q&A pairs — a
+          one-item or empty FAQPage is noise to crawlers. */}
+      {faqPairs.length >= 2 && <JsonLd data={faqLd(faqPairs)} />}
 
       <article className="bg-white">
         {/* Full-width Cover Hero Section */}
