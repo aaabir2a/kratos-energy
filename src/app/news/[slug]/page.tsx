@@ -7,7 +7,7 @@ import { Icon } from "@/components/ui/Icon";
 import { BlogBlockRenderer } from "@/components/blog/BlogBlockRenderer";
 import { SYSTEMS } from "@/lib/systems";
 import { absoluteUrl, postPath } from "@/lib/seo/site";
-import { articleLd } from "@/lib/seo/schema";
+import { articleLd, breadcrumbLd } from "@/lib/seo/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -180,9 +180,17 @@ export default async function NewsPostPage({ params }: Params) {
     path: postPath("news", post.slug || slug),
   });
 
+  // Mirrors the breadcrumb rendered below, matching /blog/[slug].
+  const breadcrumbJson = breadcrumbLd([
+    { name: "Home", path: "/" },
+    { name: "News", path: "/news" },
+    { name: post.title, path: postPath("news", post.slug || slug) },
+  ]);
+
   return (
     <SiteLayout>
       <JsonLd data={schemaJson} />
+      <JsonLd data={breadcrumbJson} />
 
       <article className="bg-white">
         <div className="relative w-full overflow-hidden bg-[#0e4a31] text-white min-h-[300px] flex items-center">

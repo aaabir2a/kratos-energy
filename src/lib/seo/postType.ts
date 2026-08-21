@@ -6,14 +6,29 @@
 
 export type PostSchemaShape = {
   /** schema.org article type for the main JSON-LD node. */
-  article: "BlogPosting" | "NewsArticle";
+  article: "Article" | "BlogPosting" | "NewsArticle";
   /** Whether to also emit an FAQPage node built from the post body. */
   faq: boolean;
 };
 
+/**
+ * The types the CMS defines today. All are listed explicitly so each is a
+ * deliberate choice rather than whatever the fallback happens to be.
+ *
+ * `article` maps to schema.org Article — the parent type — because those posts
+ * are editorial pieces rather than dated blog entries; `general-blog` is a blog
+ * entry proper, so BlogPosting.
+ *
+ * `how-to` stays BlogPosting rather than schema.org HowTo: HowTo requires a
+ * `step` list, and these posts are prose without machine-readable steps.
+ * Emitting HowTo without steps would be invalid markup.
+ */
 const BY_TYPE_SLUG: Record<string, PostSchemaShape> = {
+  "general-blog": { article: "BlogPosting", faq: false },
+  article: { article: "Article", faq: false },
   news: { article: "NewsArticle", faq: false },
   faq: { article: "BlogPosting", faq: true },
+  "how-to": { article: "BlogPosting", faq: false },
 };
 
 const DEFAULT_SHAPE: PostSchemaShape = { article: "BlogPosting", faq: false };

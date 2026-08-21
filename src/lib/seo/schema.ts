@@ -206,7 +206,8 @@ export function productLd(i: {
 }
 
 export function articleLd(i: {
-  type: "BlogPosting" | "NewsArticle";
+  /** schema.org article type — see schemaForPostType() for the CMS mapping. */
+  type: "Article" | "BlogPosting" | "NewsArticle";
   headline: string;
   description?: string;
   image?: string;
