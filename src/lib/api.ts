@@ -240,6 +240,50 @@ export function getProjectsServer(limit = 24): Promise<Project[]> {
   } as RequestInit);
 }
 
+/** A post as the listing endpoint returns it — enough for a card. */
+export type PostSummary = {
+  slug: string;
+  title: string;
+  excerpt?: string;
+  cover?: string;
+  category?: string;
+  categoryName?: string;
+  date?: string;
+  readMins?: number;
+  typeSlug?: string;
+};
+
+type PostListPayload = { posts?: PostSummary[] };
+
+/**
+ * Latest posts for the homepage, ISR-cached so they ship in the HTML.
+ *
+ * `type` filters on the CMS post type: "news" for the updates strip, and
+ * anything-but-news for the blog slider, matching how /blog and /news split.
+ * Returns [] on failure — the homepage drops the section rather than breaking.
+ */
+export async function getPostsServer(
+  opts: { limit?: number; type?: "news" | "not-news" } = {},
+): Promise<PostSummary[]> {
+  const { limit = 6, type } = opts;
+  try {
+    // Over-fetch, because the type filter is applied here rather than by the API.
+    const payload = await request<PostListPayload>(
+      `/public/blog/posts?page=1&limit=${Math.max(limit * 3, 12)}`,
+      { next: { revalidate: 300 } } as RequestInit,
+    );
+    const posts = payload?.posts ?? [];
+    const isNews = (p: PostSummary) => String(p.typeSlug || "").toLowerCase() === "news";
+    const filtered =
+      type === "news" ? posts.filter(isNews)
+      : type === "not-news" ? posts.filter((p) => !isNews(p))
+      : posts;
+    return filtered.slice(0, limit);
+  } catch {
+    return [];
+  }
+}
+
 export function getProducts(
   params: { category?: string; limit?: number } = {},
   signal?: AbortSignal,

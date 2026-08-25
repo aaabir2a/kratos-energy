@@ -1,6 +1,12 @@
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Hero } from "@/components/sections/Hero";
-import { getHeroImagesServer, getProjectsServer, type HeroImages, type Project } from "@/lib/api";
+import {
+  getHeroImagesServer,
+  getProjectsServer,
+  getPostsServer,
+  type HeroImages,
+  type Project,
+} from "@/lib/api";
 import { ProjectShowcase } from "@/components/sections/Projects";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { GetawayPromoSection } from "@/components/sections/GetawayPromoSection";
@@ -8,7 +14,8 @@ import { SystemPricing } from "@/components/sections/SystemPricing";
 import { BatteryRange } from "@/components/sections/BatteryRange";
 import { BrandWall } from "@/components/sections/BrandWall";
 import { SavingsCalculator } from "@/components/sections/SavingsCalculator";
-import { CaseStudies } from "@/components/sections/CaseStudies";
+import { BlogSlider } from "@/components/sections/BlogSlider";
+import { NewsUpdates } from "@/components/sections/NewsUpdates";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { RebateBanner } from "@/components/sections/RebateBanner";
 // import { GuideDownload } from "@/components/sections/GuideDownload";
@@ -49,7 +56,14 @@ async function loadProjects(): Promise<Project[]> {
 }
 
 export default async function HomePage() {
-  const [heroImages, projects] = await Promise.all([loadHeroImages(), loadProjects()]);
+  // getPostsServer swallows its own failures, so a CMS outage drops these two
+  // sections rather than taking the homepage with it.
+  const [heroImages, projects, guides, news] = await Promise.all([
+    loadHeroImages(),
+    loadProjects(),
+    getPostsServer({ limit: 6, type: "not-news" }),
+    getPostsServer({ limit: 5, type: "news" }),
+  ]);
   return (
     <SiteLayout>
       {/* The hero slider needs raw <img> for the crossfade, so its URL isn't
@@ -83,8 +97,9 @@ export default async function HomePage() {
       <SavingsCalculator />
       {/* <Services /> */}
       <ProjectShowcase projects={projects} />
-      <CaseStudies />
       <Testimonials />
+      <BlogSlider posts={guides} />
+      <NewsUpdates posts={news} />
       <RebateBanner />
       {/* <GuideDownload /> */}
       <QuoteCTA />
