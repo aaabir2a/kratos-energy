@@ -11,19 +11,33 @@ interface BlockData {
   settings?: any;
 }
 
-export function BlogBlockRenderer({ blocks }: { blocks: BlockData[] }) {
+export function BlogBlockRenderer({
+  blocks,
+  postTitle,
+}: {
+  blocks: BlockData[];
+  /** Used as last-resort alt text context for images the CMS left undescribed. */
+  postTitle?: string;
+}) {
   if (!blocks || !Array.isArray(blocks)) return null;
 
   return (
     <div className="space-y-8 font-body text-gray-700 leading-relaxed text-[16.5px]">
       {blocks.map((block) => (
-        <RenderBlock key={block.id} block={block} />
+        <RenderBlock key={block.id} block={block} postTitle={postTitle} />
       ))}
     </div>
   );
 }
 
-function RenderBlock({ block }: { block: BlockData }) {
+/** Post titles carry a " | Kratos Energy" suffix that adds nothing when read
+ *  aloud as part of an image description. */
+function articleContext(postTitle?: string): string {
+  const clean = (postTitle || "").split("|")[0].trim();
+  return clean ? `Illustration from the article: ${clean}` : "";
+}
+
+function RenderBlock({ block, postTitle }: { block: BlockData; postTitle?: string }) {
   switch (block.type) {
     case "text":
     case "texteditor":
@@ -42,7 +56,11 @@ function RenderBlock({ block }: { block: BlockData }) {
           <div className="relative w-full h-[260px] sm:h-[420px] overflow-hidden rounded-2xl shadow-sm border border-gray-100 bg-gray-50">
             <Image
               src={imageUrl}
-              alt={alt || caption || "Blog content image"}
+              // "Blog content image" told a screen-reader user nothing. Fall
+              // back to the caption, then to the article this sits in; an
+              // empty alt is better than a meaningless one, so undescribed
+              // images on an untitled page are treated as decorative.
+              alt={alt || caption || articleContext(postTitle)}
               fill
               className="object-contain"
               sizes="(max-width: 768px) 100vw, 800px"

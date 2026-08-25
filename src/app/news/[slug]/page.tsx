@@ -318,7 +318,7 @@ export default async function NewsPostPage({ params }: Params) {
           <div className="container-ke max-w-[1100px]">
             <div className="grid grid-cols-1 lg:grid-cols-10 gap-10">
               <div className="lg:col-span-7 space-y-12">
-                <BlogBlockRenderer blocks={post.blocks || []} />
+                <BlogBlockRenderer blocks={post.blocks || []} postTitle={post.title} />
               </div>
               <div className="lg:col-span-3">
                 <SidebarPackages />

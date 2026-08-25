@@ -231,6 +231,12 @@ export function articleLd(i: {
     ...(i.description ? { description: i.description } : {}),
     ...(i.image ? { image: [absoluteUrl(i.image)] } : {}),
     ...(keywords.length ? { keywords: keywords.join(", ") } : {}),
+    // GEO-2: name the subjects as entities so AI readers can tell what the
+    // post is about without inferring it from prose. Derived from the post's
+    // own tags — a fixed list would claim every article is about rebates.
+    ...(keywords.length
+      ? { about: keywords.map((name) => ({ "@type": "Thing", name })) }
+      : {}),
     ...(i.articleSection ? { articleSection: i.articleSection } : {}),
     ...(i.wordCount ? { wordCount: i.wordCount } : {}),
     author: { "@type": "Person", name: i.authorName || SITE_NAME },

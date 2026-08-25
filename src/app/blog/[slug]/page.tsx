@@ -362,7 +362,7 @@ export default async function PostPage({ params }: Params) {
             <div className="grid grid-cols-1 lg:grid-cols-10 gap-10">
               {/* Left Column - 70% width */}
               <div className="lg:col-span-7 space-y-12">
-                <BlogBlockRenderer blocks={post.blocks || []} />
+                <BlogBlockRenderer blocks={post.blocks || []} postTitle={post.title} />
               </div>
 
               {/* Right Column - 30% width */}
