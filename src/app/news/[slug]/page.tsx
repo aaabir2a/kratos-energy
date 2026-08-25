@@ -9,6 +9,7 @@ import { SYSTEMS } from "@/lib/systems";
 import { absoluteUrl, postPath } from "@/lib/seo/site";
 import { articleLd, breadcrumbLd } from "@/lib/seo/schema";
 import { wordCountFromBlocks } from "@/lib/seo/postType";
+import { imageSize } from "@/lib/seo/imageSize";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -54,6 +55,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const post = await fetchPost(slug);
   if (!post) return { title: "Update not found" };
 
+  // Measured rather than assumed — see the blog template.
+  const size = await imageSize(post.featuredImage);
+  const ogImages = post.featuredImage
+    ? [{ url: post.featuredImage, alt: post.title, ...(size ?? {}) }]
+    : undefined;
+  const tags = Array.isArray(post.tags) ? post.tags.filter(Boolean) : [];
+
   return {
     // The root template appends " · Kratos Energy" — no manual suffix.
     title: post.metaTitle || post.title,
@@ -65,14 +73,17 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.excerpt,
       url: absoluteUrl(postPath("news", post.slug || slug)),
-      images: post.featuredImage ? [{ url: post.featuredImage }] : undefined,
+      images: ogImages,
       type: "article",
+      ...(tags.length ? { tags } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.excerpt,
-      ...(post.featuredImage ? { images: [post.featuredImage] } : {}),
+      ...(post.featuredImage
+        ? { images: [{ url: post.featuredImage, alt: post.title }] }
+        : {}),
     },
   };
 }

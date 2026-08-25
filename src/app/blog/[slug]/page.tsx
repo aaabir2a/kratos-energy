@@ -9,6 +9,7 @@ import { SYSTEMS } from "@/lib/systems";
 import { absoluteUrl, postPath } from "@/lib/seo/site";
 import { articleLd, breadcrumbLd, faqLd } from "@/lib/seo/schema";
 import { schemaForPostType, faqPairsFromBlocks, wordCountFromBlocks } from "@/lib/seo/postType";
+import { imageSize } from "@/lib/seo/imageSize";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -49,6 +50,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const post = await fetchPost(slug);
   if (!post) return { title: "Article not found" };
 
+  // Measured, not assumed — featured images ship in several ratios, so a
+  // hardcoded 1200x630 would misdescribe every one of them.
+  const size = await imageSize(post.featuredImage);
+  const ogImages = post.featuredImage
+    ? [{ url: post.featuredImage, alt: post.title, ...(size ?? {}) }]
+    : undefined;
+  const tags = Array.isArray(post.tags) ? post.tags.filter(Boolean) : [];
+
   return {
     // No manual brand suffix — the root template already appends
     // " · Kratos Energy".
@@ -63,14 +72,17 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.excerpt,
       url: absoluteUrl(postPath("blog", post.slug || slug)),
-      images: post.featuredImage ? [{ url: post.featuredImage }] : undefined,
+      images: ogImages,
       type: "article",
+      ...(tags.length ? { tags } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: post.metaTitle || post.title,
       description: post.metaDescription || post.excerpt,
-      ...(post.featuredImage ? { images: [post.featuredImage] } : {}),
+      ...(post.featuredImage
+        ? { images: [{ url: post.featuredImage, alt: post.title }] }
+        : {}),
     },
   };
 }
