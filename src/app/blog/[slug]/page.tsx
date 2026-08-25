@@ -16,6 +16,50 @@ type Params = { params: Promise<{ slug: string }> };
 
 export const revalidate = 60; // ISR revalidation every 60 seconds
 
+/**
+ * Prebuild every blog post at deploy time so a crawler never pays for a cold
+ * render. Slugs not listed here still work — `dynamicParams` stays on, so new
+ * posts render on demand and ISR picks them up from then on.
+ *
+ * News posts are excluded: /blog/<news-slug> redirects to /news/<slug>, so
+ * prebuilding them here would generate pages that only ever redirect.
+ *
+ * If the CMS is unreachable during the build this returns [], and every post
+ * simply falls back to on-demand rendering — a slower first hit, not a
+ * broken deploy.
+ */
+export async function generateStaticParams() {
+  const base = process.env.NEXT_PUBLIC_API_BASE || "http://192.168.0.220:4000/api/v1";
+  const PER_PAGE = 100;
+  const MAX_PAGES = 10; // Guard against a runaway build if the API misreports.
+  const slugs: { slug: string }[] = [];
+
+  try {
+    for (let page = 1; page <= MAX_PAGES; page++) {
+      const res = await fetch(`${base}/public/blog/posts?page=${page}&limit=${PER_PAGE}`, {
+        next: { revalidate: 3600 },
+      });
+      if (!res.ok) break;
+      const data = await res.json();
+      const posts = data.data?.posts || [];
+
+      for (const p of posts as { slug?: string; typeSlug?: string }[]) {
+        if (!p.slug) continue;
+        if (String(p.typeSlug || "").toLowerCase() === "news") continue;
+        slugs.push({ slug: p.slug });
+      }
+
+      const totalPages = data.data?.pagination?.totalPages ?? 1;
+      if (posts.length === 0 || page >= totalPages) break;
+    }
+  } catch (e) {
+    console.error("generateStaticParams: could not list blog posts:", e);
+    return [];
+  }
+
+  return slugs;
+}
+
 async function fetchPost(slug: string) {
   const base = process.env.NEXT_PUBLIC_API_BASE || "http://192.168.0.220:4000/api/v1";
   try {

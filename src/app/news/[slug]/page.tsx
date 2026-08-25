@@ -18,6 +18,42 @@ export const revalidate = 60; // ISR
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://192.168.0.220:4000/api/v1";
 
+/**
+ * Prebuild news posts for the same reason the blog template does — only the
+ * `news` type lives on this route, so everything else is filtered out. Falls
+ * back to on-demand rendering when the CMS is unreachable at build time.
+ */
+export async function generateStaticParams() {
+  const PER_PAGE = 100;
+  const MAX_PAGES = 10;
+  const slugs: { slug: string }[] = [];
+
+  try {
+    for (let page = 1; page <= MAX_PAGES; page++) {
+      const res = await fetch(`${API_BASE}/public/blog/posts?page=${page}&limit=${PER_PAGE}`, {
+        next: { revalidate: 3600 },
+      });
+      if (!res.ok) break;
+      const data = await res.json();
+      const posts = data.data?.posts || [];
+
+      for (const p of posts as { slug?: string; typeSlug?: string }[]) {
+        if (!p.slug) continue;
+        if (String(p.typeSlug || "").toLowerCase() !== "news") continue;
+        slugs.push({ slug: p.slug });
+      }
+
+      const totalPages = data.data?.pagination?.totalPages ?? 1;
+      if (posts.length === 0 || page >= totalPages) break;
+    }
+  } catch (e) {
+    console.error("generateStaticParams: could not list news posts:", e);
+    return [];
+  }
+
+  return slugs;
+}
+
 async function fetchPost(slug: string) {
   try {
     const res = await fetch(`${API_BASE}/public/blog/posts/${slug}`, { next: { revalidate: 60 } });
