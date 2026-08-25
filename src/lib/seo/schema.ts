@@ -215,14 +215,24 @@ export function articleLd(i: {
   datePublished?: string;
   dateModified?: string;
   path: string;
+  /** Post tags from the CMS. */
+  keywords?: string[];
+  /** Category name, e.g. "Guides". */
+  articleSection?: string;
+  /** Counted from the rendered body, not estimated from read time. */
+  wordCount?: number;
 }) {
   const url = absoluteUrl(i.path);
+  const keywords = i.keywords?.map((k) => k.trim()).filter(Boolean) ?? [];
   return {
     "@context": "https://schema.org",
     "@type": i.type,
     headline: i.headline,
     ...(i.description ? { description: i.description } : {}),
     ...(i.image ? { image: [absoluteUrl(i.image)] } : {}),
+    ...(keywords.length ? { keywords: keywords.join(", ") } : {}),
+    ...(i.articleSection ? { articleSection: i.articleSection } : {}),
+    ...(i.wordCount ? { wordCount: i.wordCount } : {}),
     author: { "@type": "Person", name: i.authorName || SITE_NAME },
     publisher: { "@id": ORG_ID },
     ...(i.datePublished ? { datePublished: i.datePublished } : {}),
@@ -230,5 +240,14 @@ export function articleLd(i: {
     inLanguage: "en-AU",
     url,
     mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    // Ties the post to the WebSite node the root layout emits, so the whole
+    // site reads as one entity graph rather than unconnected pages.
+    isPartOf: { "@id": WEBSITE_ID },
+    // Selectors must match real elements — `.article-excerpt` is set on the
+    // post excerpt in the blog and news templates.
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", ".article-excerpt"],
+    },
   };
 }

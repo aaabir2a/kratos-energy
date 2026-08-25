@@ -83,6 +83,39 @@ function isQuestion(text: string): boolean {
 /** Answers are capped so one runaway section can't bloat the page payload. */
 const MAX_ANSWER = 1200;
 
+/** Every readable string in a block, whatever shape that block's content is. */
+function blockText(raw: Block): string {
+  const type = String(raw?.type || "").toLowerCase();
+  const content = raw?.content;
+
+  if (type === "text" || type === "texteditor") {
+    return toText(
+      typeof content === "string" ? content : String((content as { html?: string })?.html ?? ""),
+    );
+  }
+  if (type === "accordion" || type === "card") {
+    const items = (content as { items?: { title?: string; content?: string }[] })?.items ?? [];
+    return items.map((it) => `${toText(String(it?.title ?? ""))} ${toText(String(it?.content ?? ""))}`).join(" ");
+  }
+  if (type === "tabs") {
+    const tabs = (content as { tabs?: { title?: string; content?: string }[] })?.tabs ?? [];
+    return tabs.map((t) => `${toText(String(t?.title ?? ""))} ${toText(String(t?.content ?? ""))}`).join(" ");
+  }
+  return "";
+}
+
+/**
+ * Words in the post body. Counted from the actual content rather than derived
+ * from `readMins`, which the CMS leaves unset — the public page falls back to a
+ * flat 5, so a read-time estimate would put the same wordCount on every post.
+ */
+export function wordCountFromBlocks(blocks: unknown): number {
+  if (!Array.isArray(blocks)) return 0;
+  const text = (blocks as Block[]).map(blockText).join(" ").trim();
+  if (!text) return 0;
+  return text.split(/\s+/).length;
+}
+
 /** Pull `{q, a}` pairs out of one HTML fragment's h2/h3 headings. */
 function pairsFromHtml(html: string): { q: string; a: string }[] {
   const out: { q: string; a: string }[] = [];

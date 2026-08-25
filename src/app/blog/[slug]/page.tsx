@@ -8,7 +8,7 @@ import { BlogBlockRenderer } from "@/components/blog/BlogBlockRenderer";
 import { SYSTEMS } from "@/lib/systems";
 import { absoluteUrl, postPath } from "@/lib/seo/site";
 import { articleLd, breadcrumbLd, faqLd } from "@/lib/seo/schema";
-import { schemaForPostType, faqPairsFromBlocks } from "@/lib/seo/postType";
+import { schemaForPostType, faqPairsFromBlocks, wordCountFromBlocks } from "@/lib/seo/postType";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -201,6 +201,9 @@ export default async function PostPage({ params }: Params) {
     datePublished: post.publishedAt || post.createdAt,
     dateModified: post.updatedAt,
     path: postPath("blog", post.slug || slug),
+    keywords: post.tags,
+    articleSection: post.categoryName || undefined,
+    wordCount: wordCountFromBlocks(post.blocks) || undefined,
   });
 
   // Mirrors the breadcrumb rendered in the DOM below, so Google can extract
@@ -276,7 +279,7 @@ export default async function PostPage({ params }: Params) {
 
             {/* Excerpt */}
             {post.excerpt && (
-              <p className="mt-5 font-body text-[14.5px] leading-relaxed text-white/80 max-w-3xl">
+              <p className="article-excerpt mt-5 font-body text-[14.5px] leading-relaxed text-white/80 max-w-3xl">
                 {post.excerpt}
               </p>
             )}
