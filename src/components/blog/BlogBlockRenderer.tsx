@@ -97,55 +97,33 @@ function RenderBlock({ block }: { block: BlockData }) {
 // ── SUB-COMPONENTS ──
 
 function AccordionBlock({ items }: { items?: any[] }) {
-  const [openIdxs, setOpenIdxs] = useState<number[]>([]);
   if (!items || !Array.isArray(items)) return null;
 
-  const toggle = (idx: number) => {
-    setOpenIdxs((prev) =>
-      prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx]
-    );
-  };
-
+  // <details>/<summary> rather than a JS toggle: the answer text ships in the
+  // HTML even while collapsed, so crawlers and AI readers can see it. It also
+  // keeps working without JS and gets native keyboard and screen-reader
+  // behaviour for free.
   return (
     <div className="my-8 space-y-4">
-      {items.map((item, idx) => {
-        const isOpen = openIdxs.includes(idx);
-        return (
-          <div
-            key={idx}
-            className={`rounded-xl overflow-hidden shadow-sm transition-all duration-200 border ${
-              isOpen
-                ? "border-[#8bc34a] bg-white shadow-md"
-                : "border-gray-200 bg-white hover:border-[#8bc34a]/60 hover:shadow-md"
-            }`}
-          >
-            <button
-              type="button"
-              onClick={() => toggle(idx)}
-              className={`w-full flex items-center justify-between px-6 py-4 font-display font-bold text-left transition-colors text-[16px] leading-snug min-h-[54px] gap-4 ${
-                isOpen
-                  ? "bg-[#8bc34a] text-white"
-                  : "bg-white text-gray-900 hover:text-[#8bc34a]"
-              }`}
-            >
-              <span className="flex-1 font-semibold">{item.title}</span>
-              <Icon
-                name="chevron"
-                size={18}
-                stroke={2.5}
-                className={`transition-transform duration-200 shrink-0 ${
-                  isOpen ? "text-white rotate-180" : "text-[#8bc34a]"
-                }`}
-              />
-            </button>
-            {isOpen && (
-              <div className="px-6 py-5 text-gray-700 text-[15px] leading-relaxed font-body bg-white border-t border-[#8bc34a]/20">
-                {item.content}
-              </div>
-            )}
+      {items.map((item, idx) => (
+        <details
+          key={idx}
+          className="group rounded-xl overflow-hidden border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:border-[#8bc34a]/60 hover:shadow-md open:border-[#8bc34a] open:shadow-md"
+        >
+          <summary className="flex min-h-[54px] cursor-pointer list-none items-center justify-between gap-4 px-6 py-4 text-left font-display text-[16px] font-bold leading-snug text-gray-900 transition-colors hover:text-[#8bc34a] group-open:bg-[#8bc34a] group-open:text-white [&::-webkit-details-marker]:hidden">
+            <span className="flex-1 font-semibold">{item.title}</span>
+            <Icon
+              name="chevron"
+              size={18}
+              stroke={2.5}
+              className="shrink-0 text-[#8bc34a] transition-transform duration-200 group-open:rotate-180 group-open:text-white"
+            />
+          </summary>
+          <div className="border-t border-[#8bc34a]/20 bg-white px-6 py-5 font-body text-[15px] leading-relaxed text-gray-700">
+            {item.content}
           </div>
-        );
-      })}
+        </details>
+      ))}
     </div>
   );
 }
@@ -172,9 +150,19 @@ function TabsBlock({ tabs }: { tabs?: any[] }) {
           </button>
         ))}
       </div>
-      <div className="p-6 font-body text-gray-700 text-[15px] leading-relaxed">
-        {tabs[activeTab]?.content}
-      </div>
+      {/* Every panel is rendered and the inactive ones are hidden with CSS.
+          Rendering only the active tab kept the other panels out of the HTML
+          entirely, so crawlers only ever saw one tab's worth of content. */}
+      {tabs.map((tab, idx) => (
+        <div
+          key={idx}
+          role="tabpanel"
+          hidden={activeTab !== idx}
+          className="p-6 font-body text-gray-700 text-[15px] leading-relaxed"
+        >
+          {tab.content}
+        </div>
+      ))}
     </div>
   );
 }
