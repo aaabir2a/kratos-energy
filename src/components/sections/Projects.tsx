@@ -7,7 +7,7 @@ import type { Project } from "@/lib/api";
 
 /* --------------------------------------------------------------- helpers -- */
 
-function projectMonth(iso: string | null): string {
+export function projectMonth(iso: string | null): string {
   if (!iso) return "";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
@@ -15,7 +15,7 @@ function projectMonth(iso: string | null): string {
 }
 
 /** Residential vs Commercial label inferred from the system size in the title. */
-function categoryLabel(title: string): string {
+export function categoryLabel(title: string): string {
   const m = title.match(/(\d+(?:\.\d+)?)\s?kw\b/i);
   const kw = m ? parseFloat(m[1]) : null;
   if (kw !== null) return kw >= 30 ? "Commercial Solar" : "Residential Solar";
@@ -23,7 +23,7 @@ function categoryLabel(title: string): string {
 }
 
 /** Pull short spec "highlight" chips from the title + description. */
-function specChips(text: string): string[] {
+export function specChips(text: string): string[] {
   const out: string[] = [];
   const push = (v: string) => {
     if (v && !out.includes(v)) out.push(v);
@@ -108,7 +108,7 @@ function ProjectCard({
 
 /* -------------------------------------------------------------- lightbox -- */
 
-function Lightbox({
+export function Lightbox({
   project,
   onClose,
   initial = 0,
