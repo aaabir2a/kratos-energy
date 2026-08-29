@@ -5,6 +5,10 @@ import "./globals.css";
 import { SITE_URL, SITE_NAME, SITE_LOCALE, IS_INDEXABLE } from "@/lib/seo/site";
 import { siteGraphLd } from "@/lib/seo/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
+import {
+  GoogleTagManager,
+  GoogleTagManagerNoScript,
+} from "@/components/layout/GoogleTagManager";
 
 // Display — characterful grotesque with warmth and stroke modulation.
 // Carries the confident, expert voice without the cold geometry of Sora.
@@ -98,8 +102,14 @@ export default function RootLayout({
         {/* Hero and blog imagery are served cross-origin from the CRM. */}
         <link rel="preconnect" href="https://api.kratos-energy.com" />
         <link rel="dns-prefetch" href="https://api.kratos-energy.com" />
+        {/* GTM loads after hydration; warm the connection early so the tag
+            manager and anything it injects aren't paying for DNS + TLS. */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
       </head>
       <body suppressHydrationWarning>
+        {/* Must be the first element inside <body> per Google's install. */}
+        <GoogleTagManagerNoScript />
+        <GoogleTagManager />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-1STE29BHZ7"
           strategy="afterInteractive"
