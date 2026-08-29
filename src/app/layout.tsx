@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Hanken_Grotesk } from "next/font/google";
 import Script from "next/script";
@@ -9,6 +10,8 @@ import {
   GoogleTagManager,
   GoogleTagManagerNoScript,
 } from "@/components/layout/GoogleTagManager";
+import { MetaPixel, MetaPixelNoScript } from "@/components/layout/MetaPixel";
+import { MetaPixelRouteEvents } from "@/components/layout/MetaPixelRouteEvents";
 
 // Display — characterful grotesque with warmth and stroke modulation.
 // Carries the confident, expert voice without the cold geometry of Sora.
@@ -105,11 +108,19 @@ export default function RootLayout({
         {/* GTM loads after hydration; warm the connection early so the tag
             manager and anything it injects aren't paying for DNS + TLS. */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://connect.facebook.net" />
       </head>
       <body suppressHydrationWarning>
-        {/* Must be the first element inside <body> per Google's install. */}
+        {/* Both no-JS pixels must lead <body> per Google's and Meta's installs. */}
         <GoogleTagManagerNoScript />
+        <MetaPixelNoScript />
         <GoogleTagManager />
+        <MetaPixel />
+        {/* MetaPixelRouteEvents reads searchParams; the boundary keeps static
+            routes from de-opting to client-side rendering. */}
+        <Suspense fallback={null}>
+          <MetaPixelRouteEvents />
+        </Suspense>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-1STE29BHZ7"
           strategy="afterInteractive"

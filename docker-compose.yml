@@ -20,6 +20,8 @@ services:
         # substitutes the default only when the var is UNSET, so staging can set
         # an empty NEXT_PUBLIC_GTM_ID= to build with no tag manager.
         NEXT_PUBLIC_GTM_ID: ${NEXT_PUBLIC_GTM_ID-GTM-5RR9ZRTC}
+        # Meta Pixel ID. Single `-` for the same reason as GTM above.
+        NEXT_PUBLIC_META_PIXEL_ID: ${NEXT_PUBLIC_META_PIXEL_ID-1654900768199262}
     image: kratos-energy
     container_name: kratos-energy
     restart: unless-stopped
