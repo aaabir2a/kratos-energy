@@ -263,6 +263,11 @@ export function LeadForm({
       }
       if (value === undefined) continue;
 
+      // Every collected value is mirrored into customFields so the submit
+      // payload always carries the whole form schema. The CRM validates by
+      // field_name and strips mapped fields back out, so this adds no noise.
+      custom[name] = value;
+
       // Fields keyed by a first-class column name go straight to the lead.
       if (KNOWN_LEAD_KEYS.has(name)) {
         top[name] = value;
@@ -272,14 +277,11 @@ export function LeadForm({
       // Schema-declared mapping (maps_to) wins over heuristics.
       if (field.maps_to && KNOWN_LEAD_KEYS.has(field.maps_to) && top[field.maps_to] === undefined) {
         top[field.maps_to] = value;
-        custom[name] = value;
         continue;
       }
 
-      // Otherwise keep the raw value in customFields (the CRM validates the
-      // schema by field_name) AND mirror common contact fields onto the
-      // first-class lead columns by type/label so the lead is actually usable.
-      custom[name] = value;
+      // Otherwise mirror common contact fields onto the first-class lead
+      // columns by type/label so the lead is actually usable.
       if (typeof value === "string") {
         if (field.type === "email" && !top.email) top.email = value;
         else if (field.type === "phone" && !top.phone) top.phone = value;
