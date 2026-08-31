@@ -127,6 +127,17 @@ export default function LuxuryGetawayPage() {
                 Get a Free <span className="text-gold-400 text-glow">Luxury Getaway!</span>
               </h1>
 
+              {/* Mobile Lead Form: displayed under the title on mobile, hidden on desktop */}
+              <div className="block lg:hidden mt-6 text-ink">
+                <LeadForm
+                  formId="2f859ddd-beca-4399-a893-c2ac3e83aae7"
+                  staticTitle="Claim Your Free Quote & Getaway"
+                  staticSubmitLabel="Claim My Getaway Now"
+                  successNote="Thanks! Your luxury getaway assessment request has been received. A Kratos Energy specialist will call you within one business day."
+                  className="rounded-xl border border-white/10 bg-white p-[30px] shadow-2xl relative"
+                />
+              </div>
+
               <p className="mt-5 max-w-[620px] font-body text-[18px] sm:text-[19.5px] leading-relaxed text-[#c4d2ef]">
                 Thinking about going solar? Switch to solar and battery storage with Kratos Energy today, slash your power bills, and reward yourself with a complimentary <strong className="text-white">7-night luxury getaway to Bali, Phuket, or Mombasa!</strong>
               </p>
@@ -156,8 +167,8 @@ export default function LuxuryGetawayPage() {
               </div>
             </div>
 
-            {/* Right lead form column */}
-            <div className="lg:col-span-5">
+            {/* Right lead form column: displayed on desktop, hidden on mobile */}
+            <div className="hidden lg:block lg:col-span-5 text-ink">
               <LeadForm
                 formId="2f859ddd-beca-4399-a893-c2ac3e83aae7"
                 staticTitle="Claim Your Free Quote & Getaway"
