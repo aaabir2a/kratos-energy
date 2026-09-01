@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Stars } from "@/components/ui/Stars";
 import { Icon } from "@/components/ui/Icon";
-import { type Review, REVIEWS } from "@/lib/reviews";
+import { type Review, REVIEWS, GOOGLE_REVIEW_LINK } from "@/lib/reviews";
 
 /** Multi-colour Google "G" mark. */
 function GoogleG({ size = 18 }: { size?: number }) {
@@ -198,6 +199,41 @@ export function Testimonials() {
               }
             />
           ))}
+        </div>
+
+        {/* The slider shows three at a time; /reviews has the full set. */}
+        <div className="mt-9 flex justify-center">
+          <Link
+            href="/reviews"
+            className="ke-press inline-flex w-full items-center justify-center gap-2.5 rounded-pill bg-green-500 px-[30px] py-[15px] font-display text-[15.5px] font-bold text-white shadow-green hover:bg-green-600 sm:w-auto"
+          >
+            Read all {REVIEWS.length} reviews
+            <Icon name="arrow" size={19} stroke={2.4} />
+          </Link>
+        </div>
+
+        {/* Separate ask, separate audience: the slider persuades researchers,
+            this one is for customers who already have an install. */}
+        <div className="mt-11 flex flex-col items-center gap-6 border-t border-ash-200 pt-9 text-center sm:mt-12 sm:pt-10 lg:flex-row lg:items-center lg:justify-between lg:gap-10 lg:text-left">
+          <div className="max-w-[52ch]">
+            <h3 className="font-display text-[19px] font-extrabold tracking-[-0.01em] text-navy-700 sm:text-[21px]">
+              Been through an install with us?
+            </h3>
+            <p className="mt-1.5 font-body text-[14.5px] leading-relaxed text-ash-700">
+              Your honest Google review helps the next Australian family decide.
+            </p>
+          </div>
+
+          <a
+            href={GOOGLE_REVIEW_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ke-lift inline-flex w-full flex-none items-center justify-center gap-2.5 rounded-pill border border-ash-300 bg-white px-7 py-[13px] font-display text-[14.5px] font-bold text-forest-700 transition-colors hover:border-green-500 sm:w-auto"
+          >
+            <GoogleG size={18} />
+            Write a Google review
+            <Icon name="arrow" size={16} stroke={2.4} />
+          </a>
         </div>
       </div>
     </section>
