@@ -10,11 +10,11 @@ import { breadcrumbLd, calculatorLd, howToLd, faqLd } from "@/lib/seo/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 export const metadata = pageMetadata({
-  title: "Build Your Solar System — Live Pricing",
+  title: "Build Your Solar System Australia — Live Pricing & STC Rebate",
   description:
-    "Design your own solar system in minutes: pick panels, inverter, battery and EV charging, and see live Australian pricing including GST and your STC rebate.",
+    "Customise your solar system online in Australia: select panels, inverter, battery and EV charger, with live AUD pricing including GST and Australian STC rebates.",
   path: "/build",
-  keywords: ["build solar system", "solar system builder", "solar package pricing Australia"],
+  keywords: ["build solar system Australia", "solar system builder Australia", "solar package pricing Australia AUD"],
 });
 
 const FAQ: { q: string; a: string }[] = [

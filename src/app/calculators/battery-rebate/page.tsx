@@ -9,11 +9,15 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { RelatedCalculators } from "@/components/sections/RelatedCalculators";
 
 export const metadata = pageMetadata({
-  title: "Battery Rebate Calculator 2026 (per kWh)",
+  title: "Australian Battery Rebate Calculator 2026 — Federal & State",
   description:
-    "Calculate your 2026 federal home battery rebate under the Cheaper Home Batteries Program — the tiered amount per usable kWh, plus state support by postcode.",
+    "Calculate your 2026 Australian federal home battery rebate under the Cheaper Home Batteries Program — tiered amounts per usable kWh, plus state support by postcode.",
   path: "/calculators/battery-rebate",
-  keywords: ["battery rebate calculator", "Cheaper Home Batteries Program", "home battery rebate 2026"],
+  keywords: [
+    "battery rebate calculator Australia",
+    "Cheaper Home Batteries Program Australia",
+    "home battery rebate 2026 Australia",
+  ],
 });
 
 const FAQ: { q: string; a: string }[] = [

@@ -19,7 +19,7 @@ export const WEBSITE_ID = `${SITE_URL}/#website`;
  */
 export function organizationLd() {
   return {
-    "@type": ["Organization", "Electrician"],
+    "@type": ["Organization", "Electrician", "LocalBusiness", "RoofingContractor"],
     "@id": ORG_ID,
     name: SITE_NAME,
     legalName: ORG.legalName,
@@ -32,6 +32,10 @@ export function organizationLd() {
     telephone: ORG.phoneE164,
     email: ORG.email,
     foundingDate: ORG.foundingDate,
+    currenciesAccepted: "AUD",
+    priceRange: "$$",
+    paymentAccepted: "Cash, Credit Card, Bank Transfer, Solar Financing",
+    hasMap: "https://maps.google.com/?q=SmartSpace+Innovation+Campus+Squires+Way+North+Wollongong+NSW+2500",
     address: {
       "@type": "PostalAddress",
       streetAddress: ORG.streetAddress,
@@ -40,10 +44,31 @@ export function organizationLd() {
       postalCode: ORG.postalCode,
       addressCountry: ORG.country,
     },
-    areaServed: ORG.areaServed.map((name) => ({
-      "@type": "AdministrativeArea",
-      name,
-    })),
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: -34.4048,
+      longitude: 150.8931,
+    },
+    areaServed: [
+      { "@type": "Country", name: "Australia" },
+      { "@type": "AdministrativeArea", name: "New South Wales" },
+      { "@type": "AdministrativeArea", name: "Victoria" },
+      { "@type": "AdministrativeArea", name: "Australian Capital Territory" },
+      { "@type": "City", name: "Sydney" },
+      { "@type": "City", name: "Wollongong" },
+      { "@type": "City", name: "Melbourne" },
+      { "@type": "City", name: "Canberra" },
+      { "@type": "City", name: "Newcastle" },
+      { "@type": "City", name: "Central Coast" },
+    ],
+    knowsAbout: [
+      "Australian Solar Rebates (STC)",
+      "Clean Energy Council Guidelines",
+      "NSW Peak Demand Reduction Scheme (PDRS)",
+      "Solar Victoria Rebates",
+      "Battery Energy Storage Systems Australia",
+      "Commercial Solar EPC Australia",
+    ],
     contactPoint: {
       "@type": "ContactPoint",
       telephone: ORG.phoneE164,

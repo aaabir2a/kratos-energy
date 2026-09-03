@@ -10,11 +10,15 @@ import { JsonLd } from "@/components/seo/JsonLd";
 // import { GuideDownload } from "@/components/sections/GuideDownload";
 
 export const metadata = pageMetadata({
-  title: "Solar Savings & Payback Calculator",
+  title: "Solar Savings & Payback Calculator Australia (AUD)",
   description:
-    "Work out your solar payback period and 25-year net benefit in seconds. Adjust system size and power bill to see exactly when your solar pays for itself.",
+    "Calculate your Australian solar payback period and 25-year net savings in AUD. Real STC rebates, feed-in tariffs, and generation benchmarks for Australian homes.",
   path: "/savings-calculator",
-  keywords: ["solar savings calculator", "solar payback period Australia", "is solar worth it"],
+  keywords: [
+    "solar savings calculator Australia",
+    "solar payback period Australia AUD",
+    "is solar worth it Australia",
+  ],
 });
 
 const FAQ: { q: string; a: string }[] = [

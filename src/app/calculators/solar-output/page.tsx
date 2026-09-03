@@ -9,11 +9,15 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { RelatedCalculators } from "@/components/sections/RelatedCalculators";
 
 export const metadata = pageMetadata({
-  title: "Solar Output Calculator — kWh by Postcode",
+  title: "Solar Output Calculator Australia — kWh by Postcode & State",
   description:
-    "Estimate how many kWh your solar will generate per day, month and year by postcode, plus the CO2 you avoid. Based on Australian city generation averages.",
+    "Estimate how many kWh your solar will generate per day, month and year by Australian postcode, plus the CO2 you avoid. Based on Australian city generation averages.",
   path: "/calculators/solar-output",
-  keywords: ["solar output calculator", "solar generation by postcode", "how much power will my solar generate"],
+  keywords: [
+    "solar output calculator Australia",
+    "solar generation by postcode Australia",
+    "how much power will my solar generate Australia",
+  ],
 });
 
 const FAQ: { q: string; a: string }[] = [

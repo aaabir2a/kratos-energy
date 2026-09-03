@@ -83,6 +83,12 @@ export const metadata: Metadata = {
     description:
       "Premium panels, accredited installation and a 25-year warranty — turning Australian power bills into savings since 2016.",
   },
+  other: {
+    "geo.region": "AU-NSW",
+    "geo.placename": "North Wollongong",
+    "geo.position": "-34.4048;150.8931",
+    "ICBM": "-34.4048, 150.8931",
+  },
   // Omitted entirely while the token is blank — an empty meta tag is worse
   // than no tag.
   ...(GOOGLE_VERIFICATION ? { verification: { google: GOOGLE_VERIFICATION } } : {}),
@@ -102,6 +108,12 @@ export default function RootLayout({
   return (
     <html lang="en-AU" className={`${display.variable} ${body.variable}`}>
       <head>
+        {/* Australian Geo-Targeting */}
+        <meta name="geo.region" content="AU-NSW" />
+        <meta name="geo.placename" content="North Wollongong, NSW, Australia" />
+        <meta name="geo.position" content="-34.4048;150.8931" />
+        <meta name="ICBM" content="-34.4048, 150.8931" />
+
         {/* Hero and blog imagery are served cross-origin from the CRM. */}
         <link rel="preconnect" href="https://api.kratos-energy.com" />
         <link rel="dns-prefetch" href="https://api.kratos-energy.com" />

@@ -37,7 +37,13 @@ export function pageMetadata(seo: PageSeo): Metadata {
     title: seo.title,
     description: seo.description,
     ...(seo.keywords ? { keywords: seo.keywords } : {}),
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: {
+        "en-AU": url,
+        "x-default": url,
+      },
+    },
     openGraph: {
       title: seo.title,
       description: seo.description,

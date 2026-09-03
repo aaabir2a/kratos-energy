@@ -25,6 +25,8 @@ const nextConfig = {
       // Battery and EV charging moved under /products in the same nav rework.
       { source: "/battery-storage", destination: "/products/battery", permanent: true },
       { source: "/ev-charging", destination: "/products/ev-charging", permanent: true },
+      // Natural redirect for about page variant
+      { source: "/about-us", destination: "/about", permanent: true },
     ];
   },
 };

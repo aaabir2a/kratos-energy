@@ -9,11 +9,15 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { RelatedCalculators } from "@/components/sections/RelatedCalculators";
 
 export const metadata = pageMetadata({
-  title: "EV Charging Cost Calculator (Solar vs Grid)",
+  title: "EV Charging Cost Calculator Australia — Solar vs Grid Savings",
   description:
-    "Work out what it costs to charge your electric car each year, and how much you save charging from solar instead of the grid — by postcode and driving distance.",
+    "Calculate electric car home charging costs in Australia in AUD, and see how much you save charging from rooftop solar instead of the Australian grid.",
   path: "/calculators/ev-charging-cost",
-  keywords: ["EV charging cost calculator", "cost to charge electric car Australia", "solar EV charging savings"],
+  keywords: [
+    "EV charging cost calculator Australia",
+    "cost to charge electric car Australia AUD",
+    "solar EV charging savings Australia",
+  ],
 });
 
 const FAQ: { q: string; a: string }[] = [

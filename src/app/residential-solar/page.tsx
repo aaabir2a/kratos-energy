@@ -5,11 +5,11 @@ import { serviceLd } from "@/lib/seo/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 export const metadata = pageMetadata({
-  title: "Residential Solar Panels & Batteries",
+  title: "Residential Solar Systems Australia | 6.6kW, 10kW & Battery",
   description:
-    "Home solar from 6.6kW to 13.2kW with Tier-1 panels, CEC-accredited installation and a 25-year warranty. We handle every rebate across NSW, VIC and the ACT.",
+    "Australian home solar from 6.6kW to 13.2kW with Tier-1 panels, CEC-accredited installation and 25-year warranty. We claim all federal STC and state rebates for you in NSW, VIC & ACT.",
   path: "/residential-solar",
-  keywords: ["residential solar", "home solar panels Australia", "6.6kW solar system"],
+  keywords: ["residential solar Australia", "home solar panels Australia", "6.6kW solar system Australia"],
 });
 
 const SERVICES: Service[] = [

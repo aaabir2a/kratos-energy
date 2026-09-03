@@ -15,7 +15,35 @@ export default function robots(): MetadataRoute.Robots {
   }
 
   return {
-    rules: [{ userAgent: "*", allow: "/" }],
+    rules: [
+      {
+        // Standard search engines & general web crawlers
+        userAgent: "*",
+        allow: "/",
+      },
+      {
+        // Explicitly welcome AI Search & Answer engines for GEO citations
+        userAgent: [
+          "OAI-SearchBot",
+          "ChatGPT-User",
+          "GPTBot",
+          "PerplexityBot",
+          "ClaudeBot",
+          "Claude-Web",
+          "Applebot-Extended",
+        ],
+        allow: "/",
+      },
+      {
+        // Block aggressive high-frequency scrapers that consume VPS bandwidth without SEO/GEO value
+        userAgent: [
+          "Bytespider",
+          "CCBot",
+          "Amazonbot",
+        ],
+        disallow: "/",
+      },
+    ],
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,
   };

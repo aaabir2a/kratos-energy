@@ -9,11 +9,15 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { RelatedCalculators } from "@/components/sections/RelatedCalculators";
 
 export const metadata = pageMetadata({
-  title: "Feed-in Tariff Calculator 2026 (by State)",
+  title: "Solar Feed-in Tariff Calculator Australia 2026 (by State)",
   description:
-    "Estimate what your exported solar is worth with 2026 feed-in tariffs by state. See annual export earnings by postcode, system size and feed-in rate.",
+    "Estimate what your exported solar is worth with 2026 Australian feed-in tariffs by state. See annual export earnings in AUD by postcode, system size and retailer feed-in rate.",
   path: "/calculators/feed-in-tariff",
-  keywords: ["feed-in tariff calculator", "solar feed in tariff 2026", "solar export earnings"],
+  keywords: [
+    "feed-in tariff calculator Australia",
+    "solar feed in tariff 2026 Australia",
+    "solar export earnings Australia AUD",
+  ],
 });
 
 const FAQ: { q: string; a: string }[] = [

@@ -12,11 +12,11 @@ import { serviceLd } from "@/lib/seo/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 export const metadata = pageMetadata({
-  title: "Home Battery Storage & Rebates",
+  title: "Solar Battery Storage Australia — NSW, VIC & ACT Rebates",
   description:
-    "Store your daytime solar and run your home after dark. Fox ESS, GoodWe and Sigenergy batteries installed across NSW, VIC and ACT, with 2026 rebates applied.",
+    "Store daytime solar for night use in Australia. Fox ESS, GoodWe and Sigenergy batteries installed across NSW, VIC and ACT with 2026 federal battery rebates applied.",
   path: "/products/battery",
-  keywords: ["home battery storage Australia", "solar battery rebate", "Fox ESS battery"],
+  keywords: ["home battery storage Australia", "solar battery rebate Australia", "battery storage NSW VIC ACT"],
 });
 
 const BENEFITS = [

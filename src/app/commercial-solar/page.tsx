@@ -5,11 +5,11 @@ import { serviceLd } from "@/lib/seo/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 export const metadata = pageMetadata({
-  title: "Commercial Solar Systems 30–100kW+",
+  title: "Commercial Solar Systems Australia 30–100kW+ | NSW, VIC, ACT",
   description:
-    "Commercial solar that cuts operating costs — 30kW to 100kW+ systems with energy audit, ROI modelling, finance, grid connection and ongoing maintenance.",
+    "Commercial solar installations across Australia — 30kW to 100kW+ systems with energy audit, ROI modelling, finance, Australian grid approvals and maintenance.",
   path: "/commercial-solar",
-  keywords: ["commercial solar Australia", "business solar system", "50kW solar system"],
+  keywords: ["commercial solar Australia", "business solar system NSW", "commercial solar 100kW Australia"],
 });
 
 const SERVICES: Service[] = [

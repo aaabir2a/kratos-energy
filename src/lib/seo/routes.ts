@@ -45,6 +45,7 @@ const PAGES: StaticRoute[] = [
   { path: "/projects", lastModified: "2026-08-08", changeFrequency: "weekly", priority: 0.6 },
   { path: "/blog", lastModified: "2026-08-08", changeFrequency: "daily", priority: 0.6 },
   { path: "/news", lastModified: "2026-08-08", changeFrequency: "daily", priority: 0.6 },
+  { path: "/about", lastModified: "2026-09-02", changeFrequency: "monthly", priority: 0.8 },
   { path: "/contact", lastModified: "2026-08-08", changeFrequency: "yearly", priority: 0.6 },
   { path: "/support", lastModified: "2026-08-08", changeFrequency: "yearly", priority: 0.5 },
 

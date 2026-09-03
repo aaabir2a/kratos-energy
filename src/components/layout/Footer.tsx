@@ -34,6 +34,7 @@ const COLUMNS: { heading: string; items: { label: string; href: string }[] }[] =
   {
     heading: "Company",
     items: [
+      { label: "About Us", href: "/about" },
       { label: "Blog & Guides", href: "/blog" },
       { label: "News & Updates", href: "/news" },
       { label: "Our Projects", href: "/projects" },
