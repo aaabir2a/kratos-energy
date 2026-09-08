@@ -6,6 +6,7 @@ import { Icon } from "@/components/ui/Icon";
 import { getProjectsServer } from "@/lib/api";
 import { QuoteCTA } from "@/components/sections/QuoteCTA";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { projectPath, slugifyProject } from "@/lib/seo/site";
 import ProjectGalleryInteractive from "@/components/sections/ProjectGalleryInteractive";
 
 type Params = { params: Promise<{ title: string }> };
@@ -39,24 +40,40 @@ function specChips(text: string): string[] {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
     const { title } = await params;
     const decoded = decodeURIComponent(title);
+    const targetSlug = slugifyProject(decoded);
+
+    const projects = await getProjectsServer(100);
+    const project = projects.find(
+        (p) =>
+            slugifyProject(p.title) === targetSlug ||
+            p.title.toLowerCase() === decoded.toLowerCase() ||
+            p.title.toLowerCase() === decoded.replace(/-/g, " ").toLowerCase() ||
+            encodeURIComponent(p.title) === title
+    );
+
+    const cleanTitle = project ? project.title.replace(/[\r\n]+/g, " ").trim() : decoded;
+    const canonicalPath = project ? projectPath(project.title) : `/projects/${title}`;
 
     return pageMetadata({
         // The root template appends the brand — no manual suffix.
-        title: decoded,
-        description: `Solar installation details for ${decoded} — system size, equipment and results from this Kratos Energy project.`,
-        // Canonical uses the raw encoded param, so it matches the URL that was
-        // actually requested and the one listed in the sitemap.
-        path: `/projects/${title}`,
+        title: cleanTitle,
+        description: `Solar installation details for ${cleanTitle} — system size, equipment and results from this Kratos Energy project.`,
+        path: canonicalPath,
     });
 }
 
 export default async function ProjectPage({ params }: Params) {
     const { title } = await params;
-    const decoded = decodeURIComponent(title).replace(/-/g, " ");
+    const decoded = decodeURIComponent(title);
+    const targetSlug = slugifyProject(decoded);
 
     const projects = await getProjectsServer(100);
     const project = projects.find(
-        (p) => p.title.toLowerCase() === decoded.toLowerCase() || encodeURIComponent(p.title) === title
+        (p) =>
+            slugifyProject(p.title) === targetSlug ||
+            p.title.toLowerCase() === decoded.toLowerCase() ||
+            p.title.toLowerCase() === decoded.replace(/-/g, " ").toLowerCase() ||
+            encodeURIComponent(p.title) === title
     );
 
     if (!project) notFound();

@@ -8,7 +8,7 @@
  */
 
 import { getProjectsServer } from "@/lib/api";
-import { absoluteUrl, postPath } from "./site";
+import { absoluteUrl, postPath, projectPath } from "./site";
 import { w3cDate, type SitemapEntry } from "./sitemap";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://api.kratos-energy.com/api/v1";
@@ -83,13 +83,11 @@ async function fetchProjectEntries(): Promise<SitemapEntry[]> {
   return projects
     .filter((p) => p.title)
     .map((p) => ({
-      // Must byte-match the links in Projects.tsx — the route segment is the
-      // encoded title. Low priority: these URLs churn whenever a CRM title is
-      // edited, until the API grows a stable slug.
-      loc: absoluteUrl(`/projects/${encodeURIComponent(p.title)}`),
+      // Clean, slugified URL prevents newlines (\n) or spaces from breaking sitemap XML.
+      loc: absoluteUrl(projectPath(p.title)),
       lastmod: w3cDate(p.projectDate ?? p.createdAt),
       changefreq: "yearly" as const,
-      priority: 0.3,
+      priority: 0.5,
     }));
 }
 

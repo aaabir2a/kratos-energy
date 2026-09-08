@@ -39,6 +39,26 @@ export function postPath(type: "blog" | "news", slug: string): string {
   return `/${type}/${encodeURIComponent(slug)}`;
 }
 
+/**
+ * Normalizes and slugifies a project title into a clean URL slug,
+ * stripping line breaks (\r\n) and special characters.
+ */
+export function slugifyProject(title: string): string {
+  return title
+    .replace(/[\r\n]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
+}
+
+/** Canonical path for a showcase project. */
+export function projectPath(title: string): string {
+  const slug = slugifyProject(title);
+  return `/projects/${slug || encodeURIComponent(title)}`;
+}
+
 /** Escapes text for use inside an XML element. */
 export function xmlEscape(value: string): string {
   return value

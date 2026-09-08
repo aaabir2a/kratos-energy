@@ -111,10 +111,12 @@ export const NAV: NavLink[] = [
   {
     label: "Solar Savings",
     href: "/calculators",
-    // Deliberately short: the individual calculators are listed on the
-    // /calculators hub rather than repeated here.
     menu: [
       { label: "All Calculators", href: "/calculators" },
+      { label: "Solar Rebate Calculator", href: "/calculators/solar-rebate" },
+      { label: "Battery Rebate Calculator", href: "/calculators/battery-rebate" },
+      { label: "Feed-in Tariff", href: "/calculators/feed-in-tariff" },
+      { label: "EV Charging Cost", href: "/calculators/ev-charging-cost" },
       { label: "Build Your System", href: "/build" },
     ],
   },

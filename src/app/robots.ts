@@ -20,6 +20,12 @@ export default function robots(): MetadataRoute.Robots {
         // Standard search engines & general web crawlers
         userAgent: "*",
         allow: "/",
+        disallow: [
+          "/opengraph-image*",
+          "/twitter-image*",
+          "/*?ref=*",
+          "/*?format=rss",
+        ],
       },
       {
         // Explicitly welcome AI Search & Answer engines for GEO citations

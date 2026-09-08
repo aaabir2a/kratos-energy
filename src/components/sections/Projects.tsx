@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
 import type { Project } from "@/lib/api";
+import { projectPath } from "@/lib/seo/site";
 
 /* --------------------------------------------------------------- helpers -- */
 
@@ -220,7 +221,7 @@ export function Lightbox({
 
           <div className="mt-auto pt-6 flex flex-col gap-3">
             <Link
-              href={`/projects/${encodeURIComponent(project.title)}`}
+              href={projectPath(project.title)}
               onClick={onClose}
               className="ke-press flex w-full items-center justify-center gap-2 rounded-pill bg-forest-900 px-6 py-3.5 font-display text-[14.5px] font-bold text-white shadow-md hover:bg-forest-800"
             >
@@ -360,7 +361,7 @@ function WideProjectCard({
 
         <div className="mt-auto flex flex-wrap gap-2.5 pt-5">
           <Link
-            href={`/projects/${encodeURIComponent(project.title)}`}
+            href={projectPath(project.title)}
             className="ke-press inline-flex flex-1 items-center justify-center gap-2 rounded-pill bg-forest-900 px-4 py-2.5 font-display text-[13.5px] font-bold text-white hover:bg-forest-800"
           >
             Details <Icon name="arrow" size={15} stroke={2.4} className="text-green-400" />
