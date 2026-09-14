@@ -5,6 +5,7 @@ import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 import { submitLead, type LeadFormField } from "@/lib/api";
 import { useContentStore } from "@/lib/store";
+import { pushDataLayer } from "@/lib/gtm";
 import {
   BATTERY_OPTIONS,
   BRAND_BLURB,
@@ -212,6 +213,15 @@ export function SystemConfigurator() {
     loadLeadForm();
   }, [loadLeadForm]);
 
+  // Track /build page view in GTM dataLayer
+  useEffect(() => {
+    pushDataLayer({
+      event: "view_build_page",
+      page_path: "/build",
+      page_title: "Build Your Solar System Australia",
+    });
+  }, []);
+
   // Solar follows the roof recommendation until the user picks a size.
   const solar = solarOverride ?? roof.recommended;
 
@@ -333,6 +343,30 @@ export function SystemConfigurator() {
           (typeof window !== "undefined" ? window.location.href : undefined),
       });
       setMode("sent");
+
+      // Push quote conversion event to GTM dataLayer
+      pushDataLayer({
+        event: "request_quote_build",
+        event_category: "lead",
+        event_action: "quote_requested",
+        lead_source: "build_configurator",
+        page_path: "/build",
+        build_solar_kw: solar.sizeKw,
+        build_panel_count: solar.panels,
+        build_brand: brand,
+        build_inverter: inverter ? `${inverter.brand} ${inverter.model}` : null,
+        build_battery: battery ? `${battery.model} ${battery.kwh}kWh` : null,
+        build_ev_charger: ev.price ? ev.label : null,
+        build_supply_phase: phase,
+        build_roof_sqm: sqM,
+        build_roof_orientation: orientation,
+        build_roof_shading: shading,
+        build_est_total_low: costRange.lo,
+        build_est_total_high: costRange.hi,
+        build_est_saving_low: saveRange.lo,
+        build_est_saving_high: saveRange.hi,
+        build_est_payback_years: paybackRange,
+      });
     } catch {
       setSendError("Couldn't send just now — please try again or call us.");
     } finally {
@@ -734,7 +768,16 @@ export function SystemConfigurator() {
 
           {mode === "cta" && (
             <button
-              onClick={() => setMode("form")}
+              id="btn-get-exact-quote"
+              data-gtm="get-exact-quote"
+              onClick={() => {
+                setMode("form");
+                pushDataLayer({
+                  event: "click_get_exact_quote",
+                  button_text: "Get my exact quote",
+                  page_path: "/build",
+                });
+              }}
               className="ke-press mt-5 inline-flex w-full items-center justify-center gap-2.5 rounded-pill bg-green-500 px-6 py-[14px] font-display text-[15.5px] font-bold text-white shadow-green hover:bg-green-600"
             >
               Get my exact quote <Icon name="arrow" size={18} stroke={2.4} />
@@ -778,7 +821,16 @@ export function SystemConfigurator() {
               )}
               <button
                 type="submit"
+                id="btn-request-exact-quote"
+                data-gtm="request-exact-quote"
                 disabled={sending}
+                onClick={() => {
+                  pushDataLayer({
+                    event: "click_request_quote_button",
+                    button_text: "Request my exact quote",
+                    page_path: "/build",
+                  });
+                }}
                 className={cn(
                   "ke-press inline-flex w-full items-center justify-center gap-2.5 rounded-pill bg-green-500 px-6 py-[13px] font-display text-[15px] font-bold text-white shadow-green hover:bg-green-600",
                   sending && "opacity-70",
