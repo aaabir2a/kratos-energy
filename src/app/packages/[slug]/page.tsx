@@ -13,7 +13,7 @@ import {
   type SolarSystem,
 } from "@/lib/systems";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { productLd, breadcrumbLd } from "@/lib/seo/schema";
+import { productLd, serviceLd, breadcrumbLd } from "@/lib/seo/schema";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -70,15 +70,26 @@ export default async function SystemPage({ params }: Params) {
 
   return (
     <SiteLayout>
-      {/* Descriptive Product only — no `offers`. System prices are "incl. GST,
-          after STC rebate" and the STC price moves with the market, so a
-          machine-readable price would drift from what we actually charge. */}
+      {/* Priced packages are a Product carrying the same "From $…" figure the
+          hero renders. Quote-only commercial systems have no honest price, so
+          they are marked up as the Service they actually are rather than as a
+          Product with no offer — which could never earn a product result. */}
       <JsonLd
-        data={productLd({
-          name: `${system.size} Solar System`,
-          description: `${system.tagline} ${system.size} solar system with Tier 1 panels and CEC-accredited installation.`,
-          path: `/packages/${system.slug}`,
-        })}
+        data={
+          enquire
+            ? serviceLd({
+                name: `${system.size} Commercial Solar Installation`,
+                description: `${system.tagline} ${system.size} commercial solar system with Tier 1 panels and CEC-accredited installation.`,
+                path: `/packages/${system.slug}`,
+                serviceType: "Commercial solar installation",
+              })
+            : productLd({
+                name: `${system.size} Solar System`,
+                description: `${system.tagline} ${system.size} solar system with Tier 1 panels and CEC-accredited installation.`,
+                path: `/packages/${system.slug}`,
+                fromPrice: system.price ?? undefined,
+              })
+        }
       />
       <JsonLd
         data={breadcrumbLd([

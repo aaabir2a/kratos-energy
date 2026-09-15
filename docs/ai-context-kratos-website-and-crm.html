@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kratos Energy — Website &amp; CRM Knowledge Base for AI Models</title>
+<meta name="description" content="Machine-readable reference describing the Kratos Energy marketing website (Next.js) and the Kratos Sustainability CRM (Express/Prisma/React): features, routes, content model, SEO metadata, GEO signals and schema.org structure.">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{
+    --bg:#ffffff; --fg:#16211d; --muted:#5b6b64; --line:#dfe6e2;
+    --card:#f6f9f7; --code-bg:#f2f5f3; --accent:#175c4c; --accent2:#6abf2e;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1512; --fg:#e6ece9; --muted:#9db0a8; --line:#25322d;
+      --card:#141d19; --code-bg:#121a17; --accent:#6abf2e; --accent2:#6abf2e;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1512; --fg:#e6ece9; --muted:#9db0a8; --line:#25322d;
+    --card:#141d19; --code-bg:#121a17; --accent:#6abf2e; --accent2:#6abf2e;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--fg);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;margin:0}
+  .wrap{max-width:1040px;margin:0 auto;padding:40px 22px 96px}
+  h1{font-size:2rem;line-height:1.2;margin:0 0 .3em}
+  h2{font-size:1.35rem;margin:2.6em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--accent);color:var(--accent)}
+  h3{font-size:1.08rem;margin:1.8em 0 .5em}
+  h4{font-size:.98rem;margin:1.3em 0 .4em;color:var(--muted)}
+  .lede{color:var(--muted);font-size:1.02rem}
+  code{background:var(--code-bg);border:1px solid var(--line);border-radius:4px;padding:.08em .35em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88em}
+  pre{background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto}
+  pre code{background:none;border:0;padding:0;font-size:.83rem;line-height:1.5}
+  table{border-collapse:collapse;width:100%;font-size:.9rem}
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;margin:1em 0}
+  th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--card);font-weight:600;white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  .card{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent2);border-radius:8px;padding:14px 18px;margin:1.2em 0}
+  .card p:first-child{margin-top:0}.card p:last-child{margin-bottom:0}
+  .meta{font-size:.85rem;color:var(--muted)}
+  ul.tight li{margin:.15em 0}
+  nav.toc{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 20px;margin:2em 0}
+  nav.toc ol{margin:.4em 0 0;padding-left:1.3em}
+  nav.toc a{color:var(--accent);text-decoration:none}
+  nav.toc a:hover{text-decoration:underline}
+  .kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 18px;font-size:.92rem}
+  .kv dt{color:var(--muted)}
+  .kv dd{margin:0}
+  hr{border:0;border-top:1px solid var(--line);margin:3em 0}
+  @media (max-width:600px){ .kv{grid-template-columns:1fr} .kv dd{margin-bottom:.5em} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Kratos Energy — Website &amp; CRM Knowledge Base</h1>
+<p class="lede">A single reference describing the two systems that make up Kratos Energy's digital estate: the public marketing website (<code>kratos-energy</code>, Next.js) and the Kratos Sustainability CRM / content-management system (<code>kratos-energy-backend</code>, Express + Prisma + React). It is written to be read by an AI model as authoritative context — feature inventory, URL map, content model, API surface, SEO metadata rules, GEO (generative-engine optimisation) signals, and the complete schema.org structure.</p>
+
+<dl class="kv">
+  <dt>Document version</dt><dd>1.0 — 12 September 2026</dd>
+  <dt>Production site</dt><dd><code>https://kratos-energy.com</code> (non-www is canonical)</dd>
+  <dt>Public API base</dt><dd><code>https://api.kratos-energy.com/api/v1</code></dd>
+  <dt>Business</dt><dd>Kratos Energy Pty Ltd — 100% Australian-owned solar, battery and EV-charging installer; founded 2016</dd>
+  <dt>Head office</dt><dd>SmartSpace, Suite 66, 1st Floor, Enterprise 1, Innovation Campus, Squires Way, North Wollongong NSW 2500, Australia</dd>
+  <dt>Contact</dt><dd>1300 089 547 · info@kratos-energy.com</dd>
+  <dt>Service area</dt><dd>New South Wales, Victoria, Australian Capital Territory</dd>
+  <dt>Brand colours</dt><dd>green <code>#6abf2e</code>, teal <code>#175c4c</code></dd>
+</dl>
+
+<nav class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#arch">System architecture — how the two halves fit together</a></li>
+    <li><a href="#site">The website: purpose, audience, feature inventory</a></li>
+    <li><a href="#urls">Complete URL map</a></li>
+    <li><a href="#crm">The CRM / CMS: feature inventory</a></li>
+    <li><a href="#content">Content model (what the CMS publishes to the site)</a></li>
+    <li><a href="#api">Public API surface consumed by the website</a></li>
+    <li><a href="#seo">SEO layer — metadata, canonicals, sitemaps, robots</a></li>
+    <li><a href="#schema">Schema.org / JSON-LD structure</a></li>
+    <li><a href="#geo">GEO — generative-engine optimisation</a></li>
+    <li><a href="#rules">Rules an AI must not break</a></li>
+    <li><a href="#glossary">Domain glossary (Australian solar)</a></li>
+  </ol>
+</nav>
+
+<hr>
+
+<h2 id="arch">1. System architecture</h2>
+
+<p>Two separate repositories, deployed separately, joined only by a small set of unauthenticated JSON endpoints.</p>
+
+<div class="scroll"><table>
+<thead><tr><th>Repo</th><th>Stack</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>kratos-energy</code></td><td>Next.js 16 (App Router), React 19, TypeScript 5.5, Tailwind 3.4, Zustand</td><td>Public marketing site. Server-rendered, statically generated where possible, ISR for CMS content.</td></tr>
+<tr><td><code>kratos-energy-backend/backend</code></td><td>Node 22, TypeScript, Express, Prisma, PostgreSQL, MinIO, Redis (optional)</td><td>CRM API + content management + media store. Module layout: <code>src/modules/*</code> → routes → controller → service → repository, Zod validation at the edges.</td></tr>
+<tr><td><code>kratos-energy-backend/frontend</code></td><td>Vite + React + TypeScript + Tailwind + shadcn-style components, TanStack Query, Zustand</td><td>Staff-facing CRM single-page app. Never public.</td></tr>
+</tbody>
+</table></div>
+
+<pre><code>  Visitor ──► kratos-energy.com  (Next.js)
+                 │  fetch (ISR, revalidate 300–3600s)
+                 ▼
+          api.kratos-energy.com/api/v1/public/*     ← unauthenticated read
+                 ▲
+                 │  writes (session-authenticated staff)
+          CRM SPA (Vite/React)  ──►  Express API  ──►  PostgreSQL + MinIO
+
+  Visitor submits a form ──► POST /api/v1/leads/submit  (honeypot + rate-limit)
+                             └► lead created → attributed → round-robin assigned
+                                → notification email + in-app bell</code></pre>
+
+<div class="card">
+<p><strong>Key mental model:</strong> the website owns <em>presentation, routing, metadata and structured data</em>. The CRM owns <em>content, catalogue data, media and every lead</em>. The website never writes to the database except by posting a lead; the CRM never renders public HTML except the landing-page route <code>/p/:slug</code>.</p>
+</div>
+
+<hr>
+
+<h2 id="site">2. The website — purpose, audience, feature inventory</h2>
+
+<h3>2.1 Audience and job</h3>
+<p>Australian homeowners — and, on the commercial track, business owners — considering rooftop solar, battery storage, or EV charging. They are cost-anxious and sceptical; the Australian solar market has many cheap, pushy operators. The site's job is to establish trust, state costs and savings in concrete numbers, explain rebates plainly, and convert research into a quote request. Success metrics: quote-funnel completions and calculator engagement.</p>
+
+<h3>2.2 Brand voice</h3>
+<p>Trustworthy, local, expert. Calm confidence, never hype. Credentials-forward (Clean Energy Council accreditation, real case studies). Plain-spoken about money. Explicit anti-references the site must never resemble: door-to-door discount-solar clutter; generic SaaS template layouts (cream backgrounds, tracked-uppercase eyebrows above every section, identical icon-card grids, gradient text); cold utility-portal greys; bouncy over-animation.</p>
+
+<h3>2.3 Accessibility target</h3>
+<p>WCAG AA. Body contrast ≥ 4.5:1, visible focus states, keyboard-navigable forms and calculators, reduced-motion alternatives, mobile-first one-handed reachability. The audience skews older, so this is a conversion requirement, not a checkbox.</p>
+
+<h3>2.4 Feature inventory</h3>
+<div class="scroll"><table>
+<thead><tr><th>Feature</th><th>Where</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td>Quote funnel</td><td><code>/get-a-quote</code>, <code>LeadForm</code> component sitewide</td><td>Primary conversion. Posts to the CRM intake endpoint with UTM / gclid / fbclid attribution attached.</td></tr>
+<tr><td>System builder</td><td><code>/build</code></td><td>Interactive configurator: system size, battery, EV charger, with indicative pricing. State held in Zustand.</td></tr>
+<tr><td>Solar rebate calculator</td><td><code>/calculators/solar-rebate</code></td><td>STC rebate estimate by postcode → STC zone. Backed by <code>src/lib/rebates/postcodeZones.ts</code>.</td></tr>
+<tr><td>Battery rebate calculator</td><td><code>/calculators/battery-rebate</code></td><td>Federal + state battery incentive estimate (incl. NSW PDRS, Solar Victoria).</td></tr>
+<tr><td>Solar output calculator</td><td><code>/calculators/solar-output</code></td><td>kWh/year generation estimate from system size and location.</td></tr>
+<tr><td>Feed-in tariff calculator</td><td><code>/calculators/feed-in-tariff</code></td><td>Export-credit modelling against retailer FiT rates.</td></tr>
+<tr><td>EV charging cost calculator</td><td><code>/calculators/ev-charging-cost</code></td><td>Cost per 100 km, grid vs solar-charged.</td></tr>
+<tr><td>Savings calculator</td><td><code>/savings-calculator</code></td><td>Whole-of-bill savings and payback period.</td></tr>
+<tr><td>Rebate explainer hub</td><td><code>/rebates</code></td><td>Plain-English guide to STCs, state schemes, eligibility.</td></tr>
+<tr><td>State landing pages</td><td><code>/solar/nsw</code>, <code>/solar/vic</code>, <code>/solar/act</code></td><td>Geo-targeted: STC zone, local climate, state scheme, capital city. Data in <code>src/lib/states.ts</code>.</td></tr>
+<tr><td>Package pages</td><td><code>/packages/6-6kw</code> … <code>/packages/100kw</code>, <code>/packages/large-scale</code></td><td>Six sized systems (6.6, 10, 13.2, 30, 50, 100 kW) with "From $…" pricing where a price is publishable.</td></tr>
+<tr><td>Product pages</td><td><code>/products</code>, <code>/products/solar</code>, <code>/products/battery</code>, <code>/products/ev-charging</code></td><td>Hardware category pages; brand data in <code>src/lib/brands.ts</code> and <code>batteries.ts</code>.</td></tr>
+<tr><td>Segment pages</td><td><code>/residential-solar</code>, <code>/commercial-solar</code></td><td>Service pages per buyer segment.</td></tr>
+<tr><td>Project showcase</td><td><code>/projects</code>, <code>/projects/[title]</code></td><td>Completed installations pulled live from the CRM, images from MinIO.</td></tr>
+<tr><td>Editorial</td><td><code>/blog</code>, <code>/blog/[slug]</code>, <code>/news</code>, <code>/news/[slug]</code></td><td>CMS-driven. Post type decides the schema emitted (see §8).</td></tr>
+<tr><td>Trust pages</td><td><code>/about</code>, <code>/reviews</code>, <code>/support</code>, <code>/finance</code>, <code>/contact</code></td><td>Credentials, testimonials, finance options, contact.</td></tr>
+<tr><td>Referral</td><td><code>/refer</code></td><td>Customer referral submission — noindex.</td></tr>
+<tr><td>Campaign</td><td><code>/luxury-getaway</code></td><td>Promotional campaign page, low sitemap priority.</td></tr>
+</tbody>
+</table></div>
+
+<hr>
+
+<h2 id="urls">3. Complete URL map</h2>
+<p>All routes are lowercase, hyphenated, <strong>without</strong> trailing slashes. Dynamic segments are marked in brackets.</p>
+
+<div class="scroll"><table>
+<thead><tr><th>URL</th><th>Type</th><th>Indexed</th><th>Sitemap priority</th></tr></thead>
+<tbody>
+<tr><td><code>/</code></td><td>static</td><td>yes</td><td>1.0</td></tr>
+<tr><td><code>/calculators/solar-rebate</code></td><td>static</td><td>yes</td><td>0.9</td></tr>
+<tr><td><code>/build</code></td><td>static</td><td>yes</td><td>0.9</td></tr>
+<tr><td><code>/savings-calculator</code></td><td>static</td><td>yes</td><td>0.9</td></tr>
+<tr><td><code>/rebates</code></td><td>static</td><td>yes</td><td>0.9</td></tr>
+<tr><td><code>/calculators</code> + the four secondary calculators</td><td>static</td><td>yes</td><td>0.8</td></tr>
+<tr><td><code>/solar</code>, <code>/solar/[nsw|vic|act]</code></td><td>static + params</td><td>yes</td><td>0.8</td></tr>
+<tr><td><code>/residential-solar</code>, <code>/commercial-solar</code></td><td>static</td><td>yes</td><td>0.8</td></tr>
+<tr><td><code>/products</code>, <code>/products/solar</code>, <code>/products/battery</code></td><td>static</td><td>yes</td><td>0.8</td></tr>
+<tr><td><code>/about</code></td><td>static</td><td>yes</td><td>0.8</td></tr>
+<tr><td><code>/products/ev-charging</code>, <code>/finance</code>, <code>/packages/*</code>, <code>/projects</code>, <code>/blog</code>, <code>/news</code>, <code>/contact</code></td><td>static</td><td>yes</td><td>0.6</td></tr>
+<tr><td><code>/blog/[slug]</code>, <code>/news/[slug]</code></td><td>CMS dynamic</td><td>yes</td><td>0.6</td></tr>
+<tr><td><code>/projects/[title]</code></td><td>CMS dynamic</td><td>yes</td><td>0.5</td></tr>
+<tr><td><code>/support</code></td><td>static</td><td>yes</td><td>0.5</td></tr>
+<tr><td><code>/luxury-getaway</code>, <code>/privacy</code></td><td>static</td><td>yes</td><td>0.3</td></tr>
+<tr><td><code>/get-a-quote</code>, <code>/refer</code></td><td>static</td><td><strong>noindex, follow</strong></td><td>absent from sitemap</td></tr>
+<tr><td><code>/reviews</code></td><td>static</td><td>yes</td><td>—</td></tr>
+<tr><td><code>/opengraph-image</code>, <code>/twitter-image</code></td><td>generated PNG</td><td>disallowed in robots</td><td>—</td></tr>
+<tr><td><code>/manifest.webmanifest</code></td><td>PWA manifest</td><td>—</td><td>—</td></tr>
+</tbody>
+</table></div>
+
+<div class="card">
+<p><strong>Why <code>/get-a-quote</code> and <code>/refer</code> are noindex:</strong> they are conversion endpoints with thin, duplicate-intent copy. They keep <code>follow</code> so internal link equity still flows through them. This is deliberate — do not "fix" it by adding them to the sitemap.</p>
+</div>
+
+<hr>
+
+<h2 id="crm">4. The CRM / CMS — feature inventory</h2>
+
+<p>Internally branded <strong>Kratos Sustainability CRM</strong>. Four roles: <code>admin</code>, <code>manager</code>, <code>marketing</code>, <code>sales</code>. Permissions are a named catalogue (<code>src/shared/constants/rbac.ts</code>) re-provisioned on seed; the React router guards with <code>RequireAuth</code> + <code>RequirePermission</code>. Swagger is generated from the Zod schemas at <code>/api/v1/docs</code>.</p>
+
+<h3>4.1 Sales pipeline</h3>
+<ul class="tight">
+<li><strong>Leads</strong> — capture from website forms, landing pages, social and the chatbot; dedupe and enrichment on ingest; notes, activity log, status history.</li>
+<li><strong>Source attribution</strong> — first-touch and last-touch, capturing UTM parameters, <code>gclid</code> and <code>fbclid</code>.</li>
+<li><strong>Auto-assignment</strong> — round-robin across sales reps, configurable at <code>/settings/lead-assignment</code>.</li>
+<li><strong>Pipeline</strong> — configurable stages, board view.</li>
+<li><strong>Deals</strong> — convert lead → deal; line items priced by <em>snapshot</em> at sale time; close won/lost with stage history.</li>
+<li><strong>Tasks &amp; referrals</strong> — follow-up tasks; a referral programme fed by <code>/refer</code>.</li>
+</ul>
+
+<h3>4.2 Content management (what drives the public site)</h3>
+<ul class="tight">
+<li><strong>Blog posts</strong> — block-based body, taxonomy (category + type), per-post SEO fields, draft/published status, publish date.</li>
+<li><strong>Blog categories</strong> and <strong>blog types</strong> — the type slug determines the schema.org markup the website emits.</li>
+<li><strong>Projects</strong> — completed installations with ordered image galleries, location and date.</li>
+<li><strong>Catalogue</strong> — products, packages, and package↔product composition.</li>
+<li><strong>Hero images</strong> — desktop (16:9, min 2400×1350) and mobile (3:4, min 1080×1440) variants; originals plus WebP renditions in MinIO, served public-read.</li>
+<li><strong>Landing pages</strong> — published at <code>/p/:slug</code> off the API host, with a versioned dynamic form engine (<code>fields_schema</code>) validated server-side.</li>
+<li><strong>Global site lead form</strong> — the schema the main website's <code>LeadForm</code> renders, editable in-app.</li>
+</ul>
+
+<h3>4.3 Marketing &amp; communications</h3>
+<ul class="tight">
+<li><strong>Email marketing</strong> — marketing contacts, contact lists, campaigns, open/click tracking, analytics dashboard, unsubscribe handling.</li>
+<li><strong>Messaging</strong> — versioned message templates, multi-step sequences with enrolment, a send queue ("Customer Mail"), scheduled messages, a suppression list, and bounce/complaint events via provider webhook.</li>
+<li><strong>Notifications</strong> — in-app feed (top-bar bell, 30 s poll) plus email. Events: lead created, lead assigned, deal won, deal lost. Email via Resend (preferred) with SMTP fallback; the config is verified at boot and logged loudly on failure.</li>
+<li><strong>Chat inbox</strong> — mirror of the external chatbot platform: transcript replay, live takeover, reply and release; 4 s polling; lead status written back to the platform.</li>
+</ul>
+
+<h3>4.4 CRM screen map</h3>
+<div class="scroll"><table>
+<thead><tr><th>Area</th><th>Routes</th></tr></thead>
+<tbody>
+<tr><td>Sales</td><td><code>/leads</code>, <code>/leads/:id</code>, <code>/pipeline</code>, <code>/deals</code>, <code>/deals/:id</code>, <code>/sources</code></td></tr>
+<tr><td>Email marketing</td><td><code>/email/overview</code>, <code>/email/analytics</code>, <code>/email/contacts</code>, <code>/email/contacts/:id</code>, <code>/email/campaigns</code>, <code>/email/campaigns/:id</code></td></tr>
+<tr><td>Messaging</td><td><code>/messaging/queue</code>, <code>/messaging/templates</code>, <code>/messaging/templates/:id</code></td></tr>
+<tr><td>Website content</td><td><code>/blogs</code>, <code>/blogs/new</code>, <code>/blogs/:id/edit</code>, <code>/blogs/categories</code>, <code>/blogs/types</code>, <code>/website/projects</code>, <code>/website/products</code>, <code>/website/packages</code>, <code>/website/images</code>, <code>/website/lead-form</code></td></tr>
+<tr><td>Landing pages</td><td><code>/marketing</code>, <code>/marketing/pages/:id</code>, <code>/marketing/forms</code>, <code>/marketing/forms/:id</code></td></tr>
+<tr><td>Conversations</td><td><code>/chat</code></td></tr>
+<tr><td>Administration</td><td><code>/users</code>, <code>/roles</code>, <code>/offices</code>, <code>/settings/notifications</code>, <code>/settings/lead-assignment</code>, <code>/settings/messaging</code></td></tr>
+<tr><td>Public (no auth)</td><td><code>/p/:slug</code> (landing page), <code>/unsubscribe/:token</code></td></tr>
+</tbody>
+</table></div>
+
+<hr>
+
+<h2 id="content">5. Content model</h2>
+
+<h3>5.1 <code>BlogPost</code></h3>
+<div class="scroll"><table>
+<thead><tr><th>Field</th><th>Type</th><th>SEO / GEO role</th></tr></thead>
+<tbody>
+<tr><td><code>title</code></td><td>string</td><td>Becomes the <code>h1</code> and the <code>headline</code>.</td></tr>
+<tr><td><code>slug</code></td><td>unique string</td><td>URL segment. Must be lowercase, hyphenated, ASCII — see §10.</td></tr>
+<tr><td><code>excerpt</code></td><td>string</td><td>Rendered into <code>.article-excerpt</code>, which is a <code>speakable</code> selector.</td></tr>
+<tr><td><code>author</code></td><td>string</td><td><code>author.name</code> (Person). E-E-A-T signal.</td></tr>
+<tr><td><code>featuredImage</code></td><td>URL</td><td>OG image and <code>image[]</code>; real pixel dimensions are probed, never assumed.</td></tr>
+<tr><td><code>readMins</code></td><td>int</td><td>UI only; <code>wordCount</code> is counted from the rendered body instead.</td></tr>
+<tr><td><code>tags</code></td><td>string[]</td><td><code>keywords</code> plus the <code>about[]</code> entity list — the main GEO topic signal.</td></tr>
+<tr><td><code>blocks</code></td><td>JSON[]</td><td>Block-based body: paragraph, heading, image, list, quote, accordion (Q&amp;A), etc.</td></tr>
+<tr><td><code>status</code></td><td>draft | published</td><td>Only <code>published</code> reaches the public API.</td></tr>
+<tr><td><code>categoryId</code></td><td>FK</td><td><code>articleSection</code>.</td></tr>
+<tr><td><code>typeId</code></td><td>FK</td><td>Decides the schema.org article type — see §5.2.</td></tr>
+<tr><td><code>metaTitle</code>, <code>metaDescription</code>, <code>canonicalUrl</code></td><td>string</td><td>Override the derived metadata.</td></tr>
+<tr><td><code>publishedAt</code>, <code>updatedAt</code></td><td>timestamptz</td><td><code>datePublished</code> / <code>dateModified</code> and sitemap <code>lastmod</code>.</td></tr>
+</tbody>
+</table></div>
+
+<h3>5.2 Blog types</h3>
+<p>The type is a publishing decision with a direct structured-data consequence:</p>
+<div class="scroll"><table>
+<thead><tr><th>Type slug</th><th>Public URL prefix</th><th>schema.org article type</th><th>Extra node</th></tr></thead>
+<tbody>
+<tr><td><code>general-blog</code></td><td><code>/blog/</code></td><td><code>BlogPosting</code></td><td>—</td></tr>
+<tr><td><code>article</code></td><td><code>/blog/</code></td><td><code>Article</code></td><td>—</td></tr>
+<tr><td><code>news</code></td><td><code>/news/</code></td><td><code>NewsArticle</code></td><td>—</td></tr>
+<tr><td><code>faq</code></td><td><code>/blog/</code></td><td><code>BlogPosting</code></td><td><code>FAQPage</code> built from accordion blocks</td></tr>
+<tr><td><code>how-to</code></td><td><code>/blog/</code></td><td><code>BlogPosting</code></td><td>— (deliberately <em>not</em> <code>HowTo</code>)</td></tr>
+</tbody>
+</table></div>
+<p class="meta">A post routes to <code>/news/</code> if and only if its type slug is <code>news</code>. The same predicate governs the sitemap, so a post is never listed under both prefixes. <code>article</code> maps to schema.org <code>Article</code> — the parent type — because those posts are editorial pieces rather than dated blog entries. <code>how-to</code> stays <code>BlogPosting</code> because schema.org <code>HowTo</code> requires a machine-readable <code>step</code> list and these posts are prose; emitting <code>HowTo</code> without steps would be invalid markup.</p>
+
+<h3>5.3 Other published entities</h3>
+<ul class="tight">
+<li><strong>Project</strong> — <code>title</code>, <code>description</code>, ordered <code>images[]</code> (public MinIO URLs), <code>location</code>, <code>projectDate</code>. The public URL slug is derived by slugifying the title (line breaks and punctuation stripped).</li>
+<li><strong>Product</strong> / <strong>Package</strong> / <strong>PackageProduct</strong> — catalogue used both by the website product pages and by deal line items.</li>
+<li><strong>HeroImage</strong> — <code>variant: DESKTOP | MOBILE</code>, original plus WebP rendition URLs.</li>
+</ul>
+
+<hr>
+
+<h2 id="api">6. Public API surface</h2>
+<p>Base: <code>https://api.kratos-energy.com/api/v1</code>. The envelope is always <code>{ success, data, meta }</code> on success and <code>{ success:false, error:{ code, message, details } }</code> on failure.</p>
+
+<div class="scroll"><table>
+<thead><tr><th>Method &amp; path</th><th>Auth</th><th>Purpose / caching</th></tr></thead>
+<tbody>
+<tr><td><code>GET /public/blog/posts?page&amp;limit</code></td><td>none</td><td>Paginated published posts. Next.js revalidates hourly.</td></tr>
+<tr><td><code>GET /public/blog/posts/:slug</code></td><td>none</td><td>Single post with blocks, taxonomy and SEO fields.</td></tr>
+<tr><td><code>GET /public/blog/categories</code></td><td>none</td><td>Taxonomy for listing filters.</td></tr>
+<tr><td><code>GET /public/blog/types</code></td><td>none</td><td>Type slugs — drives schema selection.</td></tr>
+<tr><td><code>GET /public/projects</code>, <code>GET /public/projects/:id</code></td><td>none</td><td>Showcase. <code>Cache-Control: public, max-age=300</code>.</td></tr>
+<tr><td><code>GET /public/products</code></td><td>none</td><td>Catalogue for product pages.</td></tr>
+<tr><td><code>GET /public/packages</code>, <code>GET /public/packages/:slug</code></td><td>none</td><td>System packages and their component products.</td></tr>
+<tr><td><code>GET /public/hero-images</code></td><td>none</td><td><code>{ desktop: [], mobile: [] }</code> for the homepage hero.</td></tr>
+<tr><td><code>GET /public/forms/…</code></td><td>none</td><td>Global site lead-form schema (versioned <code>fields_schema</code>).</td></tr>
+<tr><td><code>POST /leads/submit</code></td><td>none</td><td>Lead intake. Honeypot field + rate limiting + server-side validation against the form schema.</td></tr>
+<tr><td><code>GET /p/:slug</code></td><td>none</td><td>CRM-hosted landing-page delivery.</td></tr>
+<tr><td><code>GET /public/unsubscribe/:token</code></td><td>none</td><td>One-click unsubscribe for marketing email.</td></tr>
+<tr><td><code>POST /chatbot/webhook</code></td><td>HMAC</td><td>Chatbot platform events → lead ingestion + transcript mirror.</td></tr>
+<tr><td><code>GET /docs</code></td><td>none</td><td>Swagger UI generated from the Zod schemas.</td></tr>
+</tbody>
+</table></div>
+
+<p class="meta">CORS is allowlisted: only the Kratos Energy production origins may call the public endpoints from a browser.</p>
+
+<hr>
+
+<h2 id="seo">7. SEO layer</h2>
+
+<h3>7.1 Single source of truth</h3>
+<p><code>src/lib/seo/site.ts</code> holds the canonical origin and the business identity that feeds metadata, sitemaps, robots and JSON-LD. <code>SITE_URL</code> comes from <code>NEXT_PUBLIC_SITE_URL</code>, falling back to <code>https://kratos-energy.com</code>, always without a trailing slash. It is inlined at build time — changing it requires a rebuild.</p>
+
+<p><code>IS_INDEXABLE</code> is true only when <code>SITE_URL</code> is exactly the production origin. Staging builds therefore receive a blanket <code>Disallow: /</code> in <code>robots.txt</code> and <code>robots: { index:false }</code> on every page, backed at the edge by an <code>X-Robots-Tag: noindex</code> header on the <code>test.</code> vhost.</p>
+
+<h3>7.2 Per-page metadata contract</h3>
+<p>Every page calls <code>pageMetadata()</code> with a <code>PageSeo</code> object:</p>
+<pre><code>type PageSeo = {
+  title: string;        // WITHOUT the brand — the root layout appends " · Kratos Energy"
+                        // (16 chars), so keep at or under ~45 characters
+  description: string;  // 140–158 characters; lead with a number, name the state or Australia
+  path: string;         // root-relative, e.g. "/calculators/solar-rebate"
+  keywords?: string[];
+  image?: string;       // defaults to /opengraph-image
+  type?: "website" | "article";
+  noIndex?: boolean;    // thin or duplicate-intent pages: keep the links, drop the index
+  publishedTime?: string;
+  modifiedTime?: string;
+};</code></pre>
+
+<p>It produces:</p>
+<ul class="tight">
+<li>A <strong>self-referencing canonical</strong> at the absolute page URL.</li>
+<li><code>hreflang</code> alternates: <code>en-AU</code> and <code>x-default</code>, both pointing at the same URL — AU geo-targeting without pretending other locales exist.</li>
+<li>Open Graph: title, description, url, <code>siteName</code>, <code>locale: en_AU</code>, type, and a 1200×630 image.</li>
+<li>Twitter: <code>summary_large_image</code>.</li>
+<li><code>robots: { index:false, follow:true }</code> when the page is noindex or the build is non-production.</li>
+</ul>
+
+<div class="card">
+<p><strong>Rule:</strong> canonicals are set <em>per page only</em>, never in the root layout. Next.js merges <code>alternates</code> down to any page that does not define its own, so a layout-level canonical would point every route at one URL.</p>
+</div>
+
+<h3>7.3 Sitemaps</h3>
+<p>Three files, split by volatility:</p>
+<div class="scroll"><table>
+<thead><tr><th>File</th><th>Contents</th><th>lastmod source</th></tr></thead>
+<tbody>
+<tr><td><code>/sitemap.xml</code></td><td>Sitemap index pointing at the two below.</td><td>newest child date</td></tr>
+<tr><td><code>/sitemap-static.xml</code></td><td>~31 hand-authored routes, plus the six package pages and three state pages generated from <code>SYSTEMS</code> and <code>STATE_META</code>.</td><td><strong>Hand-maintained per row.</strong></td></tr>
+<tr><td><code>/sitemap-dynamic.xml</code></td><td>CMS blog/news posts and projects, fetched from the public API and paginated (200/page, hard cap 10 pages).</td><td><code>updatedAt ?? publishedAt ?? createdAt</code></td></tr>
+</tbody>
+</table></div>
+
+<p><strong>Two deliberate design decisions worth preserving:</strong></p>
+<ol>
+<li><em>Static <code>lastmod</code> is hand-edited, not stamped with the build date.</em> Telling Google that all 31 URLs changed on every deploy teaches it that the signal is noise, and it stops trusting it. Bump a row's date only when that page meaningfully changes.</li>
+<li><em>The dynamic sitemap never throws and never returns an empty <code>urlset</code>.</em> An empty sitemap tells Google the URLs are gone; a stale one only costs freshness. The last good result is cached in module scope, with a three-URL hub seed as the cold-start floor.</li>
+</ol>
+
+<h3>7.4 robots.txt</h3>
+<pre><code>User-agent: *
+Allow: /
+Disallow: /opengraph-image*
+Disallow: /twitter-image*
+Disallow: /*?ref=*
+Disallow: /*?format=rss
+
+# Explicitly welcomed for AI-search citation
+User-agent: OAI-SearchBot, ChatGPT-User, GPTBot, PerplexityBot,
+           ClaudeBot, Claude-Web, Applebot-Extended
+Allow: /
+
+# Blocked — high-frequency scrapers with no SEO/GEO value
+User-agent: Bytespider, CCBot, Amazonbot
+Disallow: /
+
+Sitemap: https://kratos-energy.com/sitemap.xml
+Host: https://kratos-energy.com</code></pre>
+<p class="meta"><code>/_next/</code> is deliberately <em>not</em> disallowed — blocking CSS and JS stops Google rendering the page, which costs rankings.</p>
+
+<h3>7.5 Known indexing issues and their fixes</h3>
+<p>From the Search Console audit of 8 September 2026:</p>
+<div class="scroll"><table>
+<thead><tr><th>Symptom</th><th>Root cause</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>8 URLs "alternate page with proper canonical"</td><td><code>www</code> served HTTP 200 alongside non-www, with no 301</td><td>301 <code>www</code> → non-www at the edge / in <code>next.config.mjs</code></td></tr>
+<tr><td>51 URLs returning 404</td><td>Legacy WordPress paths with no redirect map</td><td>301 map for old slugs; <code>/our-projects/</code> → <code>/projects</code>; <code>/systems/50kw</code> → <code>/packages/50kw</code></td></tr>
+<tr><td>Malformed sitemap URLs</td><td>A CMS slug with a trailing apostrophe; a project title containing a literal newline and spaces</td><td>Percent-encode post slugs (<code>postPath()</code>); slugify project titles (<code>slugifyProject()</code>)</td></tr>
+<tr><td>Trailing-slash duplicates</td><td>CMS slug saved with a trailing <code>/</code></td><td>Normalise trailing slashes; validate slugs on save in the CMS</td></tr>
+<tr><td>High-value pages "discovered, not indexed"</td><td>Calculators, <code>/finance</code>, <code>/solar/act</code>, <code>/packages/10kw</code> sit too deep with weak internal linking</td><td>Surface them in top-level navigation and body-copy links</td></tr>
+<tr><td>Legacy tag URLs crawled</td><td>WordPress <code>/news/tag/…</code> paths containing raw spaces; <code>?format=rss</code></td><td>Not implemented in Next.js; blocked in robots and left to drop out</td></tr>
+</tbody>
+</table></div>
+
+<hr>
+
+<h2 id="schema">8. Schema.org / JSON-LD structure</h2>
+
+<p>All JSON-LD is generated by typed builders in <code>src/lib/seo/schema.ts</code> and injected through the <code>JsonLd</code> component. Two invariants hold everywhere:</p>
+<ol>
+<li><strong>Every URL emitted is absolute.</strong></li>
+<li><strong>Every node that refers to the business refers to it by <code>@id</code></strong> rather than repeating the entity, so the whole site reads as one connected graph.</li>
+</ol>
+
+<p>Two stable identifiers anchor the graph:</p>
+<pre><code>ORG_ID     = "https://kratos-energy.com/#organization"
+WEBSITE_ID = "https://kratos-energy.com/#website"</code></pre>
+
+<h3>8.1 Site graph — emitted once, in the root layout</h3>
+<pre><code>{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["Organization", "Electrician", "LocalBusiness", "RoofingContractor"],
+      "@id": "https://kratos-energy.com/#organization",
+      "name": "Kratos Energy",
+      "legalName": "Kratos Energy Pty Ltd",
+      "url": "https://kratos-energy.com",
+      "logo":  { "@type": "ImageObject", "url": "https://kratos-energy.com/opengraph-image" },
+      "image": "https://kratos-energy.com/opengraph-image",
+      "telephone": "+611300089547",
+      "email": "info@kratos-energy.com",
+      "foundingDate": "2016",
+      "currenciesAccepted": "AUD",
+      "priceRange": "$$",
+      "paymentAccepted": "Cash, Credit Card, Bank Transfer, Solar Financing",
+      "hasMap": "https://maps.google.com/?q=...North+Wollongong+NSW+2500",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "SmartSpace, Suite 66, 1st Floor, Enterprise 1, Innovation Campus, Squires Way",
+        "addressLocality": "North Wollongong",
+        "addressRegion": "NSW",
+        "postalCode": "2500",
+        "addressCountry": "AU"
+      },
+      "geo": { "@type": "GeoCoordinates", "latitude": -34.4048, "longitude": 150.8931 },
+      "areaServed": [
+        { "@type": "Country", "name": "Australia" },
+        { "@type": "AdministrativeArea", "name": "New South Wales" },
+        { "@type": "AdministrativeArea", "name": "Victoria" },
+        { "@type": "AdministrativeArea", "name": "Australian Capital Territory" },
+        { "@type": "City", "name": "Sydney" },
+        { "@type": "City", "name": "Wollongong" },
+        { "@type": "City", "name": "Melbourne" },
+        { "@type": "City", "name": "Canberra" },
+        { "@type": "City", "name": "Newcastle" },
+        { "@type": "City", "name": "Central Coast" }
+      ],
+      "knowsAbout": [
+        "Australian Solar Rebates (STC)",
+        "Clean Energy Council Guidelines",
+        "NSW Peak Demand Reduction Scheme (PDRS)",
+        "Solar Victoria Rebates",
+        "Battery Energy Storage Systems Australia",
+        "Commercial Solar EPC Australia"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+611300089547",
+        "email": "info@kratos-energy.com",
+        "contactType": "sales",
+        "areaServed": "AU",
+        "availableLanguage": "en"
+      },
+      "sameAs": [ "...social profile URLs..." ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://kratos-energy.com/#website",
+      "url": "https://kratos-energy.com",
+      "name": "Kratos Energy",
+      "inLanguage": "en-AU",
+      "publisher": { "@id": "https://kratos-energy.com/#organization" }
+    }
+  ]
+}</code></pre>
+
+<div class="card">
+<p><strong>Two choices to understand before editing this node.</strong> <code>Electrician</code> is used as the <code>LocalBusiness</code> subtype because it gives honest local semantics without claiming a walk-in showroom that does not exist. And <code>WebSite</code> carries <strong>no</strong> <code>potentialAction</code>/<code>SearchAction</code> — the site has no search route, and declaring one that does not exist is a known way to lose trust in your markup.</p>
+</div>
+
+<h3>8.2 Builder inventory</h3>
+<div class="scroll"><table>
+<thead><tr><th>Builder</th><th>Emits</th><th>Used on</th></tr></thead>
+<tbody>
+<tr><td><code>siteGraphLd()</code></td><td><code>@graph</code>: Organization + WebSite</td><td>root layout (once)</td></tr>
+<tr><td><code>breadcrumbLd(items)</code></td><td><code>BreadcrumbList</code> of <code>ListItem</code></td><td>pages below the root</td></tr>
+<tr><td><code>faqLd(items)</code></td><td><code>FAQPage</code> → <code>Question</code> / <code>Answer</code></td><td>rebates, state pages, FAQ-type posts</td></tr>
+<tr><td><code>itemListLd(items)</code></td><td><code>ItemList</code></td><td>hub pages: /calculators, /products, /blog</td></tr>
+<tr><td><code>calculatorLd(i)</code></td><td><code>WebApplication</code>, category <code>FinanceApplication</code>, free, AUD 0 offer</td><td>each calculator and /build</td></tr>
+<tr><td><code>howToLd(i)</code></td><td><code>HowTo</code> with a real <code>step[]</code></td><td>only where genuine machine-readable steps exist</td></tr>
+<tr><td><code>serviceLd(i)</code></td><td><code>Service</code> with <code>provider: { "@id": ORG_ID }</code> and <code>areaServed</code></td><td>/residential-solar, /commercial-solar, quote-only systems</td></tr>
+<tr><td><code>productLd(i)</code></td><td><code>Product</code>, optionally with <code>AggregateOffer</code></td><td>package and product pages that publish a price</td></tr>
+<tr><td><code>articleLd(i)</code></td><td><code>Article</code> | <code>BlogPosting</code> | <code>NewsArticle</code></td><td>every CMS post</td></tr>
+</tbody>
+</table></div>
+
+<h3>8.3 Pricing markup — <code>Product</code> vs <code>Service</code></h3>
+<p>A package with a publishable price emits <code>Product</code>; a quote-only system emits <code>Service</code>. A <code>Product</code> with no offer cannot earn a product result anyway, and inventing a price would misstate it.</p>
+<p>Where a price exists, the page shows "From $3,990" — so the markup uses <strong><code>AggregateOffer</code> with <code>lowPrice</code></strong>, never a fixed <code>Offer</code>. The number passed to the builder is the same number the page renders, so the markup cannot drift from what a visitor reads. <code>priceValidUntil</code> is set to 31 December of the current year, bounding the claim rather than asserting it indefinitely (STC-derived prices move each year).</p>
+<pre><code>"offers": {
+  "@type": "AggregateOffer",
+  "lowPrice": "3990",
+  "priceCurrency": "AUD",
+  "offerCount": 1,
+  "availability": "https://schema.org/InStock",
+  "priceValidUntil": "2026-12-31",
+  "url": "https://kratos-energy.com/packages/6-6kw",
+  "seller": { "@id": "https://kratos-energy.com/#organization" }
+}</code></pre>
+
+<h3>8.4 Article node</h3>
+<pre><code>{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",                 // from the CMS type slug — see §5.2
+  "headline": "...",
+  "description": "...",
+  "image": ["https://..."],               // absolute
+  "keywords": "tag one, tag two",
+  "about": [ { "@type": "Thing", "name": "tag one" },
+             { "@type": "Thing", "name": "tag two" } ],
+  "articleSection": "Guides",             // CMS category
+  "wordCount": 1480,                      // counted from the rendered body
+  "author":    { "@type": "Person", "name": "..." },
+  "publisher": { "@id": "https://kratos-energy.com/#organization" },
+  "datePublished": "2026-08-14T00:00:00+10:00",
+  "dateModified":  "2026-09-02T00:00:00+10:00",
+  "inLanguage": "en-AU",
+  "url": "https://kratos-energy.com/blog/slug",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://kratos-energy.com/blog/slug" },
+  "isPartOf": { "@id": "https://kratos-energy.com/#website" },
+  "speakable": { "@type": "SpeakableSpecification",
+                 "cssSelector": ["h1", ".article-excerpt"] }
+}</code></pre>
+<p class="meta"><code>about[]</code> is derived from the post's own tags, not a fixed list — a fixed list would claim every article is about rebates. <code>speakable</code> selectors must match real elements; <code>.article-excerpt</code> is set on the excerpt in both the blog and news templates. <code>wordCount</code> is counted, not estimated from read time.</p>
+
+<h3>8.5 Realistic expectations</h3>
+<p>Documented in the source so nobody over-invests: Google restricted <code>FAQPage</code> rich results to government and health sites in 2023 and deprecated <code>HowTo</code> results the same year, and <code>WebApplication</code> has never produced a SERP visual. These nodes exist to help <strong>entity understanding and AI answer surfaces</strong> — they will not render accordions in Google.</p>
+
+<h3>8.6 Injection safety</h3>
+<p><code>jsonLdSafe()</code> serialises JSON-LD with every <code>&lt;</code> escaped to its unicode form, so a CMS-supplied string containing a closing script tag cannot break out of the script block. XML sitemap values pass through <code>xmlEscape()</code>.</p>
+
+<hr>
+
+<h2 id="geo">9. GEO — generative-engine optimisation</h2>
+
+<p>GEO here means making the site legible and citable to AI search and answer engines — treated as a first-class goal alongside classical SEO, not an afterthought.</p>
+
+<div class="scroll"><table>
+<thead><tr><th>Signal</th><th>Implementation</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>Crawler access</td><td>OAI-SearchBot, ChatGPT-User, GPTBot, PerplexityBot, ClaudeBot, Claude-Web and Applebot-Extended are explicitly allowed in <code>robots.txt</code></td><td>An answer engine cannot cite what it cannot fetch.</td></tr>
+<tr><td>Bandwidth defence</td><td>Bytespider, CCBot and Amazonbot disallowed</td><td>High-frequency scraping with no citation upside.</td></tr>
+<tr><td>Entity graph</td><td>One Organization <code>@id</code> referenced from every node; <code>isPartOf</code> ties each article to the WebSite</td><td>Lets a model resolve "Kratos Energy" as one entity rather than many loose pages.</td></tr>
+<tr><td>Topic declaration (GEO-2)</td><td><code>about[]</code> as <code>Thing</code> nodes, derived from post tags</td><td>Names the subject explicitly instead of leaving it to be inferred from prose.</td></tr>
+<tr><td>Expertise declaration</td><td><code>knowsAbout[]</code> on the Organization lists six concrete Australian solar-policy domains</td><td>Supports topical-authority attribution.</td></tr>
+<tr><td>Answer extraction (GEO-1)</td><td><code>speakable</code> targeting <code>h1</code> and <code>.article-excerpt</code></td><td>Gives the engine a designated, quotable summary.</td></tr>
+<tr><td>Geo-targeting (GEO-3)</td><td><code>hreflang="en-AU"</code> + <code>x-default</code> on every page; <code>inLanguage: "en-AU"</code> on the WebSite and every article</td><td>Anchors answers to the Australian market and Australian rebate rules.</td></tr>
+<tr><td>Q&amp;A machine-readability</td><td><code>faq</code>-type posts emit a separate <code>FAQPage</code> node built from accordion blocks; accordion content must be in the server-rendered HTML, not JS-only</td><td>Answer engines extract question/answer pairs directly.</td></tr>
+<tr><td>Authorship &amp; freshness</td><td><code>author</code> (Person), <code>datePublished</code>, <code>dateModified</code>, <code>wordCount</code>, <code>articleSection</code></td><td>E-E-A-T and recency signals.</td></tr>
+<tr><td>Concrete numbers in copy</td><td>Editorial rule: state costs, savings and rebates as specific figures</td><td>Extractable, quotable claims outperform vague prose in generated answers.</td></tr>
+<tr><td>True OG image dimensions</td><td>Image headers are probed (<code>imageSize()</code>, PNG/GIF/WebP/JPEG) rather than assumed; cached 24 h</td><td>CMS featured images arrive in at least six ratios; wrong <code>width</code>/<code>height</code> renders the card cropped or letterboxed.</td></tr>
+</tbody>
+</table></div>
+
+<hr>
+
+<h2 id="rules">10. Rules an AI working on these systems must not break</h2>
+
+<h4>Canonicalisation</h4>
+<ul class="tight">
+<li>Non-www <code>https://kratos-energy.com</code> is the only canonical origin. Never emit a <code>www</code> URL.</li>
+<li>No trailing slashes on any route.</li>
+<li>Canonicals per page, never in the root layout.</li>
+<li>Never index a non-production origin — <code>IS_INDEXABLE</code> guards this; do not bypass it.</li>
+</ul>
+
+<h4>Slugs</h4>
+<ul class="tight">
+<li>Post slugs: lowercase ASCII, hyphen-separated, no trailing punctuation, no spaces, no quotes. Percent-encode on output via <code>postPath()</code>.</li>
+<li>Project URLs come from <code>slugifyProject()</code> — never interpolate a raw title into a URL or a sitemap.</li>
+</ul>
+
+<h4>Sitemaps</h4>
+<ul class="tight">
+<li>Never stamp static <code>lastmod</code> with the build date.</li>
+<li>Never publish an empty <code>urlset</code>; fall back to the last good set.</li>
+<li>Never add <code>/get-a-quote</code> or <code>/refer</code>.</li>
+<li>A post appears under exactly one of <code>/blog/</code> or <code>/news/</code>, decided by its type slug.</li>
+</ul>
+
+<h4>Structured data</h4>
+<ul class="tight">
+<li>Never assert a price the page does not display; "from" prices are <code>AggregateOffer.lowPrice</code>, never <code>Offer.price</code>.</li>
+<li>Never emit <code>HowTo</code> without a real <code>step[]</code>, or <code>SearchAction</code> without a search route.</li>
+<li>Never inline an entity that already has an <code>@id</code> — reference it.</li>
+<li><code>speakable</code> selectors must match elements that actually exist.</li>
+<li>All JSON-LD goes through <code>jsonLdSafe()</code>.</li>
+</ul>
+
+<h4>Copy</h4>
+<ul class="tight">
+<li>Australian English and Australian conventions throughout: <code>en-AU</code>, AUD, kW/kWh, STC, CEC, postcode (not ZIP).</li>
+<li>Titles at or under ~45 characters before the appended brand; descriptions 140–158 characters.</li>
+<li>No hype, no urgency pressure, no invented savings figures. Every number must be traceable to the calculators or to published rebate rules.</li>
+</ul>
+
+<h4>Security and data</h4>
+<ul class="tight">
+<li>Secrets live only in <code>backend/.env</code>; <code>.env.example</code> holds placeholders only.</li>
+<li>Public endpoints are read-only apart from lead intake, which is honeypot-protected and rate-limited.</li>
+<li>Local development runs against the <code>kratos_dev</code> database — never against production.</li>
+</ul>
+
+<hr>
+
+<h2 id="glossary">11. Domain glossary</h2>
+<div class="scroll"><table>
+<thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><strong>STC</strong></td><td>Small-scale Technology Certificate — the federal rebate mechanism for systems under 100 kW. Quantity depends on system size, install year and STC zone; usually assigned to the installer as an upfront discount.</td></tr>
+<tr><td><strong>STC zone</strong></td><td>One of four Australian solar-radiation zones (1 = sunniest), determined by postcode. Most of NSW is Zone 3, with far-western areas in Zone 2; Victoria is mostly Zone 4 — the lowest — so system sizing matters more there; the ACT is Zone 3, with clear sunny winters that lift generation.</td></tr>
+<tr><td><strong>CEC</strong></td><td>Clean Energy Council — the industry body whose accreditation and approved-product lists define a compliant Australian install.</td></tr>
+<tr><td><strong>PDRS</strong></td><td>NSW Peak Demand Reduction Scheme — the NSW battery incentive.</td></tr>
+<tr><td><strong>Solar Victoria</strong></td><td>Victorian state rebate and interest-free loan programme for solar and batteries.</td></tr>
+<tr><td><strong>Sustainable Household Scheme</strong></td><td>ACT programme offering zero-interest loans for batteries and other efficiency upgrades.</td></tr>
+<tr><td><strong>Feed-in tariff (FiT)</strong></td><td>The per-kWh credit a retailer pays for exported solar. Retailer-set and modest, so self-consumption matters more than export.</td></tr>
+<tr><td><strong>EPC</strong></td><td>Engineer–Procure–Construct — the delivery model for commercial and large-scale installs.</td></tr>
+<tr><td><strong>System size</strong></td><td>Quoted in kW of panel capacity. Published packages: 6.6, 10, 13.2, 30, 50 and 100 kW, plus a large-scale track above that.</td></tr>
+</tbody>
+</table></div>
+
+<hr>
+<p class="meta">Generated from the <code>kratos-energy</code> and <code>kratos-energy-backend</code> repositories as of 12 September 2026. Where the code and this document disagree, the code is correct — regenerate rather than patch from memory.</p>
+
+</div>
+</body>
+</html>

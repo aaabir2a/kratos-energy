@@ -16,6 +16,7 @@ import {
   type LeadFormField,
 } from "@/lib/api";
 import { useContentStore } from "@/lib/store";
+import { auPhoneError } from "@/lib/phone";
 
 /** field_name values that map to first-class lead columns; everything else on
  *  the CRM form goes into `customFields`. */
@@ -59,7 +60,16 @@ const inputClass =
   "w-full rounded-md border-[1.5px] border-ash-300 bg-white px-[15px] py-[13px] font-body text-[15px] text-ink outline-none";
 
 /** Renders one CRM-defined field by its `type`. */
-function Field({ field, error }: { field: LeadFormField; error?: string }) {
+function Field({
+  field,
+  error,
+  onPhoneBlur,
+}: {
+  field: LeadFormField;
+  error?: string;
+  /** Validates a phone field as soon as the visitor leaves it. */
+  onPhoneBlur?: (name: string, value: string, required: boolean) => void;
+}) {
   const base = `${inputClass}${error ? " border-red-400" : ""}`;
   const ph = field.placeholder || field.label;
   const req = field.required;
@@ -158,7 +168,16 @@ function Field({ field, error }: { field: LeadFormField; error?: string }) {
       control = <input {...common} type="email" placeholder={ph} />;
       break;
     case "phone":
-      control = <input {...common} type="tel" placeholder={ph} />;
+      control = (
+        <input
+          {...common}
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          placeholder={ph}
+          onBlur={(e) => onPhoneBlur?.(field.field_name, e.target.value, req)}
+        />
+      );
       break;
     case "date":
       control = <input {...common} type="date" />;
@@ -220,6 +239,19 @@ export function LeadForm({
     ? [...schema.fieldsSchema].sort((a, b) => a.order - b.order)
     : [];
 
+  /** Flag a bad phone as soon as the visitor leaves the field, and clear the
+   *  message the moment they fix it — never scold mid-typing. */
+  function validatePhoneField(name: string, value: string, required: boolean) {
+    const msg = auPhoneError(value, { required });
+    setFieldErrors((prev) => {
+      if (msg === (prev[name] ?? null)) return prev;
+      const next = { ...prev };
+      if (msg) next[name] = msg;
+      else delete next[name];
+      return next;
+    });
+  }
+
   /** Submit the CRM-defined schema: coerce each field by type, then split into
    *  first-class lead columns vs. customFields. */
   async function handleDynamicSubmit(e: FormEvent<HTMLFormElement>) {
@@ -233,6 +265,22 @@ export function LeadForm({
     // password managers autofilling the hidden field with whitespace.
     if (String(fd.get("website_spam") ?? "").trim()) {
       setSent(true);
+      return;
+    }
+
+    // Validate every phone field before building the payload — a bad number is
+    // worth catching here rather than after it has landed in the CRM.
+    const phoneErrors: Record<string, string> = {};
+    for (const field of fields) {
+      if (field.type !== "phone") continue;
+      const msg = auPhoneError(String(fd.get(field.field_name) ?? ""), {
+        required: field.required,
+      });
+      if (msg) phoneErrors[field.field_name] = msg;
+    }
+    if (Object.keys(phoneErrors).length > 0) {
+      setFieldErrors(phoneErrors);
+      setError("Please check the highlighted fields and try again.");
       return;
     }
 
@@ -342,6 +390,13 @@ export function LeadForm({
       return;
     }
 
+    const phoneMsg = auPhoneError(String(fd.get("phone") ?? ""), { required: true });
+    if (phoneMsg) {
+      setFieldErrors({ phone: phoneMsg });
+      return;
+    }
+    setFieldErrors({});
+
     const bill = String(fd.get("bill") || "");
     setSending(true);
     try {
@@ -411,7 +466,12 @@ export function LeadForm({
           {honeypot}
           <div className="flex flex-col gap-4">
             {fields.map((f) => (
-              <Field key={f.field_name} field={f} error={fieldErrors[f.field_name]} />
+              <Field
+                key={f.field_name}
+                field={f}
+                error={fieldErrors[f.field_name]}
+                onPhoneBlur={validatePhoneField}
+              />
             ))}
           </div>
           {error && (
@@ -463,13 +523,34 @@ export function LeadForm({
             <div className="grid grid-cols-2 gap-3">
               <label className="flex flex-col gap-1">
                 <span className="sr-only">Phone number</span>
-                <input name="phone" className={inputClass} type="tel" placeholder="Phone" required aria-required="true" />
+                <input
+                  name="phone"
+                  className={`${inputClass}${fieldErrors.phone ? " border-red-400" : ""}`}
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  placeholder="Phone"
+                  required
+                  aria-required="true"
+                  aria-invalid={fieldErrors.phone ? true : undefined}
+                  aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
+                  onBlur={(e) =>
+                    validatePhoneField("phone", e.target.value, true)
+                  }
+                />
               </label>
               <label className="flex flex-col gap-1">
                 <span className="sr-only">Suburb</span>
                 <input name="suburb" className={inputClass} placeholder="Suburb" required aria-required="true" />
               </label>
             </div>
+            {/* Full width, not inside the two-column grid — the message needs
+                more room than half a row gives it. */}
+            {fieldErrors.phone && (
+              <p id="phone-error" className="m-0 font-body text-[13px] text-red-600">
+                {fieldErrors.phone}
+              </p>
+            )}
             <label className="flex flex-col gap-1">
               <span className="sr-only">Monthly electricity bill</span>
               <select name="bill" className={inputClass} defaultValue="" aria-required="true">

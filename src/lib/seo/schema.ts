@@ -207,9 +207,17 @@ export function serviceLd(i: {
 }
 
 /**
- * Descriptive only — no `offers`. System prices are "incl. GST, after STC
- * rebate" and the STC price moves with the market, so a machine-readable price
- * would drift from the real one.
+ * `Product` for packages we publish a price for.
+ *
+ * `fromPrice` becomes an `AggregateOffer` with `lowPrice`, not a fixed `Offer`
+ * — the page shows "From $3,990", and marking a "from" figure as an exact price
+ * would misstate it. Pass the same number the page renders so the markup can
+ * never drift from what a visitor reads; the earlier concern about the STC
+ * price moving is handled by `priceValidUntil`, which bounds the claim to the
+ * current year rather than asserting it indefinitely.
+ *
+ * Quote-only systems have no honest price, so they use `serviceLd()` instead of
+ * this — a Product with no offer cannot earn a product result anyway.
  */
 export function productLd(i: {
   name: string;
@@ -217,6 +225,8 @@ export function productLd(i: {
   path: string;
   image?: string;
   brand?: string;
+  /** Lowest advertised price in AUD, matching the "From $…" on the page. */
+  fromPrice?: number;
 }) {
   return {
     "@context": "https://schema.org",
@@ -227,6 +237,20 @@ export function productLd(i: {
     ...(i.image ? { image: absoluteUrl(i.image) } : {}),
     brand: { "@type": "Brand", name: i.brand ?? SITE_NAME },
     manufacturer: { "@id": ORG_ID },
+    ...(i.fromPrice
+      ? {
+          offers: {
+            "@type": "AggregateOffer",
+            lowPrice: String(i.fromPrice),
+            priceCurrency: "AUD",
+            offerCount: 1,
+            availability: "https://schema.org/InStock",
+            priceValidUntil: `${new Date().getFullYear()}-12-31`,
+            url: absoluteUrl(i.path),
+            seller: { "@id": ORG_ID },
+          },
+        }
+      : {}),
   };
 }
 

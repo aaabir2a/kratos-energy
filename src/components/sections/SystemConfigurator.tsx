@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
 import { submitLead, type LeadFormField } from "@/lib/api";
+import { auPhoneError } from "@/lib/phone";
 import { useContentStore } from "@/lib/store";
 import {
   BATTERY_OPTIONS,
@@ -273,6 +274,12 @@ export function SystemConfigurator() {
     }
     if (!email && !phoneNo) {
       setSendError("Please add an email or a phone number so we can reach you.");
+      return;
+    }
+    // Optional here — but if one was given it has to be a real AU number.
+    const phoneMsg = auPhoneError(phoneNo);
+    if (phoneMsg) {
+      setSendError(phoneMsg);
       return;
     }
 
@@ -762,6 +769,8 @@ export function SystemConfigurator() {
                 <input
                   name="phone"
                   type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
                   placeholder="Phone"
                   className="w-full rounded-md border-[1.5px] border-ash-300 bg-white px-3.5 py-2.5 font-body text-[14px] text-ink outline-none"
                 />
